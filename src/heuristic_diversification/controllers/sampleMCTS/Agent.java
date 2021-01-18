@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import core.game.StateObservation;
-import core.player.AbstractPlayer;
+import core.player.AbstractHeuristicPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -15,7 +15,7 @@ import tools.ElapsedCpuTimer;
  * Time: 21:45
  * This is an implementation of MCTS UCT
  */
-public class Agent extends AbstractPlayer {
+public class Agent extends AbstractHeuristicPlayer {
 
     public int num_actions;
     public Types.ACTIONS[] actions;
@@ -24,13 +24,16 @@ public class Agent extends AbstractPlayer {
 
     /**
      * Public constructor with state observation and time due.
-     * @param so state observation of the current game.
+     * @param stateObs state observation of the current game.
      * @param elapsedTimer Timer for the controller creation.
+     * @param heuristicName Name of the heuristic to use for evaluation.
      */
-    public Agent(StateObservation so, ElapsedCpuTimer elapsedTimer)
+    public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, String heuristicName)
     {
+        super(stateObs, heuristicName); 
+
         //Get the actions in a static array.
-        ArrayList<Types.ACTIONS> act = so.getAvailableActions();
+        ArrayList<Types.ACTIONS> act = stateObs.getAvailableActions();
         actions = new Types.ACTIONS[act.size()];
         for(int i = 0; i < actions.length; ++i)
         {
@@ -40,11 +43,11 @@ public class Agent extends AbstractPlayer {
 
         //Create the player.
 
-        mctsPlayer = getPlayer(so, elapsedTimer);
+        mctsPlayer = getPlayer(stateObs, elapsedTimer);
     }
 
     public SingleMCTSPlayer getPlayer(StateObservation so, ElapsedCpuTimer elapsedTimer) {
-        return new SingleMCTSPlayer(new Random(), num_actions, actions);
+        return new SingleMCTSPlayer(new Random(), num_actions, actions, heuristic);
     }
 
 

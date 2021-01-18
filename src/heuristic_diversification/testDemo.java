@@ -47,7 +47,7 @@ public class testDemo {
 		String heuristicName = "WinningAndScoreHeuristic";
 		String heuristic = heuristicsPath + heuristicName;
 
-		String controllerName = "sampleonesteplookahead";
+		String controllerName = "sampleMCTS";
 		String controller = controllersPath + controllerName + ".Agent";
 
 		String actionFile = null;

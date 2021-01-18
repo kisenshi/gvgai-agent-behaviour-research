@@ -1,8 +1,9 @@
-package tracks.singlePlayer.advanced.sampleMCTS;
+package heuristic_diversification.controllers.sampleMCTS;
 
 import java.util.Random;
 
 import core.game.StateObservation;
+import core.heuristic.StateHeuristic;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -29,10 +30,13 @@ public class SingleMCTSPlayer
     public int num_actions;
     public Types.ACTIONS[] actions;
 
-    public SingleMCTSPlayer(Random a_rnd, int num_actions, Types.ACTIONS[] actions)
+    private StateHeuristic heuristic;
+
+    public SingleMCTSPlayer(Random a_rnd, int num_actions, Types.ACTIONS[] actions, StateHeuristic heuristic)
     {
         this.num_actions = num_actions;
         this.actions = actions;
+        this.heuristic = heuristic;
         m_rnd = a_rnd;
     }
 
@@ -42,9 +46,12 @@ public class SingleMCTSPlayer
      */
     public void init(StateObservation a_gameState)
     {
+        // Update the information the heuristic contains about the game if needed
+        heuristic.updateHeuristicInternalInformation(a_gameState);
+        
         //Set the game observation to a newly root node.
         //System.out.println("learning_style = " + learning_style);
-        m_root = new SingleTreeNode(m_rnd, num_actions, actions);
+        m_root = new SingleTreeNode(m_rnd, num_actions, actions, heuristic);
         m_root.rootState = a_gameState;
     }
 

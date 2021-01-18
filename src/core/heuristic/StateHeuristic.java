@@ -21,6 +21,8 @@ public abstract class StateHeuristic {
 
     abstract public void updateHeuristicInternalInformation(StateObservation stateObs);
 
+    abstract public String relevantInfoStr(StateObservation stateObs);
+
     abstract public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds);
 
     abstract public void drawInScreen(Graphics2D g);

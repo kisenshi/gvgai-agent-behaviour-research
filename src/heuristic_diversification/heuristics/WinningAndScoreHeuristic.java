@@ -47,6 +47,10 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         currentScore = stateObs.getGameScore();
     }
 
+    public String relevantInfoStr(StateObservation stateObs) {
+        return "score: " + stateObs.getGameScore();
+    }
+
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds) {
         // Data:
         // gameId controllerId randomSeed winnerId score gameTicks

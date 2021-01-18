@@ -1,16 +1,15 @@
-package tracks.singlePlayer.advanced.sampleMCTS;
+package heuristic_diversification.controllers.sampleMCTS;
 
 import java.util.Random;
 
 import core.game.StateObservation;
+import core.heuristic.StateHeuristic;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.Utils;
 
 public class SingleTreeNode
 {
-    private final double HUGE_NEGATIVE = -10000000.0;
-    private final double HUGE_POSITIVE =  10000000.0;
     public double epsilon = 1e-6;
     public double egreedyEpsilon = 0.05;
     public SingleTreeNode parent;
@@ -28,16 +27,19 @@ public class SingleTreeNode
     public double K = Math.sqrt(2);
 
     public StateObservation rootState;
+    private StateHeuristic heuristic;
 
-    public SingleTreeNode(Random rnd, int num_actions, Types.ACTIONS[] actions) {
-        this(null, -1, rnd, num_actions, actions);
+    public SingleTreeNode(Random rnd, int num_actions, Types.ACTIONS[] actions, StateHeuristic heuristic) {
+        this(null, -1, rnd, num_actions, actions, heuristic);
     }
 
-    public SingleTreeNode(SingleTreeNode parent, int childIdx, Random rnd, int num_actions, Types.ACTIONS[] actions) {
+    public SingleTreeNode(SingleTreeNode parent, int childIdx, Random rnd, int num_actions, Types.ACTIONS[] actions, StateHeuristic heuristic) {
         this.parent = parent;
         this.m_rnd = rnd;
         this.num_actions = num_actions;
         this.actions = actions;
+        this.heuristic = heuristic;
+
         children = new SingleTreeNode[num_actions];
         totValue = 0.0;
         this.childIdx = childIdx;
@@ -107,9 +109,9 @@ public class SingleTreeNode
         }
 
         //Roll the state
-        state.advance(actions[bestAction]);
+        advanceState(state, actions[bestAction]);
 
-        SingleTreeNode tn = new SingleTreeNode(this,bestAction,this.m_rnd,num_actions, actions);
+        SingleTreeNode tn = new SingleTreeNode(this,bestAction,this.m_rnd,num_actions, actions, heuristic);
         children[bestAction] = tn;
         return tn;
     }
@@ -144,7 +146,7 @@ public class SingleTreeNode
         }
 
         //Roll the state:
-        state.advance(actions[selected.childIdx]);
+        advanceState(state, actions[selected.childIdx]);
 
         return selected;
     }
@@ -157,7 +159,7 @@ public class SingleTreeNode
         while (!finishRollout(state,thisDepth)) {
 
             int action = m_rnd.nextInt(num_actions);
-            state.advance(actions[action]);
+            advanceState(state, actions[action]);
             thisDepth++;
         }
 
@@ -175,18 +177,7 @@ public class SingleTreeNode
     }
 
     public double value(StateObservation a_gameState) {
-
-        boolean gameOver = a_gameState.isGameOver();
-        Types.WINNER win = a_gameState.getGameWinner();
-        double rawScore = a_gameState.getGameScore();
-
-        if(gameOver && win == Types.WINNER.PLAYER_LOSES)
-            rawScore += HUGE_NEGATIVE;
-
-        if(gameOver && win == Types.WINNER.PLAYER_WINS)
-            rawScore += HUGE_POSITIVE;
-
-        return rawScore;
+        return heuristic.evaluateState(a_gameState);
     }
 
     public boolean finishRollout(StateObservation rollerState, int depth)
@@ -292,5 +283,9 @@ public class SingleTreeNode
         }
 
         return false;
+    }
+
+    private void advanceState(StateObservation state, Types.ACTIONS action) {
+        state.advance(action);
     }
 }
