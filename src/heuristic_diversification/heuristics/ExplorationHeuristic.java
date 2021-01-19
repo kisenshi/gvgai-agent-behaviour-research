@@ -22,13 +22,7 @@ import java.io.IOException;
  */
 
 public class ExplorationHeuristic extends StateHeuristic {
-    int block_size;
-    int grid_width;
-    int grid_height;
-    boolean[][] exploration_matrix;
-    Vector2d currentPosition;
-    int last_discovered_tick = 0;
-    int games_lvl_navigation_sizes[] = new int[]{
+    private static int sGamesLvlNavigationSizes[] = new int[]{
         30,     //"aliens",
         9,      //"bait",
         206,    //"butterflies",
@@ -49,17 +43,24 @@ public class ExplorationHeuristic extends StateHeuristic {
         189,    //"seaquest",
         121,    //"survivezombies",
         50,     //"waitforbreakfast"
-};
+    };
+    private int mBlockSize;
+    private int mGridWidth;
+    private int mGridHeight;
+    private boolean[][] mExplorationMatrix;
+
+    private Vector2d mCurrentPosition;
+    private int mLastDiscoveryTick = 0;
 
     public ExplorationHeuristic(StateObservation stateObs) {
         // When the class is instantiated it is needed to initialise the exploration matrix
-        block_size = stateObs.getBlockSize();
-        Dimension grid_dimension = stateObs.getWorldDimension();
+        mBlockSize = stateObs.getBlockSize();
+        Dimension gridDimension = stateObs.getWorldDimension();
 
-        grid_width = grid_dimension.width / block_size;
-        grid_height = grid_dimension.height / block_size;
+        mGridWidth = gridDimension.width / mBlockSize;
+        mGridHeight = gridDimension.height / mBlockSize;
 
-        exploration_matrix = new boolean[grid_width][grid_height];
+        mExplorationMatrix = new boolean[mGridWidth][mGridHeight];
 
         markNewPositionAsVisited(stateObs);
     }
@@ -84,7 +85,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
 
         // If it has been before, it is penalised
-        if (avatarPosition.equals(currentPosition)){
+        if (avatarPosition.equals(mCurrentPosition)){
             // As it is tried to reward exploration, it is penalised more if it is the last position visited
             return -50;
         }
@@ -97,7 +98,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         Vector2d avatarPosition = stateObs.getAvatarPosition();
 
         if (!isOutOfBounds(avatarPosition)){
-            currentPosition = avatarPosition.copy();
+            mCurrentPosition = avatarPosition.copy();
             if (!hasBeenBefore(avatarPosition)) {
                 markNewPositionAsVisited(stateObs);
             }
@@ -115,7 +116,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         // Data:
         // gameId controllerId randomSeed winnerId score gameTicks mapSize nExplored navigationSize percentageExplored lastDiscoveredTick
         int gameId = recordIds[0];
-        int navigation_size = games_lvl_navigation_sizes[gameId];
+        int navigationSize = sGamesLvlNavigationSizes[gameId];
 
         try {
             if(fileName != null && !fileName.equals("")) {
@@ -123,7 +124,7 @@ public class ExplorationHeuristic extends StateHeuristic {
                 writer.write(gameId + " " + recordIds[1] + " " + randomSeed +
                         " " + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) +
                         " " + played.getScore() + " " + played.getGameTick() +
-                        " " + getMapSize() + " " + explored + " " + navigation_size + " " + explored/navigation_size + " " + last_discovered_tick + "\n");
+                        " " + getMapSize() + " " + explored + " " + navigationSize + " " + explored/navigationSize + " " + mLastDiscoveryTick + "\n");
 
                 //printExplorationMatrix();
 
@@ -137,20 +138,20 @@ public class ExplorationHeuristic extends StateHeuristic {
     public void drawInScreen(Graphics2D g) {
         Color rectColor = new Color(255, 255, 255, 127);
 
-        for (int i = 0; i < exploration_matrix.length; i++) {
-            for (int j = 0; j < exploration_matrix[i].length; j++) {
-                if (exploration_matrix[i][j]) {
+        for (int i = 0; i < mExplorationMatrix.length; i++) {
+            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
+                if (mExplorationMatrix[i][j]) {
                     g.setColor(rectColor);
-                    g.fillRect(i*block_size, j*block_size, block_size, block_size);
+                    g.fillRect(i*mBlockSize, j*mBlockSize, mBlockSize, mBlockSize);
                     g.setColor(Types.WHITE);
-                    g.drawRect(i*block_size, j*block_size, block_size, block_size);
+                    g.drawRect(i*mBlockSize, j*mBlockSize, mBlockSize, mBlockSize);
                 }
             }
         }
     }
 
     private int getMapSize(){
-        return grid_width * grid_height;
+        return mGridWidth * mGridHeight;
     }
 
     /**
@@ -159,10 +160,10 @@ public class ExplorationHeuristic extends StateHeuristic {
      * @return
      */
     private boolean isOutOfBounds(Vector2d position){
-        int x = (int)position.x / block_size;
-        int y = (int)position.y / block_size;
+        int x = (int)position.x / mBlockSize;
+        int y = (int)position.y / mBlockSize;
 
-        if ((x < 0) || (x >= grid_width) || (y < 0) || (y >= grid_height)){
+        if ((x < 0) || (x >= mGridWidth) || (y < 0) || (y >= mGridHeight)){
             return true;
         }
 
@@ -170,10 +171,10 @@ public class ExplorationHeuristic extends StateHeuristic {
     }
 
     /**
-     * Marks the position as visited in the exploration_matrix
+     * Marks the position as visited in the mExplorationMatrix
      * The position is provided as a Vector2d object so it is needed to
      * calculate the valid coordinates to be considered for the matrix
-     * It would be used the block_size int set when initialised
+     * It would be used the mBlockSize int set when initialised
      * @param position The position as a Vector2d object
      */
     private void markNewPositionAsVisited(StateObservation stateObs){
@@ -182,13 +183,13 @@ public class ExplorationHeuristic extends StateHeuristic {
             return;
         }
 
-        int x = (int)position.x / block_size;
-        int y = (int)position.y / block_size;
+        int x = (int)position.x / mBlockSize;
+        int y = (int)position.y / mBlockSize;
 
         //System.out.println("Marking ("+x+" , "+y+") as VISITED");
 
-        exploration_matrix[x][y] = true;
-        last_discovered_tick = stateObs.getGameTick();
+        mExplorationMatrix[x][y] = true;
+        mLastDiscoveryTick = stateObs.getGameTick();
     }
 
     /**
@@ -198,12 +199,12 @@ public class ExplorationHeuristic extends StateHeuristic {
      * @return true or false depending if the position has already been visited or not
      */
     private boolean hasBeenBefore(Vector2d position){
-        int x = (int)position.x / block_size;
-        int y = (int)position.y / block_size;
+        int x = (int)position.x / mBlockSize;
+        int y = (int)position.y / mBlockSize;
 
-        //System.out.println("Been before to ("+x+" , "+y+")? "+exploration_matrix[x][y]);
+        //System.out.println("Been before to ("+x+" , "+y+")? "+mExplorationMatrix[x][y]);
 
-        return exploration_matrix[x][y];
+        return mExplorationMatrix[x][y];
     }
 
     /**
@@ -213,9 +214,9 @@ public class ExplorationHeuristic extends StateHeuristic {
     private double getNSpotsExplored(){
         double explored = 0;
 
-        for (int i = 0; i < exploration_matrix.length; i++) {
-            for (int j = 0; j < exploration_matrix[i].length; j++) {
-                if (exploration_matrix[i][j]) {
+        for (int i = 0; i < mExplorationMatrix.length; i++) {
+            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
+                if (mExplorationMatrix[i][j]) {
                     explored ++;
                 }
             }
@@ -229,9 +230,9 @@ public class ExplorationHeuristic extends StateHeuristic {
      * @throws IOException
      */
     private void printExplorationMatrix() throws IOException {
-        for (int i = 0; i < exploration_matrix.length; i++) {
-            for (int j = 0; j < exploration_matrix[i].length; j++) {
-                if (exploration_matrix[i][j]){
+        for (int i = 0; i < mExplorationMatrix.length; i++) {
+            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
+                if (mExplorationMatrix[i][j]){
                     if (writer != null){
                         writer.write(" X ");
                     } else {
