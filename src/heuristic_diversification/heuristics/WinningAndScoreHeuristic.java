@@ -20,7 +20,7 @@ import java.io.IOException;
  * Maximize the score difference if the player has not win yet
  */
 public class WinningAndScoreHeuristic extends StateHeuristic {
-    double currentScore;
+    private double mCurrentScore;
 
     public WinningAndScoreHeuristic(StateObservation stateObs) {}
 
@@ -38,13 +38,13 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         }
 
         // Return the score change
-        double diffScore = newScore - currentScore;
+        double diffScore = newScore - mCurrentScore;
         return diffScore;
     }
 
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
         // Store the current score in the game
-        currentScore = stateObs.getGameScore();
+        mCurrentScore = stateObs.getGameScore();
     }
 
     public String relevantInfoStr(StateObservation stateObs) {
