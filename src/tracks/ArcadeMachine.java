@@ -14,6 +14,7 @@ import core.competition.CompetitionParameters;
 import core.game.Game;
 import core.game.StateObservation;
 import core.game.StateObservationMulti;
+import core.heuristic.StateHeuristic;
 import core.player.AbstractMultiPlayer;
 import core.player.AbstractPlayer;
 import core.player.Player;
@@ -950,12 +951,12 @@ public class ArcadeMachine {
      *         game.
      */
     public static AbstractHeuristicPlayer createHeuristicPlayer(String playerName, String actionFile, StateObservation stateObs,
-	    int randomSeed, boolean isHuman, String heuristicName)  {
+	    int randomSeed, boolean isHuman, StateHeuristic heuristic)  {
         AbstractHeuristicPlayer player = null;
 
         try {
             // create the controller.
-            player = (AbstractHeuristicPlayer) createHeuristicController(playerName, 0, stateObs, heuristicName);
+            player = (AbstractHeuristicPlayer) createHeuristicController(playerName, 0, stateObs, heuristic);
             if (player != null)
                 player.setup(actionFile, randomSeed, isHuman);
             // else System.out.println("No controller created.");
@@ -981,12 +982,12 @@ public class ArcadeMachine {
      *            Name of the controller to instantiate.
      * @param stateObs
      *            Initial state of the game to be played by the agent.
-     * @param heuristicName
-     *            Name of the heuristic to plug into the player
+     * @param heuristic
+     *           Instance of the heuristic to plug in the player
      * @return the player if it could be created, null otherwise.
      */
 
-    protected static Player createHeuristicController(String playerName, int playerID, StateObservation stateObs, String heuristicName)
+    protected static Player createHeuristicController(String playerName, int playerID, StateObservation stateObs, StateHeuristic heuristic)
 	    throws RuntimeException {
         Player player = null;
         try {
@@ -1001,11 +1002,11 @@ public class ArcadeMachine {
 				Class<? extends AbstractHeuristicPlayer> controllerClass = Class.forName(playerName)
                     .asSubclass(AbstractHeuristicPlayer.class);
                     
-				Class[] gameArgClass = new Class[] { StateObservation.class, ElapsedCpuTimer.class, String.class };
+				Class[] gameArgClass = new Class[] { StateObservation.class, ElapsedCpuTimer.class, StateHeuristic.class };
 				Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
 
 				// Call the constructor with the appropriate parameters.
-				Object[] constructorArgs = new Object[] { stateObs, ect.copy(), heuristicName };
+				Object[] constructorArgs = new Object[] { stateObs, ect.copy(), heuristic };
 
 				player = (AbstractHeuristicPlayer) controllerArgsConstructor.newInstance(constructorArgs);
 				player.setPlayerID(playerID);
@@ -1069,6 +1070,44 @@ public class ArcadeMachine {
         return player;
     }
 
+    public static StateHeuristic createHeuristic(String heuristicName) {
+        StateHeuristic heuristic = null;
+        try {
+            Class<? extends StateHeuristic> heuristicClass = Class.forName(heuristicName)
+                    .asSubclass(StateHeuristic.class);
+
+            Class[] heuristicArgsClass = new Class[] { };
+            Object[] constructorArgs = new Object[] { };
+
+            Constructor heuristicArgsConstructor = heuristicClass.getConstructor(heuristicArgsClass);
+
+            heuristic = (StateHeuristic) heuristicArgsConstructor.newInstance(constructorArgs);
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            System.err.println("Constructor " + heuristicName + "() not found :");
+            System.exit(1);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class " + heuristicName + " not found :");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InstantiationException e) {
+            System.err.println("Exception instantiating " + heuristicName + ":");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            System.err.println("Illegal access exception when instantiating " + heuristicName + ":");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InvocationTargetException e) {
+            System.err.println("Exception calling the constructor " + heuristicName + "():");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return heuristic;
+    }
+
 	/**
      * Reads and launches a game for a bot to be played with a certain heuristic. 
      * Graphics can be on or off.
@@ -1097,7 +1136,7 @@ public class ArcadeMachine {
      */
 
 	public static double[] runOneGameUsingHeuristic(String game_file, String level_file, boolean visuals, String agentNames,
-													String actionFile, int randomSeed, int playerID, String heuristicName, String heuristicFile,
+													String actionFile, int randomSeed, int playerID, StateHeuristic heuristic, String heuristicFile,
 													int[] recordIds) {
 		VGDLFactory.GetInstance().init(); // This always first thing to do.
 		VGDLRegistry.GetInstance().init();
@@ -1139,7 +1178,7 @@ public class ArcadeMachine {
 
         // single player
         players[playerId] = ArcadeMachine.createHeuristicPlayer(names[playerId], actionFile, toPlay.getObservation(), randomSeed,
-                humans[playerId], heuristicName);
+                humans[playerId], heuristic);
 
 		if (players[playerId] == null) {
 			// Something went wrong in the constructor, controller

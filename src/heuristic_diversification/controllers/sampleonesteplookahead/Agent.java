@@ -1,6 +1,7 @@
 package heuristic_diversification.controllers.sampleonesteplookahead;
 
 import core.game.StateObservation;
+import core.heuristic.StateHeuristic;
 import core.player.AbstractHeuristicPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
@@ -20,8 +21,8 @@ public class Agent extends AbstractHeuristicPlayer {
     public double epsilon = 1e-6;
     public Random m_rnd;
 
-    public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, String heuristicName) {
-        super(stateObs, heuristicName);
+    public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, StateHeuristic heuristic) {
+        super(stateObs, heuristic);
         m_rnd = new Random();
     }
 

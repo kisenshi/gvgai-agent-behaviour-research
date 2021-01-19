@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import core.game.StateObservation;
+import core.heuristic.StateHeuristic;
 import core.player.AbstractHeuristicPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
@@ -26,11 +27,11 @@ public class Agent extends AbstractHeuristicPlayer {
      * Public constructor with state observation and time due.
      * @param stateObs state observation of the current game.
      * @param elapsedTimer Timer for the controller creation.
-     * @param heuristicName Name of the heuristic to use for evaluation.
+     * @param heuristic Instance of the heuristic to use for evaluation.
      */
-    public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, String heuristicName)
+    public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, StateHeuristic heuristic)
     {
-        super(stateObs, heuristicName); 
+        super(stateObs, heuristic); 
 
         //Get the actions in a static array.
         ArrayList<Types.ACTIONS> act = stateObs.getAvailableActions();

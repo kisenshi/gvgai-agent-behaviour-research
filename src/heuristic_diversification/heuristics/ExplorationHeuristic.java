@@ -52,8 +52,8 @@ public class ExplorationHeuristic extends StateHeuristic {
     private Vector2d mCurrentPosition;
     private int mLastDiscoveryTick = 0;
 
-    public ExplorationHeuristic(StateObservation stateObs) {
-        // When the class is instantiated it is needed to initialise the exploration matrix
+    public void initHeuristicInternalInformation(StateObservation stateObs){
+        // Initialise the exploration matrix with the information given in the initial state
         mBlockSize = stateObs.getBlockSize();
         Dimension gridDimension = stateObs.getWorldDimension();
 

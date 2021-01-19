@@ -17,6 +17,8 @@ public abstract class StateHeuristic {
     protected static final double HUGE_POSITIVE =  10000.0;
     protected BufferedWriter writer;
 
+    abstract public void initHeuristicInternalInformation(StateObservation stateObs);
+
     abstract public double evaluateState(StateObservation stateObs);
 
     abstract public void updateHeuristicInternalInformation(StateObservation stateObs);

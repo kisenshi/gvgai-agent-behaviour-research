@@ -16,51 +16,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public abstract class AbstractHeuristicPlayer extends AbstractPlayer {
-
-    private String heuristicName = "YouForgotToSetTheHeuristic";
     protected StateHeuristic heuristic;
 
-    public AbstractHeuristicPlayer(StateObservation stateObs, String heuristicName) {
-        this.heuristicName = heuristicName;
-        this.heuristic = createPlayerHeuristic(stateObs);
-    }
-
-    protected StateHeuristic createPlayerHeuristic(StateObservation stateObs) {
-        StateHeuristic heuristic = null;
-        try {
-            Class<? extends StateHeuristic> heuristicClass = Class.forName(heuristicName)
-                    .asSubclass(StateHeuristic.class);
-
-            Class[] heuristicArgsClass = new Class[] { StateObservation.class };
-            Object[] constructorArgs = new Object[] { stateObs };
-
-            Constructor heuristicArgsConstructor = heuristicClass.getConstructor(heuristicArgsClass);
-
-            heuristic = (StateHeuristic) heuristicArgsConstructor.newInstance(constructorArgs);
-
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            System.err.println("Constructor " + heuristicName + "() not found :");
-            System.exit(1);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Class " + heuristicName + " not found :");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (InstantiationException e) {
-            System.err.println("Exception instantiating " + heuristicName + ":");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (IllegalAccessException e) {
-            System.err.println("Illegal access exception when instantiating " + heuristicName + ":");
-            e.printStackTrace();
-            System.exit(1);
-        } catch (InvocationTargetException e) {
-            System.err.println("Exception calling the constructor " + heuristicName + "():");
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        return heuristic;
+    public AbstractHeuristicPlayer(StateObservation stateObs, StateHeuristic heuristic) {
+        this.heuristic = heuristic;
+        heuristic.initHeuristicInternalInformation(stateObs);
     }
 
     /**

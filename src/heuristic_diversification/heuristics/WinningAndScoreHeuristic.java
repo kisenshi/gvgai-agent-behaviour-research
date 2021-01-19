@@ -22,7 +22,10 @@ import java.io.IOException;
 public class WinningAndScoreHeuristic extends StateHeuristic {
     private double mCurrentScore;
 
-    public WinningAndScoreHeuristic(StateObservation stateObs) {}
+    public void initHeuristicInternalInformation(StateObservation stateObs){
+        // Store the score from the game initial state
+        mCurrentScore = stateObs.getGameScore();
+    }
 
     public double evaluateState(StateObservation stateObs) {
         boolean gameOver = stateObs.isGameOver();

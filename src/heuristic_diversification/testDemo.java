@@ -10,6 +10,8 @@ import tracks.ArcadeMachine;
 
 import java.util.Random;
 
+import core.heuristic.StateHeuristic;
+
 public class testDemo {
     public static void main(String[] args) {
 
@@ -47,7 +49,7 @@ public class testDemo {
 
 		//String heuristicName = "WinningAndScoreHeuristic";
 		String heuristicName = "ExplorationHeuristic";
-		String heuristic = heuristicsPath + heuristicName;
+		String heuristicInfo = heuristicsPath + heuristicName;
 
 		String controllerName = "sampleMCTS";
 		String controller = controllersPath + controllerName + ".Agent";
@@ -62,8 +64,9 @@ public class testDemo {
 		};
 
 		// 2. This plays a game in a level by the controller.
+		StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
         ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
-
+		//ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 
 		// 3. This replays a game from an action file previously recorded
 	//	 String readActionsFile = recordActionsFile;
