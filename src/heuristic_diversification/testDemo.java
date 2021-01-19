@@ -19,6 +19,7 @@ public class testDemo {
 
 		// Available controllers:
 		String sampleOneStepController = "heuristic_diversification.controllers.sampleonesteplookahead.Agent";
+		String sampleMCTS = "heuristic_diversification.controllers.sampleMCTS.Agent";
 
 		//Load available games
         String spGamesCollection =  "examples/all_games_sp.csv";
@@ -44,7 +45,8 @@ public class testDemo {
 		// 1. This starts a game, in a level, played by a human.
 		//ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
 
-		String heuristicName = "WinningAndScoreHeuristic";
+		//String heuristicName = "WinningAndScoreHeuristic";
+		String heuristicName = "ExplorationHeuristic";
 		String heuristic = heuristicsPath + heuristicName;
 
 		String controllerName = "sampleMCTS";
