@@ -16,6 +16,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Maximize the exploration of the map
@@ -48,10 +50,16 @@ public class ExplorationHeuristic extends StateHeuristic {
     private int mGridWidth;
     private int mGridHeight;
     private boolean[][] mExplorationMatrix;
+    private HashMap<String, Integer> mFutureExploredPositions;
 
     private Vector2d mCurrentPosition;
     private int mLastDiscoveryTick = 0;
 
+    public ExplorationHeuristic() {
+        mFutureExploredPositions = new HashMap<String, Integer>();
+    }
+    
+    @Override
     public void initHeuristicInternalInformation(StateObservation stateObs){
         // Initialise the exploration matrix with the information given in the initial state
         mBlockSize = stateObs.getBlockSize();
@@ -65,6 +73,45 @@ public class ExplorationHeuristic extends StateHeuristic {
         markNewPositionAsVisited(stateObs);
     }
 
+    @Override
+    public void updateHeuristicInternalInformation(StateObservation stateObs) {
+        // Update the exploration matrix
+        Vector2d avatarPosition = stateObs.getAvatarPosition();
+
+        if (!isOutOfBounds(avatarPosition)){
+            mCurrentPosition = avatarPosition.copy();
+            if (!hasBeenBefore(avatarPosition)) {
+                markNewPositionAsVisited(stateObs);
+            }
+        }
+        return;
+    }
+
+    @Override
+    public void restartFutureStateData() {
+        mFutureExploredPositions.clear();
+        return;
+    }
+
+    @Override
+    public void updateFutureStateData(StateObservation stateObs) {
+        if (!stateObs.isAvatarAlive() || stateObs.isGameOver()){
+            return;
+        }
+
+        String avatarPositionKey = getPositionKey(stateObs.getAvatarPosition());
+
+        if (!mFutureExploredPositions.containsKey(avatarPositionKey)){
+            mFutureExploredPositions.put(avatarPositionKey, 1);
+        } else {
+            // A position has been visited more than once
+            int oldValue = mFutureExploredPositions.get(avatarPositionKey);
+            mFutureExploredPositions.put(avatarPositionKey, oldValue+1);
+        }
+        return;
+    }
+
+    @Override
     public double evaluateState(StateObservation stateObs) {
         boolean gameOver = stateObs.isGameOver();
 
@@ -93,23 +140,12 @@ public class ExplorationHeuristic extends StateHeuristic {
         return -25;
     }
 
-    public void updateHeuristicInternalInformation(StateObservation stateObs) {
-        // Update the exploration matrix
-        Vector2d avatarPosition = stateObs.getAvatarPosition();
-
-        if (!isOutOfBounds(avatarPosition)){
-            mCurrentPosition = avatarPosition.copy();
-            if (!hasBeenBefore(avatarPosition)) {
-                markNewPositionAsVisited(stateObs);
-            }
-        }
-       
-    }
-
+    @Override
     public String relevantInfoStr(StateObservation stateObs) {
         return "exploration: " + getNSpotsExplored();
     }
 
+    @Override
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int recordIds[]) {
         double explored = getNSpotsExplored();
 
@@ -135,6 +171,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
     }
 
+    @Override
     public void drawInScreen(Graphics2D g) {
         Color rectColor = new Color(255, 255, 255, 127);
 
@@ -152,6 +189,23 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     private int getMapSize(){
         return mGridWidth * mGridHeight;
+    }
+
+    private String getPositionKey(Vector2d position){
+        int x = (int)position.x / mBlockSize;
+        int y = (int)position.y / mBlockSize;
+
+        return x + " " + y;
+    }
+
+    private int getX(String key){
+        String[] coordinates = key.split(" +");
+        return Integer.parseInt(coordinates[0]);
+    }
+
+    private int getY(String key){
+        String[] coordinates = key.split(" +");
+        return Integer.parseInt(coordinates[1]);
     }
 
     /**

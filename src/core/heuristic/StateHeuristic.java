@@ -19,9 +19,13 @@ public abstract class StateHeuristic {
 
     abstract public void initHeuristicInternalInformation(StateObservation stateObs);
 
+    abstract public void updateHeuristicInternalInformation(StateObservation stateObs);
+
     abstract public double evaluateState(StateObservation stateObs);
 
-    abstract public void updateHeuristicInternalInformation(StateObservation stateObs);
+    abstract public void restartFutureStateData();
+
+    abstract public void updateFutureStateData(StateObservation stateObs);
 
     abstract public String relevantInfoStr(StateObservation stateObs);
 

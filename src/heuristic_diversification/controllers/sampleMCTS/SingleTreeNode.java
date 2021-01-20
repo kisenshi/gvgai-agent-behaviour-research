@@ -62,6 +62,8 @@ public class SingleTreeNode
         //while(numIters < Agent.MCTS_ITERATIONS){
 
             StateObservation state = rootState.copy();
+            heuristic.restartFutureStateData();
+
 
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
             SingleTreeNode selected = treePolicy(state);
@@ -287,5 +289,6 @@ public class SingleTreeNode
 
     private void advanceState(StateObservation state, Types.ACTIONS action) {
         state.advance(action);
+        heuristic.updateFutureStateData(state);
     }
 }

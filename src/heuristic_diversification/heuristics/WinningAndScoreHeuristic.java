@@ -22,11 +22,13 @@ import java.io.IOException;
 public class WinningAndScoreHeuristic extends StateHeuristic {
     private double mCurrentScore;
 
+    @Override
     public void initHeuristicInternalInformation(StateObservation stateObs){
         // Store the score from the game initial state
         mCurrentScore = stateObs.getGameScore();
     }
 
+    @Override
     public double evaluateState(StateObservation stateObs) {
         boolean gameOver = stateObs.isGameOver();
         Types.WINNER win = stateObs.getGameWinner();
@@ -45,15 +47,18 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         return diffScore;
     }
 
+    @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
         // Store the current score in the game
         mCurrentScore = stateObs.getGameScore();
     }
 
+    @Override
     public String relevantInfoStr(StateObservation stateObs) {
         return "score: " + stateObs.getGameScore();
     }
 
+    @Override
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds) {
         // Data:
         // gameId controllerId randomSeed winnerId score gameTicks
@@ -74,6 +79,18 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
     @Override
     public void drawInScreen(Graphics2D g) {
         // No need to draw anything on screen
+        return;
+    }
+
+    @Override
+    public void restartFutureStateData() {
+        // No future state data handled in this heuristic
+        return;
+    }
+
+    @Override
+    public void updateFutureStateData(StateObservation stateObs) {
+        // No future state data handled in this heuristic
         return;
     }
 }
