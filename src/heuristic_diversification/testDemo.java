@@ -24,8 +24,7 @@ public class testDemo {
 		String sampleMCTS = "heuristic_diversification.controllers.sampleMCTS.Agent";
 
 		//Load available games
-        String spGamesCollection =  "examples/all_games_sp.csv";
-        String gamesTest =  "examples/games_test.csv";
+        String gamesTest =  "examples/games_heuristic_experiments.csv";
 		String[][] games = Utils.readGames(gamesTest);
 
 		//Game settings
@@ -33,7 +32,7 @@ public class testDemo {
 		int seed = new Random().nextInt();
 
 		// Game and level to play
-		int gameIdx = 1;
+		int gameIdx = 2;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
@@ -59,7 +58,7 @@ public class testDemo {
 		
 		// As the data is appended at the end of the file, it is needed to store the game and controllers id
 		int[] recordIds = new int[]{
-			0,
+			gameIdx,
 			0,
 		};
 
