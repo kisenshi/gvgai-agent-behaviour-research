@@ -68,7 +68,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         mGridWidth = gridDimension.width / mBlockSize;
         mGridHeight = gridDimension.height / mBlockSize;
 
-        mExplorationMatrix = new boolean[mGridWidth][mGridHeight];
+        mExplorationMatrix = new boolean[mGridHeight][mGridWidth];
 
         markNewPositionAsVisited(stateObs);
     }
@@ -114,6 +114,9 @@ public class ExplorationHeuristic extends StateHeuristic {
     @Override
     public double evaluateState(StateObservation stateObs) {
         boolean gameOver = stateObs.isGameOver();
+        for (Map.Entry<String,Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
+            System.out.println("visited " + visitedPosition.getKey() + " times: " + visitedPosition.getValue());
+        }
 
         // For this heuristic is penalised finishing the game, either when winning or losing it
         if (gameOver){
@@ -175,13 +178,13 @@ public class ExplorationHeuristic extends StateHeuristic {
     public void drawInScreen(Graphics2D g) {
         Color rectColor = new Color(255, 255, 255, 127);
 
-        for (int i = 0; i < mExplorationMatrix.length; i++) {
-            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
-                if (mExplorationMatrix[i][j]) {
+        for (int y = 0; y < mExplorationMatrix.length; y++) {
+            for (int x = 0; x < mExplorationMatrix[y].length; x++) {
+                if (mExplorationMatrix[y][x]) {
                     g.setColor(rectColor);
-                    g.fillRect(i*mBlockSize, j*mBlockSize, mBlockSize, mBlockSize);
+                    g.fillRect(x*mBlockSize, y*mBlockSize, mBlockSize, mBlockSize);
                     g.setColor(Types.WHITE);
-                    g.drawRect(i*mBlockSize, j*mBlockSize, mBlockSize, mBlockSize);
+                    g.drawRect(x*mBlockSize, y*mBlockSize, mBlockSize, mBlockSize);
                 }
             }
         }
@@ -242,7 +245,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         //System.out.println("Marking ("+x+" , "+y+") as VISITED");
 
-        mExplorationMatrix[x][y] = true;
+        mExplorationMatrix[y][x] = true;
         mLastDiscoveryTick = stateObs.getGameTick();
     }
 
@@ -258,7 +261,11 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         //System.out.println("Been before to ("+x+" , "+y+")? "+mExplorationMatrix[x][y]);
 
-        return mExplorationMatrix[x][y];
+        return mExplorationMatrix[y][x];
+    }
+
+    private boolean hasBeenVisited(int x, int y){
+        return mExplorationMatrix[y][x];
     }
 
     /**
@@ -268,9 +275,9 @@ public class ExplorationHeuristic extends StateHeuristic {
     private double getNSpotsExplored(){
         double explored = 0;
 
-        for (int i = 0; i < mExplorationMatrix.length; i++) {
-            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
-                if (mExplorationMatrix[i][j]) {
+        for (int y = 0; y < mExplorationMatrix.length; y++) {
+            for (int x = 0; x < mExplorationMatrix[y].length; x++) {
+                if (mExplorationMatrix[y][x]) {
                     explored ++;
                 }
             }
@@ -284,9 +291,9 @@ public class ExplorationHeuristic extends StateHeuristic {
      * @throws IOException
      */
     private void printExplorationMatrix() throws IOException {
-        for (int i = 0; i < mExplorationMatrix.length; i++) {
-            for (int j = 0; j < mExplorationMatrix[i].length; j++) {
-                if (mExplorationMatrix[i][j]){
+        for (int y = 0; y < mExplorationMatrix.length; y++) {
+            for (int x = 0; x < mExplorationMatrix[y].length; x++) {
+                if (mExplorationMatrix[y][x]){
                     if (writer != null){
                         writer.write(" X ");
                     } else {
