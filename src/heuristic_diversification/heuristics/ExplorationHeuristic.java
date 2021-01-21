@@ -80,9 +80,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         if (!isOutOfBounds(avatarPosition)){
             mCurrentPosition = avatarPosition.copy();
-            if (!hasBeenBefore(avatarPosition)) {
-                visitCurrentPosition(stateObs);
-            }
+            visitCurrentPosition(stateObs);
         }
         return;
     }
@@ -113,34 +111,29 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public double evaluateState(StateObservation stateObs) {
-        boolean gameOver = stateObs.isGameOver();
-        for (Map.Entry<String,Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
-            System.out.println("visited " + visitedPosition.getKey() + " times: " + visitedPosition.getValue());
-        }
-
         // For this heuristic is penalised finishing the game, either when winning or losing it
+        boolean gameOver = stateObs.isGameOver();
         if (gameOver){
             return HUGE_NEGATIVE;
         }
 
-        Vector2d avatarPosition = stateObs.getAvatarPosition();
-        if (isOutOfBounds(avatarPosition)){
-            // If the new position is out of bounds then dont go there
-            return HUGE_NEGATIVE;
+        double h = 0;
+        for (Map.Entry<String,Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
+            int x = getX(visitedPosition.getKey());
+            int y = getY(visitedPosition.getKey());
+
+
+            if(!hasBeenVisited(x, y)){
+                // Reward highly each non-visited position encountered
+                h += 100;
+            } else {
+                // If the agent has already visited a position, reward those they have been the less number of times
+                int nVisits = visitedPosition.getValue() + getNumberVisits(x, y);
+                h += (-1 * nVisits);
+            }
         }
 
-        if (!hasBeenBefore(avatarPosition)){
-            // If it hasnt been before, it is rewarded
-            return 100;
-        }
-
-        // If it has been before, it is penalised
-        if (avatarPosition.equals(mCurrentPosition)){
-            // As it is tried to reward exploration, it is penalised more if it is the last position visited
-            return -50;
-        }
-
-        return -25;
+        return h;
     }
 
     @Override
@@ -255,10 +248,11 @@ public class ExplorationHeuristic extends StateHeuristic {
         int x = (int)position.x / mBlockSize;
         int y = (int)position.y / mBlockSize;
 
-        //System.out.println("Marking ("+x+" , "+y+") as VISITED");
-
+        if(!hasBeenVisited(x, y)){
+            mLastDiscoveryTick = stateObs.getGameTick();
+        }
+        
         mExplorationMatrix[y][x] += 1;
-        mLastDiscoveryTick = stateObs.getGameTick();
     }
 
     /**
