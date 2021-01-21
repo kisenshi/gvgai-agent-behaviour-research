@@ -49,7 +49,7 @@ public class ExplorationHeuristic extends StateHeuristic {
     private int mBlockSize;
     private int mGridWidth;
     private int mGridHeight;
-    private boolean[][] mExplorationMatrix;
+    private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
 
     private Vector2d mCurrentPosition;
@@ -68,9 +68,9 @@ public class ExplorationHeuristic extends StateHeuristic {
         mGridWidth = gridDimension.width / mBlockSize;
         mGridHeight = gridDimension.height / mBlockSize;
 
-        mExplorationMatrix = new boolean[mGridHeight][mGridWidth];
+        mExplorationMatrix = new int[mGridHeight][mGridWidth];
 
-        markNewPositionAsVisited(stateObs);
+        visitCurrentPosition(stateObs);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         if (!isOutOfBounds(avatarPosition)){
             mCurrentPosition = avatarPosition.copy();
             if (!hasBeenBefore(avatarPosition)) {
-                markNewPositionAsVisited(stateObs);
+                visitCurrentPosition(stateObs);
             }
         }
         return;
@@ -180,7 +180,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
-                if (mExplorationMatrix[y][x]) {
+                if (hasBeenVisited(x, y)) {
                     g.setColor(rectColor);
                     g.fillRect(x*mBlockSize, y*mBlockSize, mBlockSize, mBlockSize);
                     g.setColor(Types.WHITE);
@@ -190,10 +190,17 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
     }
 
+    /**
+     * @return Size of the map 
+     */
     private int getMapSize(){
         return mGridWidth * mGridHeight;
     }
 
+    /**
+     * Generate the key formed by the coordinates for the mFutureExploredPositions hashmap
+     * @return String in the form "x y"
+     */
     private String getPositionKey(Vector2d position){
         int x = (int)position.x / mBlockSize;
         int y = (int)position.y / mBlockSize;
@@ -201,11 +208,19 @@ public class ExplorationHeuristic extends StateHeuristic {
         return x + " " + y;
     }
 
+    /**
+     * Get the x coordinate from the key used for the mFutureExploredPositions hashmap
+     * @return the x coordinate
+     */
     private int getX(String key){
         String[] coordinates = key.split(" +");
         return Integer.parseInt(coordinates[0]);
     }
 
+    /**
+     * Get the y coordinate from the key used for the mFutureExploredPositions hashmap
+     * @return the y coordinate
+     */
     private int getY(String key){
         String[] coordinates = key.split(" +");
         return Integer.parseInt(coordinates[1]);
@@ -228,13 +243,10 @@ public class ExplorationHeuristic extends StateHeuristic {
     }
 
     /**
-     * Marks the position as visited in the mExplorationMatrix
-     * The position is provided as a Vector2d object so it is needed to
-     * calculate the valid coordinates to be considered for the matrix
-     * It would be used the mBlockSize int set when initialised
-     * @param position The position as a Vector2d object
+     * Mark the current position as visited in the exploratory matrix
+     * @param stateObs The current state to get the position and the game tick
      */
-    private void markNewPositionAsVisited(StateObservation stateObs){
+    private void visitCurrentPosition(StateObservation stateObs){
         Vector2d position = stateObs.getAvatarPosition();
         if (isOutOfBounds(position)){
             return;
@@ -245,13 +257,13 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         //System.out.println("Marking ("+x+" , "+y+") as VISITED");
 
-        mExplorationMatrix[y][x] = true;
+        mExplorationMatrix[y][x] += 1;
         mLastDiscoveryTick = stateObs.getGameTick();
     }
 
     /**
-     * Checks if the position has already been visited. As it is provided as Vector2d objects,
-     * it is needed to convert it to valid coordinates to be considered for the matrix
+     * Check if the position provided has been visited at least once by consulting the exploratory matrix.
+     * The Vector2d of the position needs to be converted to valid coordinates.
      * @param position The position to be checked, as a Vector2d objects
      * @return true or false depending if the position has already been visited or not
      */
@@ -259,25 +271,37 @@ public class ExplorationHeuristic extends StateHeuristic {
         int x = (int)position.x / mBlockSize;
         int y = (int)position.y / mBlockSize;
 
-        //System.out.println("Been before to ("+x+" , "+y+")? "+mExplorationMatrix[x][y]);
-
-        return mExplorationMatrix[y][x];
+        return hasBeenVisited(x, y);
     }
 
+    /**
+     * Check if the position given by the (x,y) coordinates have been visited at least once.
+     * @param x coordinate x
+     * @param y coordinate y
+     * @return true or false depending if the position has already been visited or not
+     */
     private boolean hasBeenVisited(int x, int y){
+        return getNumberVisits(x, y) > 0;
+    }
+
+    /**
+     * @param x coordinate x
+     * @param y coordinate y
+     * @return Number of times a certain position has been visited by the player
+     */
+    private int getNumberVisits(int x, int y){
         return mExplorationMatrix[y][x];
     }
 
     /**
-     * Returns the percentage of the map explored in total
-     * @return
+     * @return Number of different unique positions visited by the player
      */
     private double getNSpotsExplored(){
         double explored = 0;
 
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
-                if (mExplorationMatrix[y][x]) {
+                if (hasBeenVisited(x, y)) {
                     explored ++;
                 }
             }
@@ -287,13 +311,13 @@ public class ExplorationHeuristic extends StateHeuristic {
     }
 
     /**
-     * DEBUGGING method
+     * Debug method: Print the exploratory matrix marking the positions of the map visited by the player
      * @throws IOException
      */
     private void printExplorationMatrix() throws IOException {
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
-                if (mExplorationMatrix[y][x]){
+                if (hasBeenVisited(x, y)){
                     if (writer != null){
                         writer.write(" X ");
                     } else {
