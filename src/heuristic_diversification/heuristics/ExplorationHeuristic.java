@@ -52,7 +52,6 @@ public class ExplorationHeuristic extends StateHeuristic {
     private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
 
-    private Vector2d mCurrentPosition;
     private int mLastDiscoveryTick = 0;
 
     public ExplorationHeuristic() {
@@ -79,7 +78,6 @@ public class ExplorationHeuristic extends StateHeuristic {
         Vector2d avatarPosition = stateObs.getAvatarPosition();
 
         if (!isOutOfBounds(avatarPosition)){
-            mCurrentPosition = avatarPosition.copy();
             visitCurrentPosition(stateObs);
         }
         return;
@@ -253,19 +251,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
         
         mExplorationMatrix[y][x] += 1;
-    }
-
-    /**
-     * Check if the position provided has been visited at least once by consulting the exploratory matrix.
-     * The Vector2d of the position needs to be converted to valid coordinates.
-     * @param position The position to be checked, as a Vector2d objects
-     * @return true or false depending if the position has already been visited or not
-     */
-    private boolean hasBeenBefore(Vector2d position){
-        int x = (int)position.x / mBlockSize;
-        int y = (int)position.y / mBlockSize;
-
-        return hasBeenVisited(x, y);
+        }
     }
 
     /**
