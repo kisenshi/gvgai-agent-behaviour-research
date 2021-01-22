@@ -31,12 +31,6 @@ public class testDemo {
 		boolean visuals = true;
 		int seed = new Random().nextInt();
 
-		// Game and level to play
-		int gameIdx = 2;
-		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
-		String gameName = games[gameIdx][1];
-		String game = games[gameIdx][0];
-		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
 
 		String recordActionsFile = null;// "actions_" + games[gameIdx] + "_lvl"
 						// + levelIdx + "_" + seed + ".txt";
@@ -59,6 +53,13 @@ public class testDemo {
 		StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
 
 		if(true){
+		// Game and level to play
+		int gameIdx = 13;
+		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
+		String gameName = games[gameIdx][1];
+		String game = games[gameIdx][0];
+		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
+
 			String resultsHeuristicFile = "Test" + heuristicName + "_" + gameName + ".txt";
 
 			// As the data is appended at the end of the file, it is needed to store the game and controllers id
@@ -70,7 +71,7 @@ public class testDemo {
 			ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 		} else {
 			int n_games = 20;
-			for (int gameId = 0; gameId < n_games + gameId; gameId++) {
+			for (int gameId = 0; gameId < (n_games-1) + gameId; gameId++) {
 				seed = new Random().nextInt();
 
 				levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).

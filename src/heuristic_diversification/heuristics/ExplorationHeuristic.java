@@ -99,7 +99,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void updateFutureStateData(StateObservation stateObs) {
-        if (!stateObs.isAvatarAlive() || stateObs.isGameOver()){
+        if (!stateObs.isAvatarAlive() || stateObs.isGameOver() || isOutOfBounds(stateObs.getAvatarPosition())){
             return;
         }
 
