@@ -46,11 +46,18 @@ public class ExplorationHeuristic extends StateHeuristic {
         121,    //"survivezombies",
         50,     //"waitforbreakfast"
     };
+    private static int COLOURS[][] = {
+        {0,0,255},      // blue
+        {0,255,0},      // green
+        {255,255,0},    // yellow
+        {255,0,0},      // red
+    };
     private int mBlockSize;
     private int mGridWidth;
     private int mGridHeight;
     private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
+    private int mMaxExplorationMatrixValue;
 
     private int mLastDiscoveryTick = 0;
 
@@ -68,6 +75,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         mGridHeight = gridDimension.height / mBlockSize;
 
         mExplorationMatrix = new int[mGridHeight][mGridWidth];
+        mMaxExplorationMatrixValue = 0;
 
         visitCurrentPosition(stateObs);
     }
@@ -167,18 +175,50 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void drawInScreen(Graphics2D g) {
-        Color rectColor = new Color(255, 255, 255, 127);
-
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
                 if (hasBeenVisited(x, y)) {
-                    g.setColor(rectColor);
+                    g.setColor(heatMapColour(getNumberVisits(x, y)));
                     g.fillRect(x*mBlockSize, y*mBlockSize, mBlockSize, mBlockSize);
                     g.setColor(Types.WHITE);
                     g.drawRect(x*mBlockSize, y*mBlockSize, mBlockSize, mBlockSize);
                 }
             }
         }
+    }
+
+    /**
+     * Calculate the colour of the heatmap for the position, given the number of times it has been visited
+     * The algorithm is based on: http://www.andrewnoske.com/wiki/Code_-_heatmaps_and_color_gradients
+     * The range of the minimum and maximum for the heatmap is dynamic, taking as reference the maximum value encountered in the
+     * exploration matrix. 
+     * Colours go blue (less visited) --> green --> yellow --> red (most visited)
+     */
+    private Color heatMapColour(int positionValue){
+        // The range of possible colours goes between [1, mMaxExplorationMatrixValue]; normalise positionValue
+        double mMinExplorationMatrixValue = 0.0;
+        double positionValueNorm = (positionValue - mMinExplorationMatrixValue) / (mMaxExplorationMatrixValue - mMinExplorationMatrixValue); 
+
+        // 4 colour used for the heatmap: blue, green, yellow, red   
+        int colourIndex1; 
+        int colourIndex2;
+        double colourFraction = 0;
+
+        if (positionValueNorm <= 0) {
+            colourIndex1 = colourIndex2 = 0;
+        } else if (positionValueNorm >= 1) {
+            colourIndex1 = colourIndex2 = COLOURS.length - 1;
+        } else {
+            positionValueNorm *= (COLOURS.length - 1);
+            colourIndex1 = (int)Math.floor(positionValueNorm);
+            colourIndex2 = colourIndex1 + 1;
+            colourFraction = positionValueNorm - colourIndex1;
+        }
+        int r_rgb = (int)((COLOURS[colourIndex2][0] - COLOURS[colourIndex1][0])*colourFraction + COLOURS[colourIndex1][0]);
+        int g_rgb = (int)((COLOURS[colourIndex2][1] - COLOURS[colourIndex1][1])*colourFraction + COLOURS[colourIndex1][1]);
+        int b_rgb = (int)((COLOURS[colourIndex2][2] - COLOURS[colourIndex1][2])*colourFraction + COLOURS[colourIndex1][2]);
+
+        return new Color(r_rgb, g_rgb, b_rgb, 127);
     }
 
     /**
@@ -251,6 +291,8 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
         
         mExplorationMatrix[y][x] += 1;
+        if (getNumberVisits(x, y) > mMaxExplorationMatrixValue) {
+            mMaxExplorationMatrixValue = getNumberVisits(x, y);
         }
     }
 
@@ -297,18 +339,24 @@ public class ExplorationHeuristic extends StateHeuristic {
     private void printExplorationMatrix() throws IOException {
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
-                if (hasBeenVisited(x, y)){
+                int nVisits = getNumberVisits(x, y);
+                if (nVisits < 10) {
                     if (writer != null){
-                        writer.write(" X ");
+                        writer.write(getNumberVisits(x, y) + "   ");
                     } else {
-                        System.out.print(" X ");
+                        System.out.print(getNumberVisits(x, y) + "   ");
                     }
-
-                } else {
-                    if (writer != null) {
-                        writer.write(" - ");
+                } else if(nVisits < 100) {
+                    if (writer != null){
+                        writer.write(getNumberVisits(x, y) + "  ");
                     } else {
-                        System.out.print(" - ");
+                        System.out.print(getNumberVisits(x, y) + "  ");
+                    }
+                } else {
+                    if (writer != null){
+                        writer.write(getNumberVisits(x, y) + " ");
+                    } else {
+                        System.out.print(getNumberVisits(x, y) + " ");
                     }
                 }
             }

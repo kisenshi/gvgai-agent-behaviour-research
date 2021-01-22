@@ -55,17 +55,52 @@ public class testDemo {
 		String controller = controllersPath + controllerName + ".Agent";
 
 		String actionFile = null;
-		String resultsHeuristicFile = "Test" + heuristicName + "_" + gameName + ".txt";
+
+		StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
+
+		if(true){
+			String resultsHeuristicFile = "Test" + heuristicName + "_" + gameName + ".txt";
+
+			// As the data is appended at the end of the file, it is needed to store the game and controllers id
+			int[] recordIds = new int[]{
+				gameIdx,
+				0,
+			};
+
+			ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+		} else {
+			int n_games = 20;
+			for (int gameId = 0; gameId < n_games + gameId; gameId++) {
+				seed = new Random().nextInt();
+
+				levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
+				gameName = games[gameId][1];
+				game = games[gameId][0];
+				level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
+
+				String resultsHeuristicFile = "Test" + heuristicName + "_" + gameName + ".txt";
+
+				// As the data is appended at the end of the file, it is needed to store the game and controllers id
+				int[] recordIds = new int[]{
+						gameId,
+						0,
+				};
+
+				// 2. This plays a game in a level by the controller.
+				ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+			}
+		}
+
 		
 		// As the data is appended at the end of the file, it is needed to store the game and controllers id
-		int[] recordIds = new int[]{
-			gameIdx,
-			0,
-		};
+		//int[] recordIds = new int[]{
+		//	gameIdx,
+		//	0,
+		//};
 
 		// 2. This plays a game in a level by the controller.
-		StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
-        ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+		//StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
+        //ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 		//ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 
 		// 3. This replays a game from an action file previously recorded
