@@ -71,7 +71,7 @@ public class testDemo {
 			ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 		} else {
 			int n_games = 20;
-			for (int gameId = 0; gameId < (n_games-1) + gameId; gameId++) {
+			for (int gameId = 0; gameId < (n_games-1); gameId++) {
 				seed = new Random().nextInt();
 
 				levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
