@@ -58,6 +58,8 @@ public class ExplorationHeuristic extends StateHeuristic {
     private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
     private int mMaxExplorationMatrixValue;
+    private int mMaxFutureStates;
+    private int mNFutureStates;
 
     private int mLastDiscoveryTick = 0;
 
@@ -76,6 +78,8 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         mExplorationMatrix = new int[mGridHeight][mGridWidth];
         mMaxExplorationMatrixValue = 0;
+        mMaxFutureStates = 0;
+        mNFutureStates = 0;
 
         visitCurrentPosition(stateObs);
     }
@@ -94,6 +98,7 @@ public class ExplorationHeuristic extends StateHeuristic {
     @Override
     public void restartFutureStateData() {
         mFutureExploredPositions.clear();
+        mNFutureStates = 0;
         return;
     }
 
@@ -112,18 +117,36 @@ public class ExplorationHeuristic extends StateHeuristic {
             int oldValue = mFutureExploredPositions.get(avatarPositionKey);
             mFutureExploredPositions.put(avatarPositionKey, oldValue+1);
         }
+
+        // Keep track of the maximum number of future states predicted as well as its maximum
+        mNFutureStates +=1 ;
+        if (mNFutureStates > mMaxFutureStates){
+            mMaxFutureStates = mNFutureStates;
+        }
+
         return;
+    }
+
+    private double getHighHeuristicValue(){
+        if(mMaxExplorationMatrixValue == 0 || mMaxFutureStates == 0) {
+            return 100;
+        }
+
+        return mMaxFutureStates * mMaxExplorationMatrixValue;
     }
 
     @Override
     public double evaluateState(StateObservation stateObs) {
+        double h = 0;
+
         // For this heuristic is penalised finishing the game, either when winning or losing it
         boolean gameOver = stateObs.isGameOver();
         if (gameOver){
-            return HUGE_NEGATIVE;
-        }
+            // Return a negative value that it is in range of the possible values in the heuristic, to reduce the range between
+            // the lowest and highest values of the heuristic
+            h = (-1) * getHighHeuristicValue();
+        } 
 
-        double h = 0;
         for (Map.Entry<String,Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
             int x = getX(visitedPosition.getKey());
             int y = getY(visitedPosition.getKey());
@@ -131,12 +154,17 @@ public class ExplorationHeuristic extends StateHeuristic {
 
             if(!hasBeenVisited(x, y)){
                 // Reward highly each non-visited position encountered
-                h += 100;
+                h += getHighHeuristicValue();
             } else {
                 // If the agent has already visited a position, reward those they have been the less number of times
-                int nVisits = visitedPosition.getValue() + getNumberVisits(x, y);
+                int nVisits = visitedPosition.getValue() * getNumberVisits(x, y);
                 h += (-1 * nVisits);
             }
+        } 
+
+        while (mNFutureStates < mMaxFutureStates){
+            h += (-1 * mMaxExplorationMatrixValue);
+            mNFutureStates += 1;
         }
 
         return h;
