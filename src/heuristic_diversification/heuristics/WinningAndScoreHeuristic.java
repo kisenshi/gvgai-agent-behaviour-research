@@ -24,31 +24,48 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs){
+        // Initialise max and min values of heuristic
+        heuristicMax = HUGE_NEGATIVE;
+        heuristicMin = HUGE_POSITIVE;
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+        
         // Store the score from the game initial state
         mCurrentScore = stateObs.getGameScore();
     }
 
+    private double getHighHeuristicValue(){
+        return 1000;
+    }
+
     @Override
     public double evaluateState(StateObservation stateObs) {
+        double h = 0;
+
         boolean gameOver = stateObs.isGameOver();
         Types.WINNER win = stateObs.getGameWinner();
         double newScore = stateObs.getGameScore();
 
         if(gameOver && win == Types.WINNER.PLAYER_LOSES){
-            return HUGE_NEGATIVE;
+            h = (-1) * getHighHeuristicValue();
         }
 
         if(gameOver && win == Types.WINNER.PLAYER_WINS) {
-            return HUGE_POSITIVE;
+            h = getHighHeuristicValue();
         }
 
         // Return the score change
-        double diffScore = newScore - mCurrentScore;
-        return diffScore;
+        h += (newScore - mCurrentScore);
+
+        return h;
     }
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
+        // Start fresh for future calculations
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+
         // Store the current score in the game
         mCurrentScore = stateObs.getGameScore();
     }

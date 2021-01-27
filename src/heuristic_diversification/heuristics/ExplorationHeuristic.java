@@ -69,6 +69,12 @@ public class ExplorationHeuristic extends StateHeuristic {
     
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs){
+        // Initialise max and min values of heuristic
+        heuristicMax = HUGE_NEGATIVE;
+        heuristicMin = HUGE_POSITIVE;
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+
         // Initialise the exploration matrix with the information given in the initial state
         mBlockSize = stateObs.getBlockSize();
         Dimension gridDimension = stateObs.getWorldDimension();
@@ -86,6 +92,10 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
+        // Start fresh for future calculations
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+
         // Update the exploration matrix
         Vector2d avatarPosition = stateObs.getAvatarPosition();
 
