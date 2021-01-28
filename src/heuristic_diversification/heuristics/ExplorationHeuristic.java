@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Maximize the exploration of the map
+ * Maximize the physical exploration of the map, divided on tiles
  */
 
 public class ExplorationHeuristic extends StateHeuristic {

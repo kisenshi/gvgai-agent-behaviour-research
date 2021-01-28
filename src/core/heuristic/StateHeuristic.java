@@ -38,7 +38,7 @@ public abstract class StateHeuristic {
 
     abstract public void drawInScreen(Graphics2D g);
 
-    protected double normaliseHeuristic(double h){
+    public double normaliseHeuristic(double h){
         if ((h > heuristicMax) && (h < heuristicMin)){
             // This is the case for the first iteration
             heuristicMax = heuristicMin = h;

@@ -1108,6 +1108,41 @@ public class ArcadeMachine {
         return heuristic;
     }
 
+    public static StateHeuristic createHeuristicWithArgs(String heuristicName, Class[] heuristicArgsClass, Object[] constructorArgs) {
+        StateHeuristic heuristic = null;
+        try {
+            Class<? extends StateHeuristic> heuristicClass = Class.forName(heuristicName)
+                    .asSubclass(StateHeuristic.class);
+
+            Constructor heuristicArgsConstructor = heuristicClass.getConstructor(heuristicArgsClass);
+
+            heuristic = (StateHeuristic) heuristicArgsConstructor.newInstance(constructorArgs);
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            System.err.println("Constructor " + heuristicName + "() not found :");
+            System.exit(1);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class " + heuristicName + " not found :");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InstantiationException e) {
+            System.err.println("Exception instantiating " + heuristicName + ":");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            System.err.println("Illegal access exception when instantiating " + heuristicName + ":");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InvocationTargetException e) {
+            System.err.println("Exception calling the constructor " + heuristicName + "():");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return heuristic;
+    }
+
 	/**
      * Reads and launches a game for a bot to be played with a certain heuristic. 
      * Graphics can be on or off.
