@@ -5,14 +5,13 @@
 
 package heuristic_diversification;
 
-import tools.Utils;
-import tracks.ArcadeMachine;
-
+import java.util.Arrays;
 import java.util.Random;
-import java.util.ArrayList;
 
 import core.heuristic.StateHeuristic;
-import heuristic_diversification.heuristics.ExplorationHeuristic;
+import heuristic_diversification.helper.Behaviours;
+import tools.Utils;
+import tracks.ArcadeMachine;
 
 public class mapElites {
 
@@ -25,9 +24,7 @@ public class mapElites {
 		String sampleOneStepController = controllersPath + "sampleonesteplookahead.Agent";
         String sampleMCTS = controllersPath + "sampleMCTS.Agent";
 
-        // Available heuristics
-        String winningAndScore = heuristicsPath + "WinningAndScoreHeuristic";
-        String exploration = heuristicsPath + "ExplorationHeuristic";
+        // Main heuristic
         String team = heuristicsPath + "TeamBehavioursHeuristic";
         
         //Available games
@@ -37,18 +34,18 @@ public class mapElites {
         
         String controller = sampleMCTS;
 
-        StateHeuristic winningAndScoreHeuristic = ArcadeMachine.createHeuristic(winningAndScore);
-        StateHeuristic explorationHeuristic = ArcadeMachine.createHeuristic(exploration);
+        int nHeuristics = Behaviours.values().length;
+        StateHeuristic heuristicsList[] = new StateHeuristic[nHeuristics];
+        Double heuristicsWeightList[] = new Double[nHeuristics];
 
-        ArrayList<StateHeuristic> heuristicsList = new ArrayList<StateHeuristic>();
-        heuristicsList.add(winningAndScoreHeuristic);
-        heuristicsList.add(explorationHeuristic);
+        for (Behaviours info : Behaviours.values()) {
+            heuristicsList[info.id()] = info.getHeuristicInstance();
+        }
 
-        ArrayList<Double> heuristicsWeightList = new ArrayList<Double>();
-        heuristicsWeightList.add(0.35);
-        heuristicsWeightList.add(0.65);
-
-        Class[] heuristicArgsClass = new Class[] { ArrayList.class, ArrayList.class };
+        heuristicsWeightList[Behaviours.WINNER.id()] = 0.0;
+        heuristicsWeightList[Behaviours.EXPLORER.id()] = 1.0;
+    
+        Class[] heuristicArgsClass = new Class[] { heuristicsList.getClass(), heuristicsWeightList.getClass() };
         Object[] constructorArgs = new Object[] { heuristicsList, heuristicsWeightList};
         StateHeuristic teamBehaviouHeuristic = ArcadeMachine.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
 
@@ -67,7 +64,7 @@ public class mapElites {
 		String game = games[gameIdx][0];
         String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
         
-        if (false){
+        if (true){
             String resultsHeuristicFile = "TestTeamBehaviourHeuristic_" + gameName + ".txt";
             int[] recordIds = new int[]{
                 gameIdx,

@@ -5,13 +5,12 @@ import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class TeamBehavioursHeuristic extends StateHeuristic {
-    private ArrayList<StateHeuristic> mHeuristics;
-    private ArrayList<Double> mHeuristicsWeights;
+    private StateHeuristic[] mHeuristics;
+    private Double[] mHeuristicsWeights;
 
-    public TeamBehavioursHeuristic(ArrayList<StateHeuristic> heuristics, ArrayList<Double> weights){
+    public TeamBehavioursHeuristic(StateHeuristic[] heuristics, Double[] weights){
         // We assume the number of heuristics and their weights are the same and provided in the same order
         mHeuristics = heuristics;
         setHeuristicsWeights(weights);
@@ -40,13 +39,13 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
             return 0;
         }
 
-        for (int i = 0; i < mHeuristics.size(); i++) {
-            StateHeuristic heuristic = mHeuristics.get(i);
+        for (int i = 0; i < mHeuristics.length; i++) {
+            StateHeuristic heuristic = mHeuristics[i];
             double h = heuristic.evaluateState(stateObs);
             double hNorm = heuristic.normaliseHeuristic(h);
 
             // add the heuristic value based on its weight to the final result
-            double hWeight = mHeuristicsWeights.get(i);
+            double hWeight = mHeuristicsWeights[i];
             finalH += (hNorm * hWeight); 
         }
 
@@ -90,11 +89,11 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
         }
     }
 
-    public void setHeuristicsWeights(ArrayList<Double> weights){
+    public void setHeuristicsWeights(Double[] weights){
         mHeuristicsWeights = weights;
     }
 
     private boolean checkHeuristicsArraySize(){
-        return (mHeuristics.size() == mHeuristicsWeights.size());
+        return (mHeuristics.length == mHeuristicsWeights.length);
     }
 }
