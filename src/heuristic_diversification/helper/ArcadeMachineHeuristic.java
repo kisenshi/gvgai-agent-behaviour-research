@@ -45,15 +45,13 @@ public class ArcadeMachineHeuristic {
      *            Initial state of the game to be played by the agent.
      * @param randomSeed
      *            Seed for the sampleRandom generator of the game to be played.
-     * @param isHuman
-     *            Indicates if the player is human
-     * @param heuristicName
-     *            Name of the heuristic to plug into the player
+     * @param heuristic
+     *            Heuristic object to plug into the player
      * @return the player, created and initialized, ready to start playing the
      *         game.
      */
     public static AbstractHeuristicPlayer createHeuristicPlayer(String playerName, String actionFile, StateObservation stateObs,
-	    int randomSeed, StateHeuristic heuristic)  {
+	                                                            int randomSeed, StateHeuristic heuristic)  {
         AbstractHeuristicPlayer player = null;
 
         try {
@@ -264,8 +262,6 @@ public class ArcadeMachineHeuristic {
      *            this game, should be recorded.
      * @param randomSeed
      *            sampleRandom seed for the sampleRandom generator.
-     * @param playerID
-     *            ID of the human player
      * @param heuristicName
 	 * 			  name (include packages) of the heuristic to be used
      * @param recordIds
@@ -273,7 +269,7 @@ public class ArcadeMachineHeuristic {
      */
 
 	public static double[] runOneGameUsingHeuristic(String game_file, String level_file, boolean visuals, String agentNames,
-													String actionFile, int randomSeed, int playerID, StateHeuristic heuristic, String heuristicFile,
+													String actionFile, int randomSeed, StateHeuristic heuristic, String heuristicFile,
 													int[] recordIds) {
 		VGDLFactory.GetInstance().init(); // This always first thing to do.
 		VGDLRegistry.GetInstance().init();
@@ -326,7 +322,7 @@ public class ArcadeMachineHeuristic {
 		// Then, play the game.
 		double[] score;
 		if (visuals)
-			score = toPlay.playGame(players, randomSeed, false, playerID);
+			score = toPlay.playGame(players, randomSeed, false, 0);
 		else
 			score = toPlay.runGame(players, randomSeed);
 

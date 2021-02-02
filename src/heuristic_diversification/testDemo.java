@@ -66,7 +66,7 @@ public class testDemo {
 				0,
 			};
 
-			ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+			ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
 		} else {
 			int n_games = 20;
 			for (int gameId = 0; gameId < n_games; gameId++) {
@@ -86,7 +86,7 @@ public class testDemo {
 				};
 
 				// 2. This plays a game in a level by the controller.
-				ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+				ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
 			}
 		}
 

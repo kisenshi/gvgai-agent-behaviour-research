@@ -70,7 +70,7 @@ public class mapElites {
                 0,
             };
 
-            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
         } else {  
         
         int n_games = 20;
@@ -91,7 +91,7 @@ public class mapElites {
             };
 
             // 2. This plays a game in a level by the controller.
-            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
         }
         }
     }
