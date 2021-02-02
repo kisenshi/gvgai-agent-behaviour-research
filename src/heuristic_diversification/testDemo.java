@@ -5,12 +5,11 @@
 
 package heuristic_diversification;
 
-import tools.Utils;
-import tracks.ArcadeMachine;
-
 import java.util.Random;
 
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.ArcadeMachineHeuristic;
+import tools.Utils;
 
 public class testDemo {
     public static void main(String[] args) {
@@ -49,7 +48,7 @@ public class testDemo {
 
 		String actionFile = null;
 
-		StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicInfo);
+		StateHeuristic heuristic = ArcadeMachineHeuristic.createHeuristic(heuristicInfo);
 
 		if(true){
 		// Game and level to play
@@ -67,7 +66,7 @@ public class testDemo {
 				0,
 			};
 
-			ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+			ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 		} else {
 			int n_games = 20;
 			for (int gameId = 0; gameId < n_games; gameId++) {
@@ -87,7 +86,7 @@ public class testDemo {
 				};
 
 				// 2. This plays a game in a level by the controller.
-				ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
+				ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, heuristic, resultsHeuristicFile, recordIds);
 			}
 		}
 

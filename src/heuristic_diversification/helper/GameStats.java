@@ -1,3 +1,8 @@
+/**
+ * Author: Cristina Guerrero
+ * Date: 1st February 2021
+ */
+
 package heuristic_diversification.helper;
 
 import java.util.ArrayList;

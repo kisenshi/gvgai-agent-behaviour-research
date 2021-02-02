@@ -8,9 +8,9 @@ package heuristic_diversification;
 import java.util.Random;
 
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.ArcadeMachineHeuristic;
 import heuristic_diversification.helper.Behaviours;
 import tools.Utils;
-import tracks.ArcadeMachine;
 
 public class mapElites {
 
@@ -41,12 +41,12 @@ public class mapElites {
             heuristicsList[info.id()] = info.getHeuristicInstance();
         }
 
-        heuristicsWeightList[Behaviours.WINNER.id()] = 0.0;
-        heuristicsWeightList[Behaviours.EXPLORER.id()] = 1.0;
+        heuristicsWeightList[Behaviours.WINNER.id()] = 0.15;
+        heuristicsWeightList[Behaviours.EXPLORER.id()] = 0.85;
     
         Class[] heuristicArgsClass = new Class[] { heuristicsList.getClass(), heuristicsWeightList.getClass() };
         Object[] constructorArgs = new Object[] { heuristicsList, heuristicsWeightList};
-        StateHeuristic teamBehaviouHeuristic = ArcadeMachine.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
+        StateHeuristic teamBehaviouHeuristic = ArcadeMachineHeuristic.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
 
         //Game settings
 		boolean visuals = true;
@@ -70,7 +70,7 @@ public class mapElites {
                 0,
             };
 
-            ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
         } else {  
         
         int n_games = 20;
@@ -91,7 +91,7 @@ public class mapElites {
             };
 
             // 2. This plays a game in a level by the controller.
-            ArcadeMachine.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, 0, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
         }
         }
     }

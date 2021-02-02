@@ -1,7 +1,6 @@
 package heuristic_diversification.helper;
 
 import core.heuristic.StateHeuristic;
-import tracks.ArcadeMachine;
 
 public enum Behaviours {
 
@@ -20,7 +19,7 @@ public enum Behaviours {
 
     public StateHeuristic getHeuristicInstance(){
         String heuristicPath = HEURISTICS_PATH + fileName;
-        StateHeuristic heuristic = ArcadeMachine.createHeuristic(heuristicPath);
+        StateHeuristic heuristic = ArcadeMachineHeuristic.createHeuristic(heuristicPath);
         return heuristic;
     }
 
