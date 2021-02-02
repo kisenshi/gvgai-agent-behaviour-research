@@ -5,7 +5,6 @@
 
 package heuristic_diversification;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import core.heuristic.StateHeuristic;

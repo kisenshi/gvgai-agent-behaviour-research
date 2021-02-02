@@ -1,17 +1,18 @@
 package heuristic_diversification.heuristics;
 
+import java.awt.Graphics2D;
+
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
-
-import java.awt.*;
 
 public class TeamBehavioursHeuristic extends StateHeuristic {
     private StateHeuristic[] mHeuristics;
     private Double[] mHeuristicsWeights;
 
-    public TeamBehavioursHeuristic(StateHeuristic[] heuristics, Double[] weights){
-        // We assume the number of heuristics and their weights are the same and provided in the same order
+    public TeamBehavioursHeuristic(StateHeuristic[] heuristics, Double[] weights) {
+        // We assume the number of heuristics and their weights are the same and
+        // provided in the same order
         mHeuristics = heuristics;
         setHeuristicsWeights(weights);
     }
@@ -19,7 +20,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs) {
         for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.initHeuristicInternalInformation(stateObs);   
+            heuristic.initHeuristicInternalInformation(stateObs);
         }
     }
 
@@ -34,7 +35,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public double evaluateState(StateObservation stateObs) {
         double finalH = 0;
 
-        if (!checkHeuristicsArraySize()){
+        if (!checkHeuristicsArraySize()) {
             // Avoid error in the iteration
             return 0;
         }
@@ -46,7 +47,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
 
             // add the heuristic value based on its weight to the final result
             double hWeight = mHeuristicsWeights[i];
-            finalH += (hNorm * hWeight); 
+            finalH += (hNorm * hWeight);
         }
 
         return finalH;
@@ -55,7 +56,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     @Override
     public void restartFutureStateData() {
         for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.restartFutureStateData();;
+            heuristic.restartFutureStateData();
         }
     }
 
@@ -70,7 +71,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public String relevantInfoStr(StateObservation stateObs) {
         String s = "";
         for (StateHeuristic heuristic : mHeuristics) {
-            s.concat(heuristic.relevantInfoStr(stateObs)+"\n");
+            s.concat(heuristic.relevantInfoStr(stateObs) + "\n");
         }
         return s;
     }
@@ -89,11 +90,11 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
         }
     }
 
-    public void setHeuristicsWeights(Double[] weights){
+    public void setHeuristicsWeights(Double[] weights) {
         mHeuristicsWeights = weights;
     }
 
-    private boolean checkHeuristicsArraySize(){
+    private boolean checkHeuristicsArraySize() {
         return (mHeuristics.length == mHeuristicsWeights.length);
     }
 }

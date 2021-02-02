@@ -5,16 +5,16 @@
 
 package heuristic_diversification.heuristics;
 
-import core.game.Game;
-import core.game.StateObservation;
-import core.heuristic.StateHeuristic;
-import ontology.Types;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import core.game.Game;
+import core.game.StateObservation;
+import core.heuristic.StateHeuristic;
+import ontology.Types;
 
 /**
  * Maximize the score difference if the player has not win yet
@@ -24,17 +24,18 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs){
+    public void initHeuristicInternalInformation(StateObservation stateObs) {
         // Initialise max and min values of heuristic
         heuristicMax = HUGE_NEGATIVE;
         heuristicMin = HUGE_POSITIVE;
         nMaxHeuristicUpdates = 0;
         nMinHeuristicUpdates = 0;
-        
+
         // Store the score from the game initial state
         mCurrentScore = stateObs.getGameScore();
     }
 
-    private double getHighHeuristicValue(){
+    private double getHighHeuristicValue() {
         return 1000;
     }
 
@@ -46,11 +47,11 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         Types.WINNER win = stateObs.getGameWinner();
         double newScore = stateObs.getGameScore();
 
-        if(gameOver && win == Types.WINNER.PLAYER_LOSES){
+        if (gameOver && win == Types.WINNER.PLAYER_LOSES) {
             h = (-1) * getHighHeuristicValue();
         }
 
-        if(gameOver && win == Types.WINNER.PLAYER_WINS) {
+        if (gameOver && win == Types.WINNER.PLAYER_WINS) {
             h = getHighHeuristicValue();
         }
 
@@ -80,11 +81,11 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         // Data:
         // gameId controllerId randomSeed winnerId score gameTicks
         try {
-            if(fileName != null && !fileName.equals("")) {
+            if (fileName != null && !fileName.equals("")) {
                 writer = new BufferedWriter(new FileWriter(new File(fileName), true));
-                writer.write(recordIds[0] + " " + recordIds[1] + " " + randomSeed +
-                        " " + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) +
-                        " " + played.getScore() + " " + played.getGameTick() + "\n");
+                writer.write(recordIds[0] + " " + recordIds[1] + " " + randomSeed + " "
+                        + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) + " " + played.getScore() + " "
+                        + played.getGameTick() + "\n");
 
                 writer.close();
             }

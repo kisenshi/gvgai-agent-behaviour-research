@@ -31,7 +31,6 @@ public class testDemo {
 		boolean visuals = true;
 		int seed = new Random().nextInt();
 
-
 		String recordActionsFile = null;// "actions_" + games[gameIdx] + "_lvl"
 						// + levelIdx + "_" + seed + ".txt";
 						// where to record the actions

@@ -5,11 +5,11 @@
 
 package core.heuristic;
 
+import java.awt.Graphics2D;
+import java.io.BufferedWriter;
+
 import core.game.Game;
 import core.game.StateObservation;
-
-import java.awt.*;
-import java.io.BufferedWriter;
 
 public abstract class StateHeuristic {
     protected static final double HUGE_NEGATIVE = -10000.0;
