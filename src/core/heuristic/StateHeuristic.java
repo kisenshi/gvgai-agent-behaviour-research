@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 
 import core.game.Game;
 import core.game.StateObservation;
+import heuristic_diversification.helper.GameStats;
 
 public abstract class StateHeuristic {
     protected static final double HUGE_NEGATIVE = -10000.0;
@@ -37,6 +38,8 @@ public abstract class StateHeuristic {
     abstract public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds);
 
     abstract public void drawInScreen(Graphics2D g);
+
+    abstract public void recordGameStats(Game game, GameStats gameStats);
 
     public double normaliseHeuristic(double h){
         if ((h > heuristicMax) && (h < heuristicMin)){

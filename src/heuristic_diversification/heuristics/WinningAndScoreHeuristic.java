@@ -14,6 +14,7 @@ import java.io.IOException;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.GameStats;
 import ontology.Types;
 
 /**
@@ -21,9 +22,10 @@ import ontology.Types;
  */
 public class WinningAndScoreHeuristic extends StateHeuristic {
     private double mCurrentScore;
+    private int mLastScoreChangeTick;
+    private int mLastPositiveScoreChangeTick;
 
     @Override
-    public void initHeuristicInternalInformation(StateObservation stateObs){
     public void initHeuristicInternalInformation(StateObservation stateObs) {
         // Initialise max and min values of heuristic
         heuristicMax = HUGE_NEGATIVE;
@@ -33,6 +35,8 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
         // Store the score from the game initial state
         mCurrentScore = stateObs.getGameScore();
+        mLastScoreChangeTick = stateObs.getGameTick();
+        mLastPositiveScoreChangeTick = stateObs.getGameTick();
     }
 
     private double getHighHeuristicValue() {
@@ -67,8 +71,24 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         nMaxHeuristicUpdates = 0;
         nMinHeuristicUpdates = 0;
 
+        double newScore = stateObs.getGameScore();
+        if(Double.compare(newScore, mCurrentScore) != 0){
+            mLastScoreChangeTick = stateObs.getGameTick();
+
+            if(Double.compare(newScore, mCurrentScore) > 0){
+                mLastPositiveScoreChangeTick = stateObs.getGameTick();
+            }
+        }
+        
         // Store the current score in the game
-        mCurrentScore = stateObs.getGameScore();
+        mCurrentScore = newScore;
+    }
+
+    @Override
+    public void recordGameStats(Game game, GameStats gameStats) {
+        int isWinner = (game.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0);
+        gameStats.addWinnerData(isWinner);
+        gameStats.addRecordBreakerData(game.getScore(), mLastScoreChangeTick, mLastPositiveScoreChangeTick);
     }
 
     @Override

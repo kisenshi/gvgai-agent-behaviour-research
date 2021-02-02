@@ -18,6 +18,7 @@ import java.util.Map;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.GameStats;
 import ontology.Types;
 import tools.Vector2d;
 
@@ -189,9 +190,15 @@ public class ExplorationHeuristic extends StateHeuristic {
         return "exploration: " + getNSpotsExplored();
     }
 
+
+    @Override
+    public void recordGameStats(Game game, GameStats gameStats) {
+        gameStats.addExplorerFinalData(getNSpotsExplored(), mExplorationMatrix, mLastDiscoveryTick);
+    }
+
     @Override
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int recordIds[]) {
-        double explored = getNSpotsExplored();
+        int explored = getNSpotsExplored();
 
         // Data:
         // gameId controllerId randomSeed winnerId score gameTicks mapSize nExplored
@@ -205,7 +212,7 @@ public class ExplorationHeuristic extends StateHeuristic {
                 writer.write(gameId + " " + recordIds[1] + " " + randomSeed + " "
                         + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) + " " + played.getScore() + " "
                         + played.getGameTick() + " " + getMapSize() + " " + explored + " " + navigationSize + " "
-                        + explored / navigationSize + " " + mLastDiscoveryTick + "\n");
+                        + (explored * 1.0) / navigationSize + " " + mLastDiscoveryTick + "\n");
 
                 // printExplorationMatrix();
 
@@ -378,8 +385,8 @@ public class ExplorationHeuristic extends StateHeuristic {
     /**
      * @return Number of different unique positions visited by the player
      */
-    private double getNSpotsExplored() {
-        double explored = 0;
+    private int getNSpotsExplored() {
+        int explored = 0;
 
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {

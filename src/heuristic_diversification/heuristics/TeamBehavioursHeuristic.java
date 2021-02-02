@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.GameStats;
 
 public class TeamBehavioursHeuristic extends StateHeuristic {
     private StateHeuristic[] mHeuristics;
@@ -74,6 +75,14 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
             s.concat(heuristic.relevantInfoStr(stateObs) + "\n");
         }
         return s;
+    }
+
+    @Override
+    public void recordGameStats(Game game, GameStats gameStats) {
+        gameStats.addGeneralData(game.getGameTick());
+        for (StateHeuristic heuristic : mHeuristics) {
+            heuristic.recordGameStats(game, gameStats);
+        }
     }
 
     @Override
