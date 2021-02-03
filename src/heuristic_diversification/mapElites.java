@@ -10,6 +10,7 @@ import java.util.Random;
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.helper.ArcadeMachineHeuristic;
 import heuristic_diversification.helper.Behaviours;
+import heuristic_diversification.helper.GameStats;
 import tools.Utils;
 
 public class mapElites {
@@ -63,36 +64,39 @@ public class mapElites {
 		String game = games[gameIdx][0];
         String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
         
-        if (true){
-            String resultsHeuristicFile = "TestTeamBehaviourHeuristic_" + gameName + ".txt";
+        boolean oneGame = true;
+        if (oneGame){
+            String resultsHeuristicFile = "Stats_" + gameName + ".txt";
             int[] recordIds = new int[]{
                 gameIdx,
                 0,
             };
 
-            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
-        } else {  
-        
-        int n_games = 20;
-        for (int gameId = 0; gameId < n_games; gameId++) {
-            seed = new Random().nextInt();
+            //ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            GameStats gameStats = new GameStats();
+            ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 5);
+            gameStats.printStats(resultsHeuristicFile);
+        } else {
+            int n_games = 20;
+            for (int gameId = 0; gameId < n_games; gameId++) {
+                seed = new Random().nextInt();
 
-            levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
-            gameName = games[gameId][1];
-            game = games[gameId][0];
-            level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
+                levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
+                gameName = games[gameId][1];
+                game = games[gameId][0];
+                level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
 
-            String resultsHeuristicFile = "TestTeamBehaviourHeuristic_" + gameName + ".txt";
+                String resultsHeuristicFile = "TestTeamBehaviourHeuristic_" + gameName + ".txt";
 
-            // As the data is appended at the end of the file, it is needed to store the game and controllers id
-            int[] recordIds = new int[]{
-                    gameId,
-                    0,
-            };
+                // As the data is appended at the end of the file, it is needed to store the game and controllers id
+                int[] recordIds = new int[]{
+                        gameId,
+                        0,
+                };
 
-            // 2. This plays a game in a level by the controller.
-            ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
-        }
+                // 2. This plays a game in a level by the controller.
+                ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
+            }
         }
     }
 }

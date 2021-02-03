@@ -7,6 +7,7 @@ package heuristic_diversification.helper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 
 import core.competition.CompetitionParameters;
 import core.game.Game;
@@ -337,5 +338,73 @@ public class ArcadeMachineHeuristic {
 		toPlay.printResult();
 
 		return toPlay.getFullResult();
+    }
+
+    public static void runGameAndGetStats(GameStats gameStats, String game_file, String level_file, boolean visuals, String agentName,
+                                              String actionFile, StateHeuristic heuristic, int nGames) {
+        VGDLFactory.GetInstance().init();
+        VGDLRegistry.GetInstance().init();
+        
+        if (VERBOSE) {
+            System.out.println(" ** Playing game " + game_file + ", level " + level_file + " **");
+        }
+        
+        // Create the game to be played
+        Game toPlay = new VGDLParser().parseGame(game_file);
+
+        // Create the player
+		String[] names = agentName.split(" ");
+		int no_players = toPlay.no_players;
+		if (no_players > 1) {
+            System.out.println("Error: Only single player supported in this mode");
+            return;
+		}
+
+		AbstractHeuristicPlayer[] players;
+		players = new AbstractHeuristicPlayer[no_players];
+
+		int playerId = 0;
+        
+        for (int i = 0; i < nGames; i++) {
+            int randomSeed = new Random().nextInt();
+            toPlay.buildLevel(level_file, randomSeed);
+
+            // Warm the game up.
+            ArcadeMachine.warmUp(toPlay, CompetitionParameters.WARMUP_TIME);
+            double[] score;
+
+            // single player
+            players[playerId] = createHeuristicPlayer(names[playerId], actionFile, toPlay.getObservation(), randomSeed, heuristic);
+
+            if (players[playerId] == null) {
+                // Something went wrong in the constructor, controller disqualified
+                toPlay.disqualify();
+
+                // Get the score for the result.
+                score = toPlay.handleResult();
+                toPlay.printResult();
+                toPlay.reset();
+                continue;
+            }
+
+            // Play the game
+            if (visuals) {
+                score = toPlay.playGame(players, randomSeed, false, 0);
+            } else {
+                score = toPlay.runGame(players, randomSeed);
+            }
+
+            ArcadeMachine.tearPlayerDown(toPlay, players, actionFile, randomSeed, true);
+
+            // Add stats of the run to the stats class
+            players[playerId].recordGameStats(toPlay, gameStats);
+
+            // This, the last thing to do in this method, always:
+		    toPlay.handleResult();
+		    toPlay.printResult();
+
+            // Reset the game
+            toPlay.reset();
+        }
     }
 }

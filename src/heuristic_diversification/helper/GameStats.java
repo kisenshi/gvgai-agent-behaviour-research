@@ -5,6 +5,10 @@
 
 package heuristic_diversification.helper;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -67,6 +71,48 @@ public class GameStats {
 
         int[][] matrixCopy = Arrays.stream(explorationMatrix).map(int[]::clone).toArray(int[][]::new);
         this.heatMapExplorationMatrix.add(matrixCopy);
+    }
+
+    private void printWinnerStats(BufferedWriter writer) throws IOException {
+        writer.write("== Winner ==\nwins: ");
+        for (int i = 0; i < win.size(); i++) {
+            writer.write(win.get(i).toString()+ " ");
+        }
+        writer.write("\n");
+    }
+
+    private void printRecordBreakerStats(BufferedWriter writer) throws IOException {
+        writer.write("== Record breaker==\n");
+        for (int i = 0; i < score.size(); i++) {
+            writer.write(score.get(i).toString() + " ");
+            writer.write(lastScoreChangeTick.get(i).toString() + " ");
+            writer.write(lastPositiveScoreChangeTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
+    }
+
+    private void printExplorerStats(BufferedWriter writer) throws IOException {
+        writer.write("== Explorer ==\n");
+        for (int i = 0; i < score.size(); i++) {
+            writer.write(nExplored.get(i).toString() + " ");
+            writer.write(lastNewExplorationTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
+    }
+
+    public void printStats(String fileName) {
+        BufferedWriter writer;
+        try {
+            if (fileName != null && !fileName.equals("")) {
+                writer = new BufferedWriter(new FileWriter(new File(fileName), true));
+                printWinnerStats(writer);
+                printRecordBreakerStats(writer);
+                printExplorerStats(writer);
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // killer

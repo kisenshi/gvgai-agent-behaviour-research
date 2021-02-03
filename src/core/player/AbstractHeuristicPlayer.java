@@ -5,15 +5,12 @@
 
 package core.player;
 
+import java.awt.Graphics2D;
+
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
-import ontology.Types;
-import tools.ElapsedCpuTimer;
-
-import java.awt.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import heuristic_diversification.helper.GameStats;
 
 public abstract class AbstractHeuristicPlayer extends AbstractPlayer {
     protected StateHeuristic heuristic;
@@ -35,5 +32,12 @@ public abstract class AbstractHeuristicPlayer extends AbstractPlayer {
      */
     public void recordHeuristicData(Game played, String fileName, int randomSeed, int[] recordIds) {
         heuristic.recordDataOnFile(played, fileName, randomSeed, recordIds);
+    }
+
+    /**
+     * Record game stats
+     */
+    public void recordGameStats(Game game, GameStats gameStats) {
+        heuristic.recordGameStats(game, gameStats);
     }
 }
