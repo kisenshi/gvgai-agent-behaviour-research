@@ -11,26 +11,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class GameStats {
     private ArrayList<Integer> gameOverTick;
 
     // winner
     private ArrayList<Integer> win; // 1 win, 0 lose
+    private double winAvg;
 
     // record breaker
     private ArrayList<Double> score;
     private ArrayList<Integer> lastScoreChangeTick;
     private ArrayList<Integer> lastPositiveScoreChangeTick;
+    private double scoreAvg;
 
     // explorer
     private int mapSize;
     private ArrayList<Integer> nExplored;
     private ArrayList<int[][]> heatMapExplorationMatrix;
     private ArrayList<Integer> lastNewExplorationTick;
+    private double nExploredAvg;
 
     public GameStats() {
-        gameOverTick = new ArrayList<Integer>();   
+        gameOverTick = new ArrayList<Integer>();
 
         // winner
         win = new ArrayList<Integer>();
@@ -47,25 +51,25 @@ public class GameStats {
         lastNewExplorationTick = new ArrayList<Integer>();
     }
 
-    public void addGeneralData(int gameOverTick){
+    public void addGeneralData(int gameOverTick) {
         this.gameOverTick.add(gameOverTick);
     }
 
-    public void addWinnerData(int win){
+    public void addWinnerData(int win) {
         this.win.add(win);
     }
 
-    public void addRecordBreakerData(double score, int lastScoreChange, int lastPositiveScoreChange){
+    public void addRecordBreakerData(double score, int lastScoreChange, int lastPositiveScoreChange) {
         this.score.add(score);
         this.lastScoreChangeTick.add(lastScoreChange);
         this.lastPositiveScoreChangeTick.add(lastPositiveScoreChange);
     }
 
-    public void setMapSize(int mapSize){
+    public void setMapSize(int mapSize) {
         this.mapSize = mapSize;
     }
 
-    public void addExplorerFinalData(int nExplored, int[][] explorationMatrix, int lastNewExploration){
+    public void addExplorerFinalData(int nExplored, int[][] explorationMatrix, int lastNewExploration) {
         this.nExplored.add(nExplored);
         this.lastNewExplorationTick.add(lastNewExploration);
 
@@ -76,7 +80,7 @@ public class GameStats {
     private void printWinnerStats(BufferedWriter writer) throws IOException {
         writer.write("== Winner ==\nwins: ");
         for (int i = 0; i < win.size(); i++) {
-            writer.write(win.get(i).toString()+ " ");
+            writer.write(win.get(i).toString() + " ");
         }
         writer.write("\n");
     }
@@ -113,6 +117,39 @@ public class GameStats {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void calculateStats() {
+        SummaryStatistics stats = new SummaryStatistics();
+
+        // win
+        System.out.println("Win");
+        for (int winValue : win) {
+            stats.addValue((double) winValue);
+        }
+        winAvg = stats.getMean();
+        System.out.println(stats.toString());
+        stats.clear();
+
+        // score
+        System.out.println("Score");
+        for (double scoreValue : score) {
+            stats.addValue(scoreValue);
+        }
+
+        scoreAvg = stats.getMean();
+        System.out.println(stats.toString());
+        stats.clear();
+
+        // exploration
+        System.out.println("Exploration");
+        for (double nExploredValue : nExplored) {
+            stats.addValue(nExploredValue);
+        }
+
+        nExploredAvg = stats.getMean();
+        System.out.println(stats.toString());
+        stats.clear();
     }
 
     // killer

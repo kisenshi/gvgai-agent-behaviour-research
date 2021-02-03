@@ -76,6 +76,7 @@ public class mapElites {
             GameStats gameStats = new GameStats();
             ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 5);
             gameStats.printStats(resultsHeuristicFile);
+            gameStats.calculateStats();
         } else {
             int n_games = 20;
             for (int gameId = 0; gameId < n_games; gameId++) {
