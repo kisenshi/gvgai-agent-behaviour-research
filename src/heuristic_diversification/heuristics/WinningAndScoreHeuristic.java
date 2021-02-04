@@ -53,14 +53,26 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
         if (gameOver && win == Types.WINNER.PLAYER_LOSES) {
             h = (-1) * getHighHeuristicValue();
+
+            if (DEBUG) {
+                System.out.print("LOSE " + h);
+            }
         }
 
         if (gameOver && win == Types.WINNER.PLAYER_WINS) {
             h = getHighHeuristicValue();
+
+            if (DEBUG) {
+                System.out.print("WIN "+ h);
+            }
         }
 
         // Return the score change
         h += (newScore - mCurrentScore);
+
+        if (DEBUG) {
+            System.out.println(" Diffscore: " + (newScore - mCurrentScore));
+        }
 
         return h;
     }

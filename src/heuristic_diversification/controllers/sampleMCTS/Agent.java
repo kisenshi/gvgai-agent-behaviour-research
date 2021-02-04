@@ -68,6 +68,9 @@ public class Agent extends AbstractHeuristicPlayer {
         int action = mctsPlayer.run(elapsedTimer);
 
         //... and return it.
+        if(StateHeuristic.DEBUG) {
+            System.out.println("ACTION: " + actions[action]);
+        }
         return actions[action];
     }
 

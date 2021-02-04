@@ -13,6 +13,8 @@ import core.game.StateObservation;
 import heuristic_diversification.helper.GameStats;
 
 public abstract class StateHeuristic {
+    public static final boolean DEBUG = false;
+
     protected static final double HUGE_NEGATIVE = -10000.0;
     protected static final double LESS_HUGE_NEGATIVE = -5000.0;
     protected static final double HUGE_POSITIVE =  10000.0;
@@ -42,6 +44,10 @@ public abstract class StateHeuristic {
     abstract public void recordGameStats(Game game, GameStats gameStats);
 
     public double normaliseHeuristic(double h){
+        if (DEBUG){
+            System.out.println("hMax: "+ heuristicMax + " hMin: " + heuristicMin + " nMaxUpdates: " + nMaxHeuristicUpdates + " nMinUpdates: " + nMinHeuristicUpdates);
+        }
+        
         if ((h > heuristicMax) && (h < heuristicMin)){
             // This is the case for the first iteration
             heuristicMax = heuristicMin = h;

@@ -159,12 +159,19 @@ public class ExplorationHeuristic extends StateHeuristic {
             // heuristic, to reduce the range between
             // the lowest and highest values of the heuristic
             h = (-1) * getHighHeuristicValue();
+
+            if(DEBUG) {
+                System.out.println("GAME OVER maxLength " + mMaxFutureStates + " maxValue " + mMaxExplorationMatrixValue + " h " + h);
+            }
         }
 
         for (Map.Entry<String, Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
             int x = getX(visitedPosition.getKey());
             int y = getY(visitedPosition.getKey());
 
+            if(DEBUG) {
+                System.out.println("visited " + visitedPosition.getKey() + " times: " + visitedPosition.getValue() + " + " + getNumberVisits(x, y));
+            }
 
             if (!hasBeenVisited(x, y)) {
                 // Reward highly each non-visited position encountered

@@ -64,6 +64,9 @@ public class SingleTreeNode
             StateObservation state = rootState.copy();
             heuristic.restartFutureStateData();
 
+            if(StateHeuristic.DEBUG) {
+                System.out.println("ROOT game tick: " + state.getGameTick() + "\n");
+            }
 
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
             SingleTreeNode selected = treePolicy(state);
@@ -179,6 +182,9 @@ public class SingleTreeNode
     }
 
     public double value(StateObservation a_gameState) {
+        if(StateHeuristic.DEBUG) {
+            System.out.println("Get state value: ");
+        }
         return heuristic.evaluateState(a_gameState);
     }
 
@@ -237,6 +243,15 @@ public class SingleTreeNode
             }
         }
 
+        if(StateHeuristic.DEBUG) {
+            for(int i=0; i<children.length; i++){
+                if(children[i] != null) {
+                    System.out.println("i " + actions[i] + " nVisits: " + children[i].nVisits + " nValue " + children[i].totValue);
+                }
+            }
+            System.out.println("Selected: " + actions[selected]);
+        }
+
         if (selected == -1)
         {
             System.out.println("Unexpected selection!");
@@ -290,5 +305,9 @@ public class SingleTreeNode
     private void advanceState(StateObservation state, Types.ACTIONS action) {
         state.advance(action);
         heuristic.updateFutureStateData(state);
+        
+        if(StateHeuristic.DEBUG) {
+            System.out.println("State advanced with " + action + "; gametick: " + state.getGameTick() + "; " + heuristic.relevantInfoStr(state));
+        }
     }
 }

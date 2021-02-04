@@ -35,6 +35,10 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     @Override
     public double evaluateState(StateObservation stateObs) {
         double finalH = 0;
+        
+        if(DEBUG) {
+            System.out.println("Evaluation...");
+        }
 
         if (!checkHeuristicsArraySize()) {
             // Avoid error in the iteration
@@ -49,6 +53,10 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
             // add the heuristic value based on its weight to the final result
             double hWeight = mHeuristicsWeights[i];
             finalH += (hNorm * hWeight);
+
+            if (DEBUG) {
+                System.out.println(h + " --> " + hNorm + " w: " + hWeight + " --> " + finalH);
+            }
         }
 
         return finalH;
