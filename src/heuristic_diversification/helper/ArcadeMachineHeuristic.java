@@ -367,6 +367,7 @@ public class ArcadeMachineHeuristic {
         
         for (int i = 0; i < nGames; i++) {
             int randomSeed = new Random().nextInt();
+            System.out.println(i + " with seed " + randomSeed);
             toPlay.buildLevel(level_file, randomSeed);
 
             // Warm the game up.
