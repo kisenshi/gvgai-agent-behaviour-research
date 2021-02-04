@@ -10,20 +10,20 @@ public enum Behaviours {
     int id;
     String fileName;
 
-    private static final String HEURISTICS_PATH = "heuristic_diversification.heuristics.";
+    public static final String HEURISTICS_PATH = "heuristic_diversification.heuristics.";
 
     Behaviours(int id, String fileName) {
         this.id = id;
         this.fileName = fileName;
     }
 
-    public StateHeuristic getHeuristicInstance(){
+    public StateHeuristic getHeuristicInstance() {
         String heuristicPath = HEURISTICS_PATH + fileName;
         StateHeuristic heuristic = ArcadeMachineHeuristic.createHeuristic(heuristicPath);
         return heuristic;
     }
 
-    public int id(){
+    public int id() {
         return id;
     }
 }
