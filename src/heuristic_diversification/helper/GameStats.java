@@ -11,6 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class GameStats {
@@ -18,20 +20,20 @@ public class GameStats {
 
     // winner
     private ArrayList<Integer> win; // 1 win, 0 lose
-    private double winAvg;
+    private StatisticalSummaryValues winStats;
 
     // record breaker
     private ArrayList<Double> score;
     private ArrayList<Integer> lastScoreChangeTick;
     private ArrayList<Integer> lastPositiveScoreChangeTick;
-    private double scoreAvg;
+    private StatisticalSummaryValues scoreStats;
 
     // explorer
     private int mapSize;
     private ArrayList<Integer> nExplored;
     private ArrayList<int[][]> heatMapExplorationMatrix;
     private ArrayList<Integer> lastNewExplorationTick;
-    private double nExploredAvg;
+    private StatisticalSummaryValues nExploredStats;
 
     public GameStats() {
         gameOverTick = new ArrayList<Integer>();
@@ -127,8 +129,9 @@ public class GameStats {
         for (int winValue : win) {
             stats.addValue((double) winValue);
         }
-        winAvg = stats.getMean();
-        System.out.println(stats.toString());
+        
+        winStats = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(winStats.toString());
         stats.clear();
 
         // score
@@ -137,8 +140,8 @@ public class GameStats {
             stats.addValue(scoreValue);
         }
 
-        scoreAvg = stats.getMean();
-        System.out.println(stats.toString());
+        scoreStats = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(scoreStats.toString());
         stats.clear();
 
         // exploration
@@ -147,8 +150,8 @@ public class GameStats {
             stats.addValue(nExploredValue);
         }
 
-        nExploredAvg = stats.getMean();
-        System.out.println(stats.toString());
+        nExploredStats = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(nExploredStats.toString());
         stats.clear();
     }
 
