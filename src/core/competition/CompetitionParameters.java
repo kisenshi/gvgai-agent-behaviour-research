@@ -86,7 +86,7 @@ public class CompetitionParameters
      *  Time limits are WALL TIME on Windows, because CPU TIME is not accurate enough
      *  at the level of milliseconds on this OS.
      */
-    public static final boolean TIME_CONSTRAINED = true;
+    public static final boolean TIME_CONSTRAINED = false;
 
     /**
      * Max number of evaluations that can be done
