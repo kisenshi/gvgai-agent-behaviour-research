@@ -13,7 +13,7 @@ import heuristic_diversification.helper.Behaviours;
 import heuristic_diversification.helper.GameStats;
 import tools.Utils;
 
-public class mapElites {
+public class MapElites {
 
     public static void main(String[] args) {
         // PATHS
