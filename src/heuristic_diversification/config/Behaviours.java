@@ -1,6 +1,7 @@
-package heuristic_diversification.helper;
+package heuristic_diversification.config;
 
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.helper.ArcadeMachineHeuristic;
 
 public enum Behaviours {
 

@@ -1,4 +1,4 @@
-package heuristic_diversification.helper;
+package heuristic_diversification.config;
 
 public enum Agents {
 
