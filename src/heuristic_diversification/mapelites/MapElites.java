@@ -36,8 +36,10 @@ public class MapElites {
     private static final String ACTION_FILE = null;
     private static final int NUM_INITIAL_CELLS = 5;
 
-    // Map elites
-    private static final int N_FEATURES = 2;
+    // Map elites config
+    private static final Performance PERFORMANCE_CRITERIA = Performance.FAST;
+    private static final Features FEATURE_X = Features.SCORE;
+    private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
 
     private Elite[][] mapElites;
     private ArrayList<EliteIdx> occupiedCellsIdx;
@@ -54,13 +56,13 @@ public class MapElites {
 
     public MapElites() {
         // 0 --> score, 1 --> n spots explored
-        mapElites = new Elite[Features.SCORE.featureArraySize()][Features.EXPLORATION_NUMBER.featureArraySize()];
+        mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
     }
     
     public void addEliteToCell(Elite elite) {
-        int featureX = elite.getFeatureIdx(Features.SCORE);
-        int featureY = elite.getFeatureIdx(Features.EXPLORATION_NUMBER);
+        int featureX = elite.getFeatureIdx(FEATURE_X);
+        int featureY = elite.getFeatureIdx(FEATURE_Y);
 
         Elite currentElite = mapElites[featureX][featureY];
 
@@ -69,9 +71,9 @@ public class MapElites {
             mapElites[featureX][featureY] = elite;
             occupiedCellsIdx.add(new EliteIdx(featureX, featureY));
         } else {
-            System.out.println("Cell occupied, compare performances: " + elite.getPerformance(Performance.FAST) + " vs " + currentElite.getPerformance(Performance.FAST));
+            System.out.println("Cell occupied, compare performances: " + elite.getPerformance(PERFORMANCE_CRITERIA) + " vs " + currentElite.getPerformance(PERFORMANCE_CRITERIA));
             // substitute the current elite only if thew new one has better performance
-            if (Double.compare(elite.getPerformance(Performance.FAST), currentElite.getPerformance(Performance.FAST)) > 0) {
+            if (Double.compare(elite.getPerformance(PERFORMANCE_CRITERIA), currentElite.getPerformance(PERFORMANCE_CRITERIA)) > 0) {
                 System.out.println("Better elite, replace");
                 mapElites[featureX][featureY] = elite;
             }
