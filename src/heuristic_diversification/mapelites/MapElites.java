@@ -6,6 +6,7 @@
 package heuristic_diversification.mapelites;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.config.Agents;
@@ -40,6 +41,7 @@ public class MapElites {
     private static final Performance PERFORMANCE_CRITERIA = Performance.FAST;
     private static final Features FEATURE_X = Features.SCORE;
     private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
+    private static final int NUM_MAPELITES_ITERATIONS = 10;
 
     private Elite[][] mapElites;
     private ArrayList<EliteIdx> occupiedCellsIdx;
@@ -58,6 +60,18 @@ public class MapElites {
         // 0 --> score, 1 --> n spots explored
         mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
+    }
+
+    public Elite getRandomEliteFromMap() {
+        Random randomGenerator = new Random();
+        int randomId = randomGenerator.nextInt(occupiedCellsIdx.size());
+        EliteIdx eliteIdx = occupiedCellsIdx.get(randomId);
+
+        return mapElites[eliteIdx.x][eliteIdx.y];
+    }
+
+    private void evolHeuristicsWeights(Double[] heuristicsWeightList) {
+        // todo(kisenshi): evol weights based on current ones
     }
     
     public void addEliteToCell(Elite elite) {
@@ -146,11 +160,29 @@ public class MapElites {
         }
 
         // MAP elites algorithm
-            // agent + heuristic weights
+        int nIterations = 0;
+        while(nIterations < NUM_MAPELITES_ITERATIONS) {
+            System.out.println("MAPELites algorithm iteration " + nIterations);
+            
+            // get random cell elite and its weights
+            Elite randomElite = mapElites.getRandomEliteFromMap();
+            heuristicsWeightList = randomElite.getWeightsClone();
+
+            // evol weights to create new "elite"
+            mapElites.evolHeuristicsWeights(heuristicsWeightList);
+
+            // set new heuristic weights in agent
+            teamBehaviouHeuristic.setHeuristicsWeights(heuristicsWeightList);
+
             // get game stats
-            // get features buckets (index) for agent
-            // compare performance for agent in MAP for those features
-                // replace cell with agent if better performance
+            GameStats gameStats = mapElites.getGameStats(controller, teamBehaviouHeuristic, game, level);
+
+            // replace cell with new elite if better performance
+            Elite newElite = new Elite(controller, heuristicsWeightList, gameStats);
+            mapElites.addEliteToCell(newElite);
+
+            nIterations++;
+        }
         
         // Save MAP info --> JSON
     }
