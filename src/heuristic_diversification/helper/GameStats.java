@@ -17,23 +17,24 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class GameStats {
     private ArrayList<Integer> gameOverTick;
+    public StatisticalSummaryValues gameOverTickStats;
 
     // winner
     private ArrayList<Integer> win; // 1 win, 0 lose
-    private StatisticalSummaryValues winStats;
+    public StatisticalSummaryValues winStats;
 
     // record breaker
     private ArrayList<Double> score;
     private ArrayList<Integer> lastScoreChangeTick;
     private ArrayList<Integer> lastPositiveScoreChangeTick;
-    private StatisticalSummaryValues scoreStats;
+    public StatisticalSummaryValues scoreStats;
 
     // explorer
     private int mapSize;
     private ArrayList<Integer> nExplored;
     private ArrayList<int[][]> heatMapExplorationMatrix;
     private ArrayList<Integer> lastNewExplorationTick;
-    private StatisticalSummaryValues nExploredStats;
+    public StatisticalSummaryValues nExploredStats;
 
     public GameStats() {
         gameOverTick = new ArrayList<Integer>();
@@ -123,6 +124,16 @@ public class GameStats {
 
     public void calculateStats() {
         SummaryStatistics stats = new SummaryStatistics();
+
+        // game ticks
+        System.out.println("Game ticks");
+        for (Integer tick : gameOverTick) {
+            stats.addValue((double) tick);
+        }
+
+        gameOverTickStats = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(gameOverTickStats.toString());
+        stats.clear();
 
         // win
         System.out.println("Win");
