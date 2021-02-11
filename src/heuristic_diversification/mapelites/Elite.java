@@ -30,4 +30,8 @@ public class Elite {
     public double getPerformance(Performance performance) {
         return performance.getPerformanceValue(gameStats);
     }
+
+    public Double[] getWeightsClone() {
+        return heuristicsWeightList.clone();
+    }
 }
