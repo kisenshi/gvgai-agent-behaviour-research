@@ -31,7 +31,23 @@ public class Elite {
         return performance.getPerformanceValue(gameStats);
     }
 
-    public Double[] getWeightsClone() {
+    public Double[] getWeightListCopy() {
         return heuristicsWeightList.clone();
+    }
+
+    public String printWeights() {
+        return "[" + heuristicsWeightList[0] + ", " + heuristicsWeightList[1] + "]";
+    }
+
+    public void printInfo() {
+        System.out.println("Agent: " + agentName);
+        System.out.println("Weights: " + printWeights());
+        System.out.println("Gametick: " + gameStats.gameOverTickStats.toString());
+        System.out.println("Wins: " + gameStats.winStats.toString());
+        System.out.println("Score: " + gameStats.scoreStats.toString());
+        System.out.println("nExplored: " + gameStats.nExploredStats.toString());
+
+        String resultsHeuristicFile = "Stats_" + heuristicsWeightList[0] + "_" + heuristicsWeightList[1] + ".txt";
+        gameStats.printStats(resultsHeuristicFile);
     }
 }
