@@ -12,9 +12,9 @@ import heuristic_diversification.config.Agents;
 import heuristic_diversification.config.Behaviours;
 import heuristic_diversification.config.Games;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
+import heuristic_diversification.framework.TeamGameplay;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.model.GameStats;
-import tools.Utils;
 
 /**
  * Contains the definition of the MAP-Elites as well as the methos required to
@@ -47,12 +47,10 @@ public class MapElites {
 
     private Elite[][] mapElites;
     private ArrayList<EliteIdx> occupiedCellsIdx;
-    private Double heuristicsWeightList[];
 
-    private TeamBehavioursHeuristic teamBehaviouHeuristic;
+    private Double heuristicsWeightList[];
     private String controller;
-    private String game;
-    private String level;
+    private TeamGameplay gameplayFramework;
 
     private class EliteIdx {
         int x;
@@ -64,28 +62,26 @@ public class MapElites {
         }
     }
 
-    public MapElites(TeamBehavioursHeuristic teamBehaviouHeuristic, Double heuristicsWeightList[], String controller, String game, String level) {
+    public MapElites(TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[]) {
         mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
         
-        this.heuristicsWeightList = heuristicsWeightList;
-        this.teamBehaviouHeuristic = teamBehaviouHeuristic;
+        this.gameplayFramework = gameplayFramework;
         this.controller = controller;
-        this.game = game;
-        this.level = level;
+        this.heuristicsWeightList = heuristicsWeightList;
     }
 
     /**
      * Initialise map. Fill nCells of the map with elites; initialised with random weights
-     * @param nCells number of cells to fill in the map for initialisation
+     * @param nInitialCells number of cells to fill in the map for initialisation
      */
-    public void initialiseMap(int nCells) {
+    public void initialiseMap(int nInitialCells) {
         int nCellsInitialised = 0;
-        while (nCellsInitialised < nCells) {
+        while (nCellsInitialised < nInitialCells) {
             Generator.setRandomWeights(heuristicsWeightList);
 
             // Create elite from random values and add to map
-            Elite elite = getGameplayElite();
+            Elite elite = createGameplayElite();
             addEliteToMap(elite);
 
             nCellsInitialised = getNCellsOccupied();
@@ -100,7 +96,7 @@ public class MapElites {
      * 2) evolve weights taking random elite as base
      * 3) create new elite (and get its stats to be able to get features and performance)
      * 4) add elite to map (assign to cell and replace elite in assigned cell if the new performance is better)
-     * @param nIterations number of iterations of the map elites algorithm
+     * @param nTotalIterations number of iterations of the map elites algorithm
      */
     public void runAlgorithm(int nTotalIterations) {
         int nIterations = 0;
@@ -115,7 +111,7 @@ public class MapElites {
             evolveHeuristicsWeights(heuristicsWeightList);
 
             // Create new possible elite and add to map
-            Elite newElite = getGameplayElite();
+            Elite newElite = createGameplayElite();
             addEliteToMap(newElite);
 
             nIterations++;
@@ -135,12 +131,10 @@ public class MapElites {
         Generator.evolveWeightList(heuristicsWeightList);
     }
     
-    private Elite getGameplayElite() {
+    private Elite createGameplayElite() {
         // Get the resulting game stats for current controller and weights
-        GameStats gameStats = new GameStats();
-        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level, VISUALS, controller, ACTION_FILE, teamBehaviouHeuristic, NUM_GAME_RUNS);
-        gameStats.calculateStats();
-
+        GameStats gameStats = gameplayFramework.createStatsFromGameplay(controller);
+    
         // Create elite with information and results
         return new Elite(controller, heuristicsWeightList, gameStats);
     }
@@ -209,10 +203,12 @@ public class MapElites {
         Object[] constructorArgs = new Object[]{heuristicsList, heuristicsWeightList};
         TeamBehavioursHeuristic teamBehaviouHeuristic = (TeamBehavioursHeuristic) ArcadeMachineHeuristic.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
 
+        TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, GAME.game(), GAME.level(LEVEL), ACTION_FILE, VISUALS, NUM_GAME_RUNS);
+
         // MAP elites adaptation
 
         // Initialise MAP 
-        MapElites mapElites = new MapElites(teamBehaviouHeuristic, heuristicsWeightList, AGENT.getAgentName(), GAME.game(), GAME.level(LEVEL));
+        MapElites mapElites = new MapElites(gameplayFramework, AGENT.getAgentName(), heuristicsWeightList);
         mapElites.initialiseMap(NUM_INITIAL_CELLS);
 
         // MAP elites algorithm
