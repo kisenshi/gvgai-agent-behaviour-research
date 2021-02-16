@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.config.Agents;
 import heuristic_diversification.config.Behaviours;
-import heuristic_diversification.helper.ArcadeMachineHeuristic;
+import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.model.GameStats;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import tools.Utils;

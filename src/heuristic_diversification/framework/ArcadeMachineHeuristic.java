@@ -3,7 +3,7 @@
  * Date: 1st February 2021
  */
 
-package heuristic_diversification.helper;
+package heuristic_diversification.framework;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -342,7 +342,7 @@ public class ArcadeMachineHeuristic {
     }
 
     public static void runGameAndGetStats(GameStats gameStats, String game_file, String level_file, boolean visuals, String agentName,
-                                              String actionFile, StateHeuristic heuristic, int nGames) {
+                                          String actionFile, StateHeuristic heuristic, int nGames) {
         VGDLFactory.GetInstance().init();
         VGDLRegistry.GetInstance().init();
         
