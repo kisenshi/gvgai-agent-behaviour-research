@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 
 import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 
 public enum Performance {
     FAST("gameOverTick", true),
