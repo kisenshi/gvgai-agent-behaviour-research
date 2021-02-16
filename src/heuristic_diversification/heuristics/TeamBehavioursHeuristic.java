@@ -15,7 +15,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
         // We assume the number of heuristics and their weights are the same and
         // provided in the same order
         mHeuristics = heuristics;
-        setHeuristicsWeights(weights);
+        mHeuristicsWeights = weights;
     }
 
     @Override
@@ -105,10 +105,6 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
         for (StateHeuristic heuristic : mHeuristics) {
             heuristic.drawInScreen(g);
         }
-    }
-
-    public void setHeuristicsWeights(Double[] weights) {
-        mHeuristicsWeights = weights;
     }
 
     private boolean checkHeuristicsArraySize() {

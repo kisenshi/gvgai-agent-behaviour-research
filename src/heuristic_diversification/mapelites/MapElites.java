@@ -167,8 +167,6 @@ public class MapElites {
         while (nCellsInitialised < NUM_INITIAL_CELLS) {
             Generator.setRandomWeights(heuristicsWeightList);
 
-            teamBehaviouHeuristic.setHeuristicsWeights(heuristicsWeightList);
-
             GameStats gameStats = mapElites.getGameStats(controller, teamBehaviouHeuristic, game, level);
 
             Elite elite = new Elite(controller, heuristicsWeightList, gameStats);
@@ -188,13 +186,10 @@ public class MapElites {
             Elite randomElite = mapElites.getRandomEliteFromMap();
             heuristicsWeightList = randomElite.getWeightListCopy();
 
-            // evol weights to create new "elite"
+            // evol weights
             mapElites.evolveHeuristicsWeights(heuristicsWeightList);
 
-            // set new heuristic weights in agent
-            teamBehaviouHeuristic.setHeuristicsWeights(heuristicsWeightList);
-
-            // get game stats
+            // get game stats with new weights
             GameStats gameStats = mapElites.getGameStats(controller, teamBehaviouHeuristic, game, level);
 
             // replace cell with new elite if better performance
