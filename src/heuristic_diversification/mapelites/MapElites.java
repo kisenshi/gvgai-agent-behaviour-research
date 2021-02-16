@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.config.Agents;
 import heuristic_diversification.config.Behaviours;
+import heuristic_diversification.config.Games;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
-import heuristic_diversification.model.GameStats;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
+import heuristic_diversification.model.GameStats;
 import tools.Utils;
 
 /**
@@ -28,24 +29,25 @@ import tools.Utils;
 public class MapElites {
     // TODO(kisenshi): generalise and make it configurable
     // Games
-    private static final String GAMES_LIST = "examples/games_heuristic_experiments.csv";
+    private static final Games GAME = Games.BUTTERFLIES;
+    private static final int LEVEL = 0;
 
     // Game runs data
-    private static final boolean VISUALS = false;
-    private static final int NUM_GAME_RUNS = 5;
+    private static final boolean VISUALS = true;
     private static final String ACTION_FILE = null;
-    private static final int NUM_INITIAL_CELLS = 5;
+    private static final int NUM_GAME_RUNS = 10;
 
     // Map elites config
     private static final Performance PERFORMANCE_CRITERIA = Performance.FAST;
     private static final Features FEATURE_X = Features.SCORE;
     private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
-    private static final int NUM_MAPELITES_ITERATIONS = 10;
+    private static final int NUM_INITIAL_CELLS = 5;
+    private static final int NUM_MAPELITES_ITERATIONS = 50;
 
     private Elite[][] mapElites;
     private ArrayList<EliteIdx> occupiedCellsIdx;
 
-    public class EliteIdx {
+    private class EliteIdx {
         int x;
         int y;
 
@@ -56,7 +58,6 @@ public class MapElites {
     }
 
     public MapElites() {
-        // 0 --> score, 1 --> n spots explored
         mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
     }
@@ -137,13 +138,8 @@ public class MapElites {
         // todo(kisenshi): this does not belong here, move to another class after tests
 
         // Game and level to play
-        String[][] games = Utils.readGames(GAMES_LIST);
-        int gameIdx = 2;
-        int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
-        String gameName = games[gameIdx][1];
-
-        String game = games[gameIdx][0];
-        String level = game.replace(gameName, gameName + "_lvl" + levelIdx);
+        String game = GAME.game();
+        String level = GAME.level(LEVEL);
 
         // Agent and heuristic
         String team = Behaviours.HEURISTICS_PATH + "TeamBehavioursHeuristic";
