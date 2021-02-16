@@ -28,9 +28,10 @@ import tools.Utils;
  */
 public class MapElites {
     // TODO(kisenshi): generalise and make it configurable
-    // Games
+    // Game and agent
     private static final Games GAME = Games.BUTTERFLIES;
     private static final int LEVEL = 0;
+    private static final Agents AGENT = Agents.MCTS;
 
     // Game runs data
     private static final boolean VISUALS = true;
@@ -46,6 +47,12 @@ public class MapElites {
 
     private Elite[][] mapElites;
     private ArrayList<EliteIdx> occupiedCellsIdx;
+    private Double heuristicsWeightList[];
+
+    private TeamBehavioursHeuristic teamBehaviouHeuristic;
+    private String controller;
+    private String game;
+    private String level;
 
     private class EliteIdx {
         int x;
@@ -57,16 +64,69 @@ public class MapElites {
         }
     }
 
-    public MapElites() {
+    public MapElites(TeamBehavioursHeuristic teamBehaviouHeuristic, Double heuristicsWeightList[], String controller, String game, String level) {
         mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
+        
+        this.heuristicsWeightList = heuristicsWeightList;
+        this.teamBehaviouHeuristic = teamBehaviouHeuristic;
+        this.controller = controller;
+        this.game = game;
+        this.level = level;
     }
 
-    public int getNCellsOccupied() {
+    /**
+     * Initialise map. Fill nCells of the map with elites; initialised with random weights
+     * @param nCells number of cells to fill in the map for initialisation
+     */
+    public void initialiseMap(int nCells) {
+        int nCellsInitialised = 0;
+        while (nCellsInitialised < nCells) {
+            Generator.setRandomWeights(heuristicsWeightList);
+
+            // Create elite from random values and add to map
+            Elite elite = getGameplayElite();
+            addEliteToMap(elite);
+
+            nCellsInitialised = getNCellsOccupied();
+        }
+
+        System.out.println("MAP Elites initialised");
+    }
+
+    /**
+     * MAP elites algorithm - iterate nIterations times
+     * 1) get random elite from map
+     * 2) evolve weights taking random elite as base
+     * 3) create new elite (and get its stats to be able to get features and performance)
+     * 4) add elite to map (assign to cell and replace elite in assigned cell if the new performance is better)
+     * @param nIterations number of iterations of the map elites algorithm
+     */
+    public void runAlgorithm(int nTotalIterations) {
+        int nIterations = 0;
+        while(nIterations < nTotalIterations) {
+            System.out.println("MAPELites algorithm iteration " + nIterations);
+            
+            // get random cell elite and a copy of its weights
+            Elite randomElite = getRandomEliteFromMap();
+            heuristicsWeightList = randomElite.getWeightListCopy();
+
+            // evol weights
+            evolveHeuristicsWeights(heuristicsWeightList);
+
+            // Create new possible elite and add to map
+            Elite newElite = getGameplayElite();
+            addEliteToMap(newElite);
+
+            nIterations++;
+        }
+    }
+
+    private int getNCellsOccupied() {
         return occupiedCellsIdx.size();
     }
 
-    public Elite getRandomEliteFromMap() {
+    private Elite getRandomEliteFromMap() {
         EliteIdx eliteIdx = (EliteIdx) Generator.getRandomElementFromArray(occupiedCellsIdx);
         return mapElites[eliteIdx.x][eliteIdx.y];
     }
@@ -75,29 +135,34 @@ public class MapElites {
         Generator.evolveWeightList(heuristicsWeightList);
     }
     
-    public void addEliteToCell(Elite elite) {
+    private Elite getGameplayElite() {
+        // Get the resulting game stats for current controller and weights
+        GameStats gameStats = new GameStats();
+        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level, VISUALS, controller, ACTION_FILE, teamBehaviouHeuristic, NUM_GAME_RUNS);
+        gameStats.calculateStats();
+
+        // Create elite with information and results
+        return new Elite(controller, heuristicsWeightList, gameStats);
+    }
+
+    private void addEliteToMap(Elite elite) {
         int featureX = elite.getFeatureIdx(FEATURE_X);
         int featureY = elite.getFeatureIdx(FEATURE_Y);
 
         Elite currentElite = mapElites[featureX][featureY];
 
-        System.out.println("weights " + elite.printWeights() + " --> Cell ("+ featureX + ", " + featureY + ")");
+        System.out.println("New elite " + elite.printWeights() + " --> Cell ("+ featureX + ", " + featureY + ")");
         if (currentElite == null) {
             mapElites[featureX][featureY] = elite;
             occupiedCellsIdx.add(new EliteIdx(featureX, featureY));
         } else {
-            System.out.println("Cell occupied; performances: " + elite.getPerformance(PERFORMANCE_CRITERIA) + " vs " + currentElite.getPerformance(PERFORMANCE_CRITERIA));
+            System.out.println("Cell occupied by elite w/ weights: " + currentElite.printWeights()+ ". Performances: " + elite.getPerformance(PERFORMANCE_CRITERIA) + " vs " + currentElite.getPerformance(PERFORMANCE_CRITERIA));
             // substitute the current elite only if thew new one has better performance
             if (Double.compare(elite.getPerformance(PERFORMANCE_CRITERIA), currentElite.getPerformance(PERFORMANCE_CRITERIA)) > 0) {
-                System.out.println("Better elite, replace");
+                System.out.println("New elite has better performance; replace");
                 mapElites[featureX][featureY] = elite;
             }
         }
-
-        /*System.out.println("Occupied cells");
-        for (EliteIdx cellIdx : occupiedCellsIdx) {
-            System.out.println("(" + cellIdx.x + " , " + cellIdx.y + ")");
-        }*/
     }
 
     public void printMapElitesInfo() {
@@ -125,25 +190,12 @@ public class MapElites {
         }
     }
 
-    public GameStats getGameStats(String agentName, StateHeuristic heuristic, String game, String level) {
-        GameStats gameStats = new GameStats();
-        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level, VISUALS, agentName, ACTION_FILE, heuristic,
-                NUM_GAME_RUNS);
-        gameStats.calculateStats();
-        return gameStats;
-    }
-
     public static void main(String[] args) {
         // Initialisations needed for algorithm and running agents
         // todo(kisenshi): this does not belong here, move to another class after tests
 
-        // Game and level to play
-        String game = GAME.game();
-        String level = GAME.level(LEVEL);
-
-        // Agent and heuristic
+        // Team initialisation
         String team = Behaviours.HEURISTICS_PATH + "TeamBehavioursHeuristic";
-        String controller = Agents.MCTS.getAgentName();
 
         int nHeuristics = Behaviours.values().length;
         StateHeuristic heuristicsList[] = new StateHeuristic[nHeuristics];
@@ -160,45 +212,13 @@ public class MapElites {
         // MAP elites adaptation
 
         // Initialise MAP 
-        MapElites mapElites = new MapElites();
-
-        // Initialise map: fill NUM_INITIAL_CELLS cells of the map with elites, randomnly initialised
-        int nCellsInitialised = 0;
-        while (nCellsInitialised < NUM_INITIAL_CELLS) {
-            Generator.setRandomWeights(heuristicsWeightList);
-
-            GameStats gameStats = mapElites.getGameStats(controller, teamBehaviouHeuristic, game, level);
-
-            Elite elite = new Elite(controller, heuristicsWeightList, gameStats);
-            mapElites.addEliteToCell(elite);
-
-            nCellsInitialised = mapElites.getNCellsOccupied();
-        }
-
-        System.out.println("MAP Elites initialised");
+        MapElites mapElites = new MapElites(teamBehaviouHeuristic, heuristicsWeightList, AGENT.getAgentName(), GAME.game(), GAME.level(LEVEL));
+        mapElites.initialiseMap(NUM_INITIAL_CELLS);
 
         // MAP elites algorithm
-        int nIterations = 0;
-        while(nIterations < NUM_MAPELITES_ITERATIONS) {
-            System.out.println("MAPELites algorithm iteration " + nIterations);
-            
-            // get random cell elite and a copy of its weights
-            Elite randomElite = mapElites.getRandomEliteFromMap();
-            heuristicsWeightList = randomElite.getWeightListCopy();
+        mapElites.runAlgorithm(NUM_MAPELITES_ITERATIONS);
 
-            // evol weights
-            mapElites.evolveHeuristicsWeights(heuristicsWeightList);
-
-            // get game stats with new weights
-            GameStats gameStats = mapElites.getGameStats(controller, teamBehaviouHeuristic, game, level);
-
-            // replace cell with new elite if better performance
-            Elite newElite = new Elite(controller, heuristicsWeightList, gameStats);
-            mapElites.addEliteToCell(newElite);
-
-            nIterations++;
-        }
-
+        // Print results
         mapElites.printMapElitesInfo();
         
         // Save MAP info --> JSON
