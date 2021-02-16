@@ -109,7 +109,7 @@ public class MapElites {
             
             // get random cell elite and a copy of its weights
             Elite randomElite = getRandomEliteFromMap();
-            heuristicsWeightList = randomElite.getWeightListCopy();
+            randomElite.copyWeightsListValues(heuristicsWeightList);
 
             // evol weights
             evolveHeuristicsWeights(heuristicsWeightList);

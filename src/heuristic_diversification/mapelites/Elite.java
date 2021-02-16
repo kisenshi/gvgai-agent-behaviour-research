@@ -31,8 +31,10 @@ public class Elite {
         return performance.getPerformanceValue(gameStats);
     }
 
-    public Double[] getWeightListCopy() {
-        return heuristicsWeightList.clone();
+    public void copyWeightsListValues(Double[] weightsList) {
+        for (int i = 0; i < heuristicsWeightList.length; i++) {
+            weightsList[i] = heuristicsWeightList[i];
+        }
     }
 
     public String printWeights() {
