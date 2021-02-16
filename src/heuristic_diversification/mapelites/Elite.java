@@ -5,7 +5,7 @@
 
 package heuristic_diversification.mapelites;
 
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 
 /**
  * Class containing the information stored in each cell of the MAP-Elites

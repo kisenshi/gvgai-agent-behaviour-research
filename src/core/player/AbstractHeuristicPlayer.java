@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 
 public abstract class AbstractHeuristicPlayer extends AbstractPlayer {
     protected StateHeuristic heuristic;

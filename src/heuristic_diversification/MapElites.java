@@ -10,7 +10,7 @@ import java.util.Random;
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.config.Behaviours;
 import heuristic_diversification.helper.ArcadeMachineHeuristic;
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 import tools.Utils;
 
 public class MapElites {

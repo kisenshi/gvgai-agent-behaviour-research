@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 
 import core.game.Game;
 import core.game.StateObservation;
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 
 public abstract class StateHeuristic {
     public static final boolean DEBUG = false;

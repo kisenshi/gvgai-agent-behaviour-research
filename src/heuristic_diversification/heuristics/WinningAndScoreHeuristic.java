@@ -14,7 +14,7 @@ import java.io.IOException;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
-import heuristic_diversification.helper.GameStats;
+import heuristic_diversification.model.GameStats;
 import ontology.Types;
 
 /**

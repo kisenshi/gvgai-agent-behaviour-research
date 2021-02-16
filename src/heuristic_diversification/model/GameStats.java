@@ -3,7 +3,7 @@
  * Date: 1st February 2021
  */
 
-package heuristic_diversification.helper;
+package heuristic_diversification.model;
 
 import java.io.BufferedWriter;
 import java.io.File;

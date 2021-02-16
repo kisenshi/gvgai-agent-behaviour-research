@@ -20,6 +20,7 @@ import core.player.Player;
 import core.vgdl.VGDLFactory;
 import core.vgdl.VGDLParser;
 import core.vgdl.VGDLRegistry;
+import heuristic_diversification.model.GameStats;
 import tools.ElapsedCpuTimer;
 import tracks.ArcadeMachine;
 
