@@ -45,20 +45,22 @@ public class MapElites {
         }
     }
 
-    public MapElites(TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[]) {
+    public MapElites(TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[], int nInitialCells) {
         mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
         
         this.gameplayFramework = gameplayFramework;
         this.controller = controller;
         this.heuristicsWeightList = heuristicsWeightList;
+
+        initialiseMap(nInitialCells);
     }
 
     /**
      * Initialise map. Fill nCells of the map with elites; initialised with random weights
      * @param nInitialCells number of cells to fill in the map for initialisation
      */
-    public void initialiseMap(int nInitialCells) {
+    private void initialiseMap(int nInitialCells) {
         int nCellsInitialised = 0;
         while (nCellsInitialised < nInitialCells) {
             Generator.setRandomWeights(heuristicsWeightList);
