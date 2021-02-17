@@ -13,7 +13,7 @@ import heuristic_diversification.model.GameStats;
 
 public enum Features {
     WINS(0, 100, 10, "win"), 
-    SCORE(0, 100, 10, "score"), 
+    SCORE(0, 70, 10, "score"), 
     EXPLORATION_PERCENTAGE(0, 100, 10, "nExplored"),
     EXPLORATION_NUMBER(0, 206, 10, "nExplored");
 

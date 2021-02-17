@@ -86,7 +86,7 @@ public class MapElites {
     public void runAlgorithm(int nTotalIterations) {
         int nIterations = 0;
         while(nIterations < nTotalIterations) {
-            System.out.println("MAPELites algorithm iteration " + nIterations);
+            System.out.println("MAPELites algorithm iteration " + (nIterations + 1));
             
             // get random cell elite and a copy of its weights
             Elite randomElite = getRandomEliteFromMap();
@@ -130,7 +130,7 @@ public class MapElites {
 
         Elite currentElite = mapElites[featureX][featureY];
 
-        System.out.println("New elite " + elite.printWeights() + " --> Cell ("+ featureX + ", " + featureY + ")");
+        System.out.println("New elite w/ weights: " + elite.printWeights() + " --> Cell ("+ featureX + ", " + featureY + ")");
         if (currentElite == null) {
             mapElites[featureX][featureY] = elite;
             occupiedCellsIdx.add(new EliteIdx(featureX, featureY));
@@ -145,7 +145,7 @@ public class MapElites {
     }
 
     public void printMapElitesInfo() {
-        System.out.println("MAP Elites cells: ");
+        System.out.println("MAP Elites cells X: "+ FEATURE_X.name()+ " (vertical); Y: " + FEATURE_Y.name() + " (horizontal)\n");
         for (int x = 0; x < mapElites.length; x++) {
             for (int y = 0; y < mapElites[x].length; y++) {
                 if (mapElites[x][y] != null) {
@@ -156,7 +156,7 @@ public class MapElites {
             }
             System.out.println("\n");
         }
-        System.out.println("MAP Elites cells info: ");
+        System.out.println("Elites info: ");
         for (int x = 0; x < mapElites.length; x++) {
             for (int y = 0; y < mapElites[x].length; y++) {
                 if (mapElites[x][y] != null) {
