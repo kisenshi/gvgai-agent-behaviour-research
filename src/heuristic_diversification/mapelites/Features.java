@@ -12,17 +12,18 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 import heuristic_diversification.model.GameStats;
 
 public enum Features {
-    WINS(0, 100, 10, "win"), 
-    SCORE(0, 70, 10, "score"), 
-    EXPLORATION_PERCENTAGE(0, 100, 10, "nExplored"),
-    EXPLORATION_NUMBER(0, 206, 10, "nExplored");
+    WINS(0, 100, 10, "win", true), 
+    SCORE(0, 70, 10, "score", false), 
+    EXPLORATION_PERCENTAGE(0, 100, 10, "percentageExplored", true),
+    EXPLORATION_NUMBER(0, 206, 10, "nExplored", false);
 
     Integer minValue;
     Integer maxValue;
     Integer bucketSize;
     String statName;
+    boolean percentage;
 
-    Features(Integer min, Integer max, Integer bucketSize, String statName) {
+    Features(Integer min, Integer max, Integer bucketSize, String statName, boolean percentage) {
         this.minValue = min;
         this.maxValue = max;
         this.bucketSize = bucketSize;
@@ -43,8 +44,14 @@ public enum Features {
             Field statsField;
             statsField = GameStats.class.getField(statName + "Stats");
             StatisticalSummaryValues stats =  (StatisticalSummaryValues) statsField.get(gameStats);
-            idx = Buckets.getMapIdx(stats.getMean(), minValue, maxValue, bucketSize);
 
+            double statsValue = stats.getMean();
+            if(percentage) {
+                // For stats in percentage, the result is in range [0, 1], we need to multiply by 100 to get the right bucket
+                statsValue *= 100;
+            }
+
+            idx = Buckets.getMapIdx(statsValue, minValue, maxValue, bucketSize);
         } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) { 
             System.err.println("Exception retrieving " + statName + "Stats in gameStats");
             e.printStackTrace();

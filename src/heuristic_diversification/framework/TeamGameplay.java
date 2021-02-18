@@ -1,5 +1,6 @@
 package heuristic_diversification.framework;
 
+import heuristic_diversification.config.Games;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.model.GameStats;
 
@@ -12,24 +13,24 @@ import heuristic_diversification.model.GameStats;
 public class TeamGameplay {
 
     private TeamBehavioursHeuristic teamBehaviouHeuristic;
-    private String game;
-    private String level;
+    private Games gameInfo;
+    private int levelId;
     private String actionFile;
     private boolean visuals;
     private int nGameRuns;
 
-    public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, String game, String level, String actionFile, Boolean visuals, int nGameRuns) {
+    public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, Games gameInfo, int levelId, String actionFile, Boolean visuals, int nGameRuns) {
         this.teamBehaviouHeuristic = teamBehaviouHeuristic;
-        this.game = game;
-        this.level = level;
+        this.gameInfo = gameInfo;
+        this.levelId = levelId;
         this.actionFile = actionFile;
         this.visuals = visuals;
         this.nGameRuns = nGameRuns;
     }
 
     public GameStats createStatsFromGameplay(String controller) {
-        GameStats gameStats = new GameStats();
-        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level, visuals, controller, actionFile, teamBehaviouHeuristic, nGameRuns);
+        GameStats gameStats = new GameStats(gameInfo.levelNavigationSize(levelId));
+        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, gameInfo.game(), gameInfo.level(levelId), visuals, controller, actionFile, teamBehaviouHeuristic, nGameRuns);
         gameStats.calculateStats();
         return gameStats;
     }

@@ -35,8 +35,11 @@ public class GameStats {
     private ArrayList<int[][]> heatMapExplorationMatrix;
     private ArrayList<Integer> lastNewExplorationTick;
     public StatisticalSummaryValues nExploredStats;
+    public StatisticalSummaryValues percentageExploredStats;
 
-    public GameStats() {
+    public GameStats(int mapSize) {
+        this.mapSize = mapSize;
+
         gameOverTick = new ArrayList<Integer>();
 
         // winner
@@ -48,7 +51,6 @@ public class GameStats {
         lastPositiveScoreChangeTick = new ArrayList<Integer>();
 
         // explorer
-        mapSize = 0;
         nExplored = new ArrayList<Integer>();
         heatMapExplorationMatrix = new ArrayList<int[][]>();
         lastNewExplorationTick = new ArrayList<Integer>();
@@ -66,10 +68,6 @@ public class GameStats {
         this.score.add(score);
         this.lastScoreChangeTick.add(lastScoreChange);
         this.lastPositiveScoreChangeTick.add(lastPositiveScoreChange);
-    }
-
-    public void setMapSize(int mapSize) {
-        this.mapSize = mapSize;
     }
 
     public void addExplorerFinalData(int nExplored, int[][] explorationMatrix, int lastNewExploration) {
@@ -140,7 +138,7 @@ public class GameStats {
         for (int winValue : win) {
             stats.addValue((double) winValue);
         }
-        
+
         winStats = (StatisticalSummaryValues) stats.getSummary();
         System.out.println(winStats.toString());
         stats.clear();
@@ -164,6 +162,19 @@ public class GameStats {
         nExploredStats = (StatisticalSummaryValues) stats.getSummary();
         System.out.println(nExploredStats.toString());
         stats.clear();
+
+        // exploration percentage
+        if (mapSize > 0) {
+            System.out.println("Exploration percentage");
+            for (double nExploredValue : nExplored) {
+                double percentageExplored = nExploredValue / mapSize;
+                stats.addValue(percentageExplored);
+            }
+
+            percentageExploredStats = (StatisticalSummaryValues) stats.getSummary();
+            System.out.println(percentageExploredStats.toString());
+            stats.clear();
+        }
     }
 
     // killer

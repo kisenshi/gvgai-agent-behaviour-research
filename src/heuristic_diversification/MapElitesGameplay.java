@@ -43,7 +43,7 @@ public class MapElitesGameplay {
         Object[] constructorArgs = new Object[]{heuristicsList, heuristicsWeightList};
         TeamBehavioursHeuristic teamBehaviouHeuristic = (TeamBehavioursHeuristic) ArcadeMachineHeuristic.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
 
-        TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, GAME.game(), GAME.level(LEVEL), ACTION_FILE, VISUALS, NUM_GAME_RUNS);
+        TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, GAME, LEVEL, ACTION_FILE, VISUALS, NUM_GAME_RUNS);
 
         // MAP elites adaptation
 
