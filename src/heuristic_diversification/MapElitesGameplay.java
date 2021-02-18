@@ -8,6 +8,8 @@ import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.framework.TeamGameplay;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.mapelites.MapElites;
+import tools.com.google.gson.Gson;
+import tools.com.google.gson.JsonElement;
 
 public class MapElitesGameplay {
     // Game
@@ -57,5 +59,10 @@ public class MapElitesGameplay {
         mapElites.printMapElitesInfo();
         
         // Save MAP info --> JSON
+        Gson gson = new Gson();
+
+        // TEST
+        JsonElement jsonElement = gson.toJsonTree(mapElites);
+        System.out.println(gson.toJson(jsonElement));
     }
 }

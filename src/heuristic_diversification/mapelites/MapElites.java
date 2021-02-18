@@ -28,12 +28,13 @@ public class MapElites {
     private static final Features FEATURE_X = Features.SCORE;
     private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
 
-    private Elite[][] mapElites;
-    private ArrayList<EliteIdx> occupiedCellsIdx;
-
-    private Double heuristicsWeightList[];
-    private String controller;
     private TeamGameplay gameplayFramework;
+
+    private ArrayList<EliteIdx> occupiedCellsIdx;
+    private Elite[][] mapElites;
+
+    transient private Double heuristicsWeightList[];
+    transient private String controller;
 
     private class EliteIdx {
         int x;

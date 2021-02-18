@@ -12,11 +12,11 @@ import heuristic_diversification.model.GameStats;
  */
 public class TeamGameplay {
 
-    private TeamBehavioursHeuristic teamBehaviouHeuristic;
+    transient private TeamBehavioursHeuristic teamBehaviouHeuristic;
     private Games gameInfo;
     private int levelId;
     private String actionFile;
-    private boolean visuals;
+    transient private boolean visuals;
     private int nGameRuns;
 
     public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, Games gameInfo, int levelId, String actionFile, Boolean visuals, int nGameRuns) {
@@ -34,5 +34,4 @@ public class TeamGameplay {
         gameStats.calculateStats();
         return gameStats;
     }
-    
 }

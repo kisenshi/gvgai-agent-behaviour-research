@@ -16,24 +16,24 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class GameStats {
-    private ArrayList<Integer> gameOverTick;
+    transient private ArrayList<Integer> gameOverTick;
     public StatisticalSummaryValues gameOverTickStats;
 
     // winner
-    private ArrayList<Integer> win; // 1 win, 0 lose
+    transient private ArrayList<Integer> win; // 1 win, 0 lose
     public StatisticalSummaryValues winStats;
 
     // record breaker
-    private ArrayList<Double> score;
-    private ArrayList<Integer> lastScoreChangeTick;
-    private ArrayList<Integer> lastPositiveScoreChangeTick;
+    transient private ArrayList<Double> score;
+    transient private ArrayList<Integer> lastScoreChangeTick;
+    transient private ArrayList<Integer> lastPositiveScoreChangeTick;
     public StatisticalSummaryValues scoreStats;
 
     // explorer
     private int mapSize;
-    private ArrayList<Integer> nExplored;
-    private ArrayList<int[][]> heatMapExplorationMatrix;
-    private ArrayList<Integer> lastNewExplorationTick;
+    transient private ArrayList<Integer> nExplored;
+    transient private ArrayList<int[][]> heatMapExplorationMatrix;
+    transient private ArrayList<Integer> lastNewExplorationTick;
     public StatisticalSummaryValues nExploredStats;
     public StatisticalSummaryValues percentageExploredStats;
 
