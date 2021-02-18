@@ -98,7 +98,7 @@ public class GameStats {
 
     private void printExplorerStats(BufferedWriter writer) throws IOException {
         writer.write("== Explorer ==\n");
-        for (int i = 0; i < score.size(); i++) {
+        for (int i = 0; i < nExplored.size(); i++) {
             writer.write(nExplored.get(i).toString() + " ");
             writer.write(lastNewExplorationTick.get(i).toString() + " ");
             writer.write("\n");
