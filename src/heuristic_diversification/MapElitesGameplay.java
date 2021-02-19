@@ -7,7 +7,9 @@ import heuristic_diversification.config.Games;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.framework.TeamGameplay;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
+import heuristic_diversification.mapelites.Features;
 import heuristic_diversification.mapelites.MapElites;
+import heuristic_diversification.mapelites.Performance;
 import tools.com.google.gson.Gson;
 import tools.com.google.gson.JsonElement;
 
@@ -24,9 +26,14 @@ public class MapElitesGameplay {
     private static final String ACTION_FILE = null;
     private static final int NUM_GAME_RUNS = 5; // 100
 
+    // MAP elites configuration
+    private static final Performance PERFORMANCE_CRITERIA = Performance.FAST;
+    private static final Features FEATURE_X = Features.SCORE;
+    private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
+
     // Map elites initialisation and iterations
-    private static final int NUM_INITIAL_CELLS = 5;
-    private static final int NUM_MAPELITES_ITERATIONS = 5; // 1000
+    private static final int NUM_INITIAL_CELLS = 1;
+    private static final int NUM_MAPELITES_ITERATIONS = 1; // 1000
     public static void main(String[] args) {
         // Initialisations needed for algorithm and running agents
 
@@ -50,7 +57,7 @@ public class MapElitesGameplay {
         // MAP elites adaptation
 
         // Initialise MAP 
-        MapElites mapElites = new MapElites(gameplayFramework, AGENT.getAgentName(), heuristicsWeightList, NUM_INITIAL_CELLS);
+        MapElites mapElites = new MapElites(PERFORMANCE_CRITERIA, FEATURE_X, FEATURE_Y, gameplayFramework, AGENT.getAgentName(), heuristicsWeightList, NUM_INITIAL_CELLS);
 
         // MAP elites algorithm
         mapElites.runAlgorithm(NUM_MAPELITES_ITERATIONS);

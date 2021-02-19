@@ -21,12 +21,10 @@ import heuristic_diversification.model.GameStats;
  * configuration set when running the algorithm
  */
 public class MapElites {
-    // TODO(kisenshi): Make it configurable through a file
-
     // Map elites config
-    private static final Performance PERFORMANCE_CRITERIA = Performance.FAST;
-    private static final Features FEATURE_X = Features.SCORE;
-    private static final Features FEATURE_Y = Features.EXPLORATION_NUMBER;
+    private Performance performanceCriteria;
+    private Features featureInfoX;
+    private Features featureInfoY;
 
     private TeamGameplay gameplayFramework;
 
@@ -46,10 +44,13 @@ public class MapElites {
         }
     }
 
-    public MapElites(TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[], int nInitialCells) {
-        mapElites = new Elite[FEATURE_X.featureArraySize()][FEATURE_Y.featureArraySize()];
+    public MapElites(Performance performance, Features featureX, Features featureY, TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[], int nInitialCells) {
+        mapElites = new Elite[featureX.featureArraySize()][featureY.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
         
+        this.performanceCriteria = performance;
+        this.featureInfoX = featureX;
+        this.featureInfoY = featureY;
         this.gameplayFramework = gameplayFramework;
         this.controller = controller;
         this.heuristicsWeightList = heuristicsWeightList;
@@ -126,8 +127,8 @@ public class MapElites {
     }
 
     private void addEliteToMap(Elite elite) {
-        int featureX = elite.getFeatureIdx(FEATURE_X);
-        int featureY = elite.getFeatureIdx(FEATURE_Y);
+        int featureX = elite.getFeatureIdx(featureInfoX);
+        int featureY = elite.getFeatureIdx(featureInfoY);
 
         Elite currentElite = mapElites[featureX][featureY];
 
@@ -136,9 +137,9 @@ public class MapElites {
             mapElites[featureX][featureY] = elite;
             occupiedCellsIdx.add(new EliteIdx(featureX, featureY));
         } else {
-            System.out.println("Cell occupied by elite w/ weights: " + currentElite.printWeights()+ ". Performances: " + elite.getPerformance(PERFORMANCE_CRITERIA) + " vs " + currentElite.getPerformance(PERFORMANCE_CRITERIA));
+            System.out.println("Cell occupied by elite w/ weights: " + currentElite.printWeights()+ ". Performances: " + elite.getPerformance(performanceCriteria) + " vs " + currentElite.getPerformance(performanceCriteria));
             // substitute the current elite only if thew new one has better performance
-            if (Double.compare(elite.getPerformance(PERFORMANCE_CRITERIA), currentElite.getPerformance(PERFORMANCE_CRITERIA)) > 0) {
+            if (Double.compare(elite.getPerformance(performanceCriteria), currentElite.getPerformance(performanceCriteria)) > 0) {
                 System.out.println("New elite has better performance; replace");
                 mapElites[featureX][featureY] = elite;
             }
@@ -146,7 +147,7 @@ public class MapElites {
     }
 
     public void printMapElitesInfo() {
-        System.out.println("MAP Elites cells X: "+ FEATURE_X.name()+ " (vertical); Y: " + FEATURE_Y.name() + " (horizontal)\n");
+        System.out.println("MAP Elites cells X: "+ featureInfoX.name()+ " (vertical); Y: " + featureInfoY.name() + " (horizontal)\n");
         for (int x = 0; x < mapElites.length; x++) {
             for (int y = 0; y < mapElites[x].length; y++) {
                 if (mapElites[x][y] != null) {
