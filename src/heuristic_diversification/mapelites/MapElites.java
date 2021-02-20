@@ -134,6 +134,7 @@ public class MapElites {
 
         System.out.println("New elite w/ weights: " + elite.printWeights() + " --> Cell ("+ featureX + ", " + featureY + ")");
         if (currentElite == null) {
+            elite.setDataForSerialisation(performanceCriteria, new Features[]{featureInfoX, featureInfoY});
             mapElites[featureX][featureY] = elite;
             occupiedCellsIdx.add(new EliteIdx(featureX, featureY));
         } else {
@@ -141,6 +142,7 @@ public class MapElites {
             // substitute the current elite only if thew new one has better performance
             if (Double.compare(elite.getPerformance(performanceCriteria), currentElite.getPerformance(performanceCriteria)) > 0) {
                 System.out.println("New elite has better performance; replace");
+                elite.setDataForSerialisation(performanceCriteria, new Features[]{featureInfoX, featureInfoY});
                 mapElites[featureX][featureY] = elite;
             }
         }

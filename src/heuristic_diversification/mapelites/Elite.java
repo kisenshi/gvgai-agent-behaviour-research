@@ -15,6 +15,8 @@ import heuristic_diversification.model.GameStats;
 public class Elite {
     String agentName;
     Double heuristicsWeightList[];
+    double performance;
+    Double[] featureValues; 
     GameStats gameStats;
 
     public Elite(String agentName, final Double weightList[], GameStats gameStats) {
@@ -34,6 +36,14 @@ public class Elite {
     public void copyWeightsListValues(Double[] weightsList) {
         for (int i = 0; i < heuristicsWeightList.length; i++) {
             weightsList[i] = heuristicsWeightList[i];
+        }
+    }
+
+    public void setDataForSerialisation(Performance performance, Features[] features) {
+        this.performance = performance.getPerformanceValue(gameStats);
+        this.featureValues = new Double[features.length];
+        for (int i = 0; i < features.length; i++) {
+            this.featureValues[i] = features[i].getFeatureValue(gameStats);
         }
     }
 

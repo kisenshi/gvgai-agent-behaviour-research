@@ -35,9 +35,8 @@ public enum Features {
         return Buckets.getMaxIdx(minValue, maxValue, bucketSize) + 1;
     }
 
-    public int getBucketIdx(GameStats gameStats) {
-
-        int idx = 0; 
+    public double getFeatureValue(GameStats gameStats) {
+        double featureValue = 0.0;
 
         try {
 
@@ -45,19 +44,23 @@ public enum Features {
             statsField = GameStats.class.getField(statName + "Stats");
             StatisticalSummaryValues stats =  (StatisticalSummaryValues) statsField.get(gameStats);
 
-            double statsValue = stats.getMean();
+            featureValue = stats.getMean();
             if(percentage) {
                 // For stats in percentage, the result is in range [0, 1], we need to multiply by 100 to get the right bucket
-                statsValue *= 100;
+                featureValue *= 100;
             }
 
-            idx = Buckets.getMapIdx(statsValue, minValue, maxValue, bucketSize);
         } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) { 
             System.err.println("Exception retrieving " + statName + "Stats in gameStats");
             e.printStackTrace();
             System.exit(1);
         }
 
-        return idx;
+        return featureValue;
+    }
+
+    public int getBucketIdx(GameStats gameStats) {
+        double featureStatsValue = getFeatureValue(gameStats);
+        return Buckets.getMapIdx(featureStatsValue, minValue, maxValue, bucketSize);
     }
 }
