@@ -2,6 +2,7 @@ package heuristic_diversification.framework;
 
 import heuristic_diversification.config.Games;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
+import heuristic_diversification.mapelites.Config.FrameworkConfig;
 import heuristic_diversification.model.GameStats;
 
 /**
@@ -12,25 +13,20 @@ import heuristic_diversification.model.GameStats;
  */
 public class TeamGameplay {
 
-    transient private TeamBehavioursHeuristic teamBehaviouHeuristic;
-    private Games gameInfo;
-    private int levelId;
-    private String actionFile;
-    transient private boolean visuals;
-    private int nGameRuns;
+    private TeamBehavioursHeuristic teamBehaviouHeuristic;
+    FrameworkConfig frameworkConfig;
 
-    public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, Games gameInfo, int levelId, String actionFile, Boolean visuals, int nGameRuns) {
+    public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, FrameworkConfig frameworkConfig) {
         this.teamBehaviouHeuristic = teamBehaviouHeuristic;
-        this.gameInfo = gameInfo;
-        this.levelId = levelId;
-        this.actionFile = actionFile;
-        this.visuals = visuals;
-        this.nGameRuns = nGameRuns;
+        this.frameworkConfig = frameworkConfig;
     }
 
     public GameStats createStatsFromGameplay(String controller) {
+        Games gameInfo = frameworkConfig.game;
+        int levelId = frameworkConfig.level;
+    
         GameStats gameStats = new GameStats(gameInfo.levelNavigationSize(levelId));
-        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, gameInfo.game(), gameInfo.level(levelId), visuals, controller, actionFile, teamBehaviouHeuristic, nGameRuns);
+        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, gameInfo.game(), gameInfo.level(levelId), frameworkConfig.visuals, controller, frameworkConfig.actionFile(), teamBehaviouHeuristic, frameworkConfig.nGameRuns);
         gameStats.calculateStats();
         return gameStats;
     }

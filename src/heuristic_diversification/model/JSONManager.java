@@ -10,12 +10,19 @@ import tools.com.google.gson.Gson;
 import tools.com.google.gson.JsonElement;
 
 public class JSONManager {
-    public static void saveMAP(MapElites mapElitesGameplay, String fileName) {
+
+    public static void saveMapElitesGameplay(Config configData, MapElites mapElitesGameplay) {
         Gson gson = new Gson();
 
-        JsonElement jsonElement = gson.toJsonTree(mapElitesGameplay);
-        String jsonString = gson.toJson(jsonElement);
-        writeToFile(jsonString, fileName + ".json");
+        JsonObject jsonObject = new JsonObject();
+        JsonElement configDataJson = gson.toJsonTree(configData);
+        JsonElement mapElitesJson = gson.toJsonTree(mapElitesGameplay);
+        
+        jsonObject.add("config", configDataJson);
+        jsonObject.add("result", mapElitesJson);
+
+        String jsonString = gson.toJson(jsonObject);
+        writeToFile(jsonString, configData.resultsFileName() + ".json");
     }
 
     private static void writeToFile(String content, String fileName) {

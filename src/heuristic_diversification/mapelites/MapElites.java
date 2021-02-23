@@ -26,7 +26,7 @@ public class MapElites {
     private Features featureInfoX;
     private Features featureInfoY;
 
-    private TeamGameplay gameplayFramework;
+    transient private TeamGameplay gameplayFramework;
 
     private ArrayList<EliteIdx> occupiedCellsIdx;
     private Elite[][] mapElites;

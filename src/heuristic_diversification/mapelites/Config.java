@@ -25,35 +25,43 @@ public class Config {
     private static final String N_ALGORITHM_ITERATIONS_KEY = "nAlgorithmIterations";
     private static final String N_MAP_INITIAL_CELLS_KEY = "nInitialCells";
 
-    private Framework frameworkConfig;
-    private MapElites mapElitesConfig;
+    private FrameworkConfig frameworkConfig;
+    private MapElitesConfig mapElitesConfig;
 
-    private class Framework {
+    public class FrameworkConfig {
         public final Games game;
         public final int level;
         public final Agents agent;
         public final int nGameRuns;
         public final boolean visuals;
-        public final boolean recordActionFile;
+        private final boolean saveActionFile;
 
-        private Framework(Properties configProperties) {
+        private FrameworkConfig(Properties configProperties) {
             this.game = Games.valueOf(configProperties.getProperty(GAME_KEY));
             this.level = Integer.parseInt(configProperties.getProperty(LEVEL_KEY));
             this.agent = Agents.valueOf(configProperties.getProperty(AGENT_KEY));
             this.nGameRuns = Integer.valueOf(configProperties.getProperty(N_GAME_RUNS_KEY));
             this.visuals = Boolean.valueOf(configProperties.getProperty(VISUALS_KEY));
-            this.recordActionFile = Boolean.valueOf(configProperties.getProperty(ACTION_FILE_KEY));
+            this.saveActionFile = Boolean.valueOf(configProperties.getProperty(ACTION_FILE_KEY));
+        }
+
+        public String actionFile() {
+            if (!saveActionFile) {
+                return null;
+            }
+
+            return resultsFileName() + "_ActionFile";
         }
     }
 
-    private class MapElites {
+    public class MapElitesConfig {
         public final Performance performanceCriteria;
         public final Features featureX;
         public final Features featureY;
         public final int nInitialCells;
         public final int nMapElitesIterations;
 
-        private MapElites(Properties configProperties) {
+        private MapElitesConfig(Properties configProperties) {
             this.performanceCriteria = Performance.valueOf(configProperties.getProperty(PERFORMANCE_CRITERIA_KEY));
             this.featureX = Features.valueOf(configProperties.getProperty(FEATURE_X_KEY));
             this.featureY = Features.valueOf(configProperties.getProperty(FEATURE_Y_KEY));
@@ -75,8 +83,16 @@ public class Config {
             System.exit(1);
         }
 
-        frameworkConfig = new Framework(configProperties);
-        mapElitesConfig = new MapElites(configProperties);
+        frameworkConfig = new FrameworkConfig(configProperties);
+        mapElitesConfig = new MapElitesConfig(configProperties);
+    }
+
+    public FrameworkConfig getFrameworkConfig() {
+        return frameworkConfig;
+    }
+
+    public MapElitesConfig getMapElitesConfig() {
+        return mapElitesConfig;
     }
 
     public  String resultsFileName() {
