@@ -26,27 +26,6 @@ import tools.Vector2d;
  * Maximize the physical exploration of the map, divided on tiles
  */
 public class ExplorationHeuristic extends StateHeuristic {
-    private static int sGamesLvlNavigationSizes[] = new int[] { 30, // "aliens",
-            9, // "bait",
-            206, // "butterflies",
-            322, // "camelRace",
-            135, // "chase",
-            184, // "chopper",
-            333, // "crossfire",
-            405, // "digdug",
-            74, // "escape",
-            79, // "hungrybirds",
-            187, // "infection",
-            243, // "intersection",
-            222, // "lemmings",
-            242, // "missilecommand",
-            15, // "modality",
-            310, // "plaqueattack",
-            266, // "roguelike",
-            189, // "seaquest",
-            121, // "survivezombies",
-            50, // "waitforbreakfast"
-    };
     private static int COLOURS[][] = { { 0, 0, 255 }, // blue
             { 0, 255, 0 }, // green
             { 255, 255, 0 }, // yellow
@@ -211,15 +190,13 @@ public class ExplorationHeuristic extends StateHeuristic {
         // gameId controllerId randomSeed winnerId score gameTicks mapSize nExplored
         // navigationSize percentageExplored lastDiscoveredTick
         int gameId = recordIds[0];
-        int navigationSize = sGamesLvlNavigationSizes[gameId];
 
         try {
             if (fileName != null && !fileName.equals("")) {
                 writer = new BufferedWriter(new FileWriter(new File(fileName), true));
                 writer.write(gameId + " " + recordIds[1] + " " + randomSeed + " "
                         + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) + " " + played.getScore() + " "
-                        + played.getGameTick() + " " + getMapSize() + " " + explored + " " + navigationSize + " "
-                        + (explored * 1.0) / navigationSize + " " + mLastDiscoveryTick + "\n");
+                        + played.getGameTick() + " " + getMapSize() + " " + explored + " " + mLastDiscoveryTick + "\n");
 
                 // printExplorationMatrix();
 
