@@ -1,3 +1,8 @@
+/**
+ * Author: Cristina Guerrero
+ * Date: 23rd February 2021
+ */
+
 package heuristic_diversification.model;
 
 import java.io.BufferedWriter;

@@ -1,3 +1,8 @@
+/**
+ * Author: Cristina Guerrero
+ * Date: 23rd February 2021
+ */
+
 package heuristic_diversification.mapelites;
 
 import java.io.BufferedWriter;

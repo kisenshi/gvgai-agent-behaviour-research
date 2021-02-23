@@ -1,3 +1,8 @@
+/**
+ * Author: Cristina Guerrero
+ * Date: 16th February 2021
+ */
+
 package heuristic_diversification.framework;
 
 import heuristic_diversification.config.Games;
