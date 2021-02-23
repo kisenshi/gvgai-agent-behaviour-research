@@ -10,8 +10,7 @@ import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.mapelites.Features;
 import heuristic_diversification.mapelites.MapElites;
 import heuristic_diversification.mapelites.Performance;
-import tools.com.google.gson.Gson;
-import tools.com.google.gson.JsonElement;
+import heuristic_diversification.model.JSONManager;
 
 public class MapElitesGameplay {
     // Game
@@ -34,6 +33,11 @@ public class MapElitesGameplay {
     // Map elites initialisation and iterations
     private static final int NUM_INITIAL_CELLS = 1;
     private static final int NUM_MAPELITES_ITERATIONS = 1; // 1000
+
+    private static String resultsFileName() {
+        return "MAPElitesGameplay_" + GAME.getGameName() + "_lvl" + LEVEL + "_x_" + FEATURE_X.name() + "_y_" + FEATURE_Y.name() + "_perf_" + PERFORMANCE_CRITERIA.name() + "_" + NUM_GAME_RUNS + "_" + NUM_MAPELITES_ITERATIONS;
+    }
+    
     public static void main(String[] args) {
         // Initialisations needed for algorithm and running agents
 
@@ -65,11 +69,6 @@ public class MapElitesGameplay {
         // Print results
         mapElites.printMapElitesInfo();
         
-        // Save MAP info --> JSON
-        Gson gson = new Gson();
-
-        // TEST
-        JsonElement jsonElement = gson.toJsonTree(mapElites);
-        System.out.println(gson.toJson(jsonElement));
+        JSONManager.saveMAP(mapElites, resultsFileName());
     }
 }
