@@ -13,8 +13,15 @@ import heuristic_diversification.model.JSONManager;
 
 public class MapElitesGameplay {
     public static void main(String[] args) {
-        // Initialisations needed for algorithm and running agents
-        Config configData = new Config("configFileTestQuick.txt");
+        // Expect config file name as argument
+        if (args.length != 1) {
+            System.out.println("Error: Please provide config file name as argument");
+            System.exit(1);
+        }
+        String configFile = args[0];
+
+        // Read config file and initialisations needed for the algorithm and running agents
+        Config configData = new Config(configFile);
         FrameworkConfig fwConfig = configData.getFrameworkConfig();
         MapElitesConfig mapElitesConfig = configData.getMapElitesConfig();
 
@@ -43,9 +50,11 @@ public class MapElitesGameplay {
         // MAP elites algorithm
         mapElites.runAlgorithm(mapElitesConfig.nMapElitesIterations);
 
-        // Print results
-        mapElites.printMapElitesInfo();
+        // Log results
+        String statsResultsFileName = configData.resultsFileName() + "_Stats";
+        mapElites.printMapElitesInfo(statsResultsFileName);
         
+        // Generate JSON
         JSONManager.saveMapElitesGameplay(configData, mapElites);
     }
 }

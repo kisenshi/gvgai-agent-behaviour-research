@@ -51,7 +51,7 @@ public class Elite {
         return "[" + heuristicsWeightList[0] + ", " + heuristicsWeightList[1] + "]";
     }
 
-    public void printInfo() {
+    public void printInfo(String statsResultsFileName) {
         System.out.println("Agent: " + agentName);
         System.out.println("Weights: " + printWeights());
         System.out.println("Gametick: " + gameStats.gameOverTickStats.toString());
@@ -59,7 +59,9 @@ public class Elite {
         System.out.println("Score: " + gameStats.scoreStats.toString());
         System.out.println("nExplored: " + gameStats.nExploredStats.toString());
 
-        String resultsHeuristicFile = "Stats_" + heuristicsWeightList[0] + "_" + heuristicsWeightList[1] + ".txt";
-        gameStats.printStats(resultsHeuristicFile);
+        if (statsResultsFileName != null) {
+            String resultsHeuristicFile = statsResultsFileName + "_" + heuristicsWeightList[0] + "_" + heuristicsWeightList[1] + ".txt";
+            gameStats.printStats(resultsHeuristicFile);
+        }
     }
 }

@@ -149,7 +149,7 @@ public class MapElites {
         System.out.println("\n");
     }
 
-    public void printMapElitesInfo() {
+    public void printMapElitesInfo(String statsResultsFileName) {
         System.out.println("MAP Elites cells X: "+ featureInfoX.name()+ " (vertical); Y: " + featureInfoY.name() + " (horizontal)\n");
         for (int x = 0; x < mapElites.length; x++) {
             for (int y = 0; y < mapElites[x].length; y++) {
@@ -168,7 +168,7 @@ public class MapElites {
                     System.out.println("-----------------------");
                     System.out.println("(" + x + ", " + y + ")");
                     Elite elite = mapElites[x][y];
-                    elite.printInfo();
+                    elite.printInfo(statsResultsFileName);
                 }
             }
         }
