@@ -146,6 +146,7 @@ public class MapElites {
                 mapElites[featureX][featureY] = elite;
             }
         }
+        System.out.println("\n");
     }
 
     public void printMapElitesInfo() {
