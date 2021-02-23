@@ -12,22 +12,22 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 import heuristic_diversification.model.GameStats;
 
 public enum Features {
-    WINS(0, 100, 10, "win", true), 
-    SCORE(0, 70, 10, "score", false), 
-    EXPLORATION_PERCENTAGE(0, 100, 10, "percentageExplored", true),
-    EXPLORATION_NUMBER(0, 206, 10, "nExplored", false);
+    WINS("win", 0, 100, 10, true), 
+    SCORE("score", 0, 70, 10, false), 
+    EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 10, true),
+    EXPLORATION_NUMBER("nExplored", 0, 206, 10, false);
 
+    String statName;
     Integer minValue;
     Integer maxValue;
     Integer bucketSize;
-    String statName;
     boolean percentage;
 
-    Features(Integer min, Integer max, Integer bucketSize, String statName, boolean percentage) {
+    Features(String statName, Integer min, Integer max, Integer bucketSize, boolean percentage) {
+        this.statName = statName;
         this.minValue = min;
         this.maxValue = max;
         this.bucketSize = bucketSize;
-        this.statName = statName;
     }
 
     public Integer featureArraySize() {

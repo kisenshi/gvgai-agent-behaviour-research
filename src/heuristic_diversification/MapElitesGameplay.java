@@ -61,7 +61,7 @@ public class MapElitesGameplay {
         // MAP elites adaptation
 
         // Initialise MAP 
-        MapElites mapElites = new MapElites(PERFORMANCE_CRITERIA, FEATURE_X, FEATURE_Y, gameplayFramework, AGENT.getAgentName(), heuristicsWeightList, NUM_INITIAL_CELLS);
+        MapElites mapElites = new MapElites(PERFORMANCE_CRITERIA, FEATURE_X, FEATURE_Y, gameplayFramework, AGENT.getAgentFileName(), heuristicsWeightList, NUM_INITIAL_CELLS);
 
         // MAP elites algorithm
         mapElites.runAlgorithm(NUM_MAPELITES_ITERATIONS);
