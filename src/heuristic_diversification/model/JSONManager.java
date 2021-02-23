@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import heuristic_diversification.mapelites.Config;
 import heuristic_diversification.mapelites.MapElites;
 import tools.com.google.gson.Gson;
 import tools.com.google.gson.JsonElement;
+import tools.com.google.gson.JsonObject;
 
 public class JSONManager {
 
