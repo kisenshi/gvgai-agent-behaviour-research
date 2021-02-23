@@ -78,8 +78,16 @@ public class GameStats {
         this.heatMapExplorationMatrix.add(matrixCopy);
     }
 
+    private void printGeneralStats(BufferedWriter writer) throws IOException {
+        writer.write("== Game ==\n");
+        for (int i = 0; i < gameOverTick.size(); i++) {
+            writer.write(gameOverTick.get(i).toString() + " ");
+        }
+        writer.write("\n");
+    }
+
     private void printWinnerStats(BufferedWriter writer) throws IOException {
-        writer.write("== Winner ==\nwins: ");
+        writer.write("== Winner ==\n");
         for (int i = 0; i < win.size(); i++) {
             writer.write(win.get(i).toString() + " ");
         }
@@ -103,6 +111,23 @@ public class GameStats {
             writer.write(lastNewExplorationTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("== Exploration Matrix ==\n");
+        for (int i = 0; i < heatMapExplorationMatrix.size(); i++) {
+            for (int y = 0; y < heatMapExplorationMatrix.get(i).length; y++) {
+                for (int x = 0; x < heatMapExplorationMatrix.get(i)[y].length; x++) {
+                    int nVisits = heatMapExplorationMatrix.get(i)[y][x];
+                    if (nVisits < 10) {
+                        writer.write(nVisits + "   ");
+                    } else if (nVisits < 100) {
+                        writer.write(nVisits + "  ");
+                    } else {
+                        writer.write(nVisits + " ");
+                    }
+                }
+                writer.write("\n");
+            }
+            writer.write("\n\n");
+        }
     }
 
     public void printStats(String fileName) {
@@ -110,6 +135,7 @@ public class GameStats {
         try {
             if (fileName != null && !fileName.equals("")) {
                 writer = new BufferedWriter(new FileWriter(new File(fileName), true));
+                printGeneralStats(writer);
                 printWinnerStats(writer);
                 printRecordBreakerStats(writer);
                 printExplorerStats(writer);
