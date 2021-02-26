@@ -1,3 +1,8 @@
+/**
+ * Author: Cristina Guerrero
+ * Date: 16th February 2021
+ */
+
 package heuristic_diversification;
 
 import core.heuristic.StateHeuristic;
