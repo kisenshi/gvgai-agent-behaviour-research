@@ -45,7 +45,7 @@ public class MapElitesGameplay {
         // MAP elites adaptation
 
         // Initialise MAP
-        MapElites mapElites = new MapElites(mapElitesConfig.performanceCriteria, mapElitesConfig.featureX, mapElitesConfig.featureY, gameplayFramework, fwConfig.agent.getAgentFileName(), heuristicsWeightList, mapElitesConfig.nInitialCells);
+        MapElites mapElites = new MapElites(mapElitesConfig.performanceCriteria, mapElitesConfig.featureX, mapElitesConfig.featureY, gameplayFramework, fwConfig.agent.getAgentFileName(), heuristicsWeightList, mapElitesConfig.nRandomInitialisations);
 
         // MAP elites algorithm
         mapElites.runAlgorithm(mapElitesConfig.nMapElitesIterations);

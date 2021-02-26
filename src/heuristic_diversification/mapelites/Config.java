@@ -27,8 +27,8 @@ public class Config {
     private static final String PERFORMANCE_CRITERIA_KEY = "perfomanceCriteria";
     private static final String FEATURE_X_KEY = "featureX";
     private static final String FEATURE_Y_KEY = "featureY";
+    private static final String N_MAP_INITIALISATION_KEY = "nRandomInitialisations";
     private static final String N_ALGORITHM_ITERATIONS_KEY = "nAlgorithmIterations";
-    private static final String N_MAP_INITIAL_CELLS_KEY = "nInitialCells";
 
     private FrameworkConfig frameworkConfig;
     private MapElitesConfig mapElitesConfig;
@@ -63,14 +63,14 @@ public class Config {
         public final Performance performanceCriteria;
         public final Features featureX;
         public final Features featureY;
-        public final int nInitialCells;
+        public final int nRandomInitialisations;
         public final int nMapElitesIterations;
 
         private MapElitesConfig(Properties configProperties) {
             this.performanceCriteria = Performance.valueOf(configProperties.getProperty(PERFORMANCE_CRITERIA_KEY));
             this.featureX = Features.valueOf(configProperties.getProperty(FEATURE_X_KEY));
             this.featureY = Features.valueOf(configProperties.getProperty(FEATURE_Y_KEY));
-            this.nInitialCells = Integer.parseInt(configProperties.getProperty(N_MAP_INITIAL_CELLS_KEY));
+            this.nRandomInitialisations = Integer.parseInt(configProperties.getProperty(N_MAP_INITIALISATION_KEY));
             this.nMapElitesIterations = Integer.parseInt(configProperties.getProperty(N_ALGORITHM_ITERATIONS_KEY));
         }
     }
@@ -175,8 +175,8 @@ public class Config {
             writer.write(PERFORMANCE_CRITERIA_KEY + "=" + performanceValuesString() + "\n");
             writer.write(FEATURE_X_KEY + "=" + featureValuesString() + "\n");
             writer.write(FEATURE_Y_KEY + "=" + featureValuesString() + "\n");
+            writer.write(N_MAP_INITIALISATION_KEY + "=1/2/3...\n");
             writer.write(N_ALGORITHM_ITERATIONS_KEY + "=1/2/3...\n");
-            writer.write(N_MAP_INITIAL_CELLS_KEY + "=1/2/3...\n");
 
             writer.close();
         } catch (IOException e) {

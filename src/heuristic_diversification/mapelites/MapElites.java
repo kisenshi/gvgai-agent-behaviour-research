@@ -44,7 +44,7 @@ public class MapElites {
         }
     }
 
-    public MapElites(Performance performance, Features featureX, Features featureY, TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[], int nInitialCells) {
+    public MapElites(Performance performance, Features featureX, Features featureY, TeamGameplay gameplayFramework, String controller, Double heuristicsWeightList[], int nRandomInitialisations) {
         mapElites = new Elite[featureX.featureArraySize()][featureY.featureArraySize()];
         occupiedCellsIdx = new ArrayList<EliteIdx>();
         
@@ -55,26 +55,25 @@ public class MapElites {
         this.controller = controller;
         this.heuristicsWeightList = heuristicsWeightList;
 
-        initialiseMap(nInitialCells);
+        initialiseMap(nRandomInitialisations);
     }
 
     /**
-     * Initialise map. Fill nCells of the map with elites; initialised with random weights
-     * @param nInitialCells number of cells to fill in the map for initialisation
+     * Initialise map. Randomise nRandomInitialisations configurations (weights) and assign the resulting
+     * agents to the correspondent cell in the MAP
+     * @param nRandomInitialisations number of random initialisations requested
      */
-    private void initialiseMap(int nInitialCells) {
-        int nCellsInitialised = 0;
-        while (nCellsInitialised < nInitialCells) {
+    private void initialiseMap(int nRandomInitialisations) {
+        for (int i = 1; i < (nRandomInitialisations + 1); i++) {
+            System.out.println("MAPELites initialisation iteration " + i);
             Generator.setRandomWeights(heuristicsWeightList);
 
             // Create elite from random values and add to map
             Elite elite = createGameplayElite();
             addEliteToMap(elite);
-
-            nCellsInitialised = getNCellsOccupied();
         }
 
-        System.out.println("MAP Elites initialised");
+        System.out.println("MAPElites initialised: " + getNCellsOccupied() + " cells occupied\n");
     }
 
     /**
