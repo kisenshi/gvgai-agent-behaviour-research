@@ -38,6 +38,8 @@ public abstract class AbstractHeuristicPlayer extends AbstractPlayer {
      * Record game stats
      */
     public void recordGameStats(Game game, GameStats gameStats) {
+        // need to include the information of the final state before saving the stats
+        heuristic.updateHeuristicInternalInformation(game.getObservation());
         heuristic.recordGameStats(game, gameStats);
     }
 }

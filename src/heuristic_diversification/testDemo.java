@@ -9,6 +9,7 @@ import java.util.Random;
 
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
+import heuristic_diversification.model.GameStats;
 import tools.Utils;
 
 public class testDemo {
@@ -67,7 +68,9 @@ public class testDemo {
 				0,
 			};
 
-			ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
+			//ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, game, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
+			GameStats gameStats = new GameStats(0);
+			ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, heuristic, 1);
 		} else {
 			int n_games = 20;
 			for (int gameId = 0; gameId < n_games; gameId++) {
