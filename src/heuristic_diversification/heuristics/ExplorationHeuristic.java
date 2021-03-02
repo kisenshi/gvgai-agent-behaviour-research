@@ -26,7 +26,8 @@ import tools.Vector2d;
  * Maximize the physical exploration of the map, divided on tiles
  */
 public class ExplorationHeuristic extends StateHeuristic {
-    private static int COLOURS[][] = { { 0, 0, 255 }, // blue
+    private static int COLOURS[][] = { 
+            { 0, 0, 255 }, // blue
             { 0, 255, 0 }, // green
             { 255, 255, 0 }, // yellow
             { 255, 0, 0 }, // red
@@ -48,11 +49,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs) {
-        // Initialise max and min values of heuristic
-        heuristicMax = HUGE_NEGATIVE;
-        heuristicMin = HUGE_POSITIVE;
-        nMaxHeuristicUpdates = 0;
-        nMinHeuristicUpdates = 0;
+        super.initHeuristicInternalInformation(stateObs);
 
         // Initialise the exploration matrix with the information given in the initial
         // state
@@ -72,9 +69,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
-        // Start fresh for future calculations
-        nMaxHeuristicUpdates = 0;
-        nMinHeuristicUpdates = 0;
+        super.updateHeuristicInternalInformation(stateObs);
 
         // Update the exploration matrix
         Vector2d avatarPosition = stateObs.getAvatarPosition();

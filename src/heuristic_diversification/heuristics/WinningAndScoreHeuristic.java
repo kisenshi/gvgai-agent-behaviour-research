@@ -27,11 +27,7 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs) {
-        // Initialise max and min values of heuristic
-        heuristicMax = HUGE_NEGATIVE;
-        heuristicMin = HUGE_POSITIVE;
-        nMaxHeuristicUpdates = 0;
-        nMinHeuristicUpdates = 0;
+        super.initHeuristicInternalInformation(stateObs);
 
         // Store the score from the game initial state
         mCurrentScore = stateObs.getGameScore();
@@ -79,9 +75,7 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
-        // Start fresh for future calculations
-        nMaxHeuristicUpdates = 0;
-        nMinHeuristicUpdates = 0;
+        super.updateHeuristicInternalInformation(stateObs);
 
         double newScore = stateObs.getGameScore();
         if(Double.compare(newScore, mCurrentScore) != 0){

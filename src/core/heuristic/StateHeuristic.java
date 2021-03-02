@@ -18,16 +18,26 @@ public abstract class StateHeuristic {
     protected static final double HUGE_NEGATIVE = -10000.0;
     protected static final double LESS_HUGE_NEGATIVE = -5000.0;
     protected static final double HUGE_POSITIVE =  10000.0;
+    
     protected BufferedWriter writer;
+    protected double heuristicMax;
+    protected double heuristicMin;
+    protected int nMinHeuristicUpdates;
+    protected int nMaxHeuristicUpdates;
 
-    protected double heuristicMax = HUGE_NEGATIVE;
-    protected double heuristicMin = HUGE_POSITIVE;
-    protected int nMinHeuristicUpdates = 0;
-    protected int nMaxHeuristicUpdates = 0;
+    public void initHeuristicInternalInformation(StateObservation stateObs) {
+        // Initialise max and min values of heuristic
+        heuristicMax = HUGE_NEGATIVE;
+        heuristicMin = HUGE_POSITIVE;
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+    }
 
-    abstract public void initHeuristicInternalInformation(StateObservation stateObs);
-
-    abstract public void updateHeuristicInternalInformation(StateObservation stateObs);
+    public void updateHeuristicInternalInformation(StateObservation stateObs) {
+        // Start fresh for future calculations
+        nMaxHeuristicUpdates = 0;
+        nMinHeuristicUpdates = 0;
+    }
 
     abstract public double evaluateState(StateObservation stateObs);
 
