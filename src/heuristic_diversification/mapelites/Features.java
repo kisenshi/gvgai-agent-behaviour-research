@@ -31,8 +31,7 @@ public enum Features {
     }
 
     public Integer featureArraySize() {
-        // The size of the array of the feature is the max id plus one
-        return Buckets.getMaxIdx(minValue, maxValue, bucketSize) + 1;
+        return Buckets.getMapNBuckets(minValue, maxValue, bucketSize);
     }
 
     public double getFeatureValue(GameStats gameStats) {
