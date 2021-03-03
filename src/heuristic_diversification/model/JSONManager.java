@@ -13,19 +13,33 @@ import java.io.IOException;
 import heuristic_diversification.mapelites.Config;
 import heuristic_diversification.mapelites.MapElites;
 import tools.com.google.gson.Gson;
+import tools.com.google.gson.GsonBuilder;
 import tools.com.google.gson.JsonElement;
 import tools.com.google.gson.JsonObject;
 
 public class JSONManager {
 
     public static void saveMapElitesGameplay(Config configData, MapElites mapElitesGameplay) {
-        Gson gson = new Gson();
+        FeaturesInfo featureXInfo = new FeaturesInfo(configData.getMapElitesConfig().featureX);
+        FeaturesInfo featureYInfo = new FeaturesInfo(configData.getMapElitesConfig().featureY);
+        
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+        JsonObject jsonFeaturesObject = new JsonObject();
+        JsonElement featureXInfoJson = gson.toJsonTree(featureXInfo);
+        JsonElement featureYInfoJson = gson.toJsonTree(featureYInfo);
+
+        jsonFeaturesObject.add(configData.getMapElitesConfig().featureX.name(), featureXInfoJson);
+        jsonFeaturesObject.add(configData.getMapElitesConfig().featureY.name(), featureYInfoJson);
+        JsonElement faturesInfoJson = gson.toJsonTree(jsonFeaturesObject);
+
 
         JsonObject jsonObject = new JsonObject();
         JsonElement configDataJson = gson.toJsonTree(configData);
         JsonElement mapElitesJson = gson.toJsonTree(mapElitesGameplay);
         
         jsonObject.add("config", configDataJson);
+        jsonObject.add("featuresDetails", faturesInfoJson);
         jsonObject.add("result", mapElitesJson);
 
         String jsonString = gson.toJson(jsonObject);

@@ -30,6 +30,22 @@ public enum Features {
         this.bucketSize = bucketSize;
     }
 
+    public Integer getFeatureMinValue() {
+        return minValue;
+    }
+
+    public Integer getFeatureMaxValue() {
+        return maxValue;
+    }
+
+    public Integer getFeatureBucketSize() {
+        return bucketSize;
+    }
+
+    public boolean isPercentageFeature() {
+        return percentage;
+    }
+
     public Integer featureArraySize() {
         return Buckets.getMapNBuckets(minValue, maxValue, bucketSize);
     }
@@ -61,5 +77,9 @@ public enum Features {
     public int getBucketIdx(GameStats gameStats) {
         double featureStatsValue = getFeatureValue(gameStats);
         return Buckets.getMapIdx(featureStatsValue, minValue, maxValue, bucketSize);
+    }
+
+    public String[] featureArrayInfo() {
+        return Buckets.getMapRangesInfo(minValue, maxValue, bucketSize);
     }
 }

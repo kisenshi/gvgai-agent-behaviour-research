@@ -87,6 +87,47 @@ public class Buckets {
     }
 
     /**
+     * Generate and array with the information of the range of values contained in each bucket
+     * @param minValue
+     * @param maxValue
+     * @param bucketSize
+     * @return
+     */
+    public static String[] getMapRangesInfo(Integer minValue, Integer maxValue, Integer bucketSize) {
+        int nTotalBuckets = getMapNBuckets(minValue, maxValue, bucketSize);
+        String[] mapRangesInfo = new String[nTotalBuckets];
+
+        // first bucket is for <=minValue
+        mapRangesInfo[0] = "[<="+minValue+"]";
+
+        // last bucket is for >=maxValue 
+        int lastId = nTotalBuckets-1;
+        mapRangesInfo[lastId] = "[>="+maxValue+"]";
+
+        // the rest of buckets values are obtained with the interval calculation∂
+        Integer maxInterval = maxValue - 1;
+        Integer intervalValue = minValue + 1;
+
+        for (int id = 1; id < lastId; id++) {
+            Integer lastValueRange = intervalValue + (bucketSize - 1);
+
+            if(lastValueRange > maxInterval) {
+                lastValueRange = maxInterval;
+            }
+
+            if (intervalValue == lastValueRange) {
+                mapRangesInfo[id] = "[" + intervalValue + "]";
+            } else {
+                mapRangesInfo[id] = "[" + intervalValue + " - " + lastValueRange + "]";
+            }
+            
+            intervalValue = lastValueRange + 1;
+        }
+
+        return mapRangesInfo;
+    }
+
+    /**
      * This method returns the id (bucket) that corresponds to the value. 
      * The id starts in 1
      * @param value

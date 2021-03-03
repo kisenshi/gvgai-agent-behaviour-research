@@ -1,5 +1,6 @@
 package heuristic_diversification.test.mapelites;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -161,5 +162,95 @@ public class BucketsTest {
         bucketSize = 10;
 
         assertEquals(13, Buckets.getMapNBuckets(minValue, maxValue, bucketSize));
+    }
+
+    @Test
+    public void testgetMapRangesInfo() {
+        Integer maxValue; 
+        Integer minValue; 
+        Integer bucketSize;
+
+        minValue = 0;
+        maxValue = 100;
+        bucketSize = 10;
+        String[] expected = new String[] {
+            "[<=0]",
+            "[1 - 10]",
+            "[11 - 20]",
+            "[21 - 30]",
+            "[31 - 40]",
+            "[41 - 50]",
+            "[51 - 60]",
+            "[61 - 70]",
+            "[71 - 80]",
+            "[81 - 90]",
+            "[91 - 99]",
+            "[>=100]",
+        };
+
+        assertArrayEquals(expected, Buckets.getMapRangesInfo(minValue, maxValue, bucketSize));
+    
+        minValue = 5;
+        maxValue = 33;
+        bucketSize = 10;
+        expected = new String[] {
+            "[<=5]",
+            "[6 - 15]",
+            "[16 - 25]",
+            "[26 - 32]",
+            "[>=33]",
+        };
+
+        assertArrayEquals(expected, Buckets.getMapRangesInfo(minValue, maxValue, bucketSize));
+
+        minValue = 0;
+        maxValue = 10;
+        bucketSize = 1;
+        expected = new String[] {
+            "[<=0]",
+            "[1]",
+            "[2]",
+            "[3]",
+            "[4]",
+            "[5]",
+            "[6]",
+            "[7]",
+            "[8]",
+            "[9]",
+            "[>=10]",
+        };
+
+        assertArrayEquals(expected, Buckets.getMapRangesInfo(minValue, maxValue, bucketSize));
+
+        minValue = 0;
+        maxValue = 100;
+        bucketSize = 25;
+        expected = new String[] {
+            "[<=0]",
+            "[1 - 25]",
+            "[26 - 50]",
+            "[51 - 75]",
+            "[76 - 99]",
+            "[>=100]",
+        };
+
+        assertArrayEquals(expected, Buckets.getMapRangesInfo(minValue, maxValue, bucketSize));
+
+        minValue = 0;
+        maxValue = 50;
+        bucketSize = 7;
+        expected = new String[] {
+            "[<=0]",
+            "[1 - 7]",
+            "[8 - 14]",
+            "[15 - 21]",
+            "[22 - 28]",
+            "[29 - 35]",
+            "[36 - 42]",
+            "[43 - 49]",
+            "[>=50]",
+        };
+
+        assertArrayEquals(expected, Buckets.getMapRangesInfo(minValue, maxValue, bucketSize));
     }
 }
