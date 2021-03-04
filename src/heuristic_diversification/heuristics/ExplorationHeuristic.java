@@ -6,7 +6,6 @@
 package heuristic_diversification.heuristics;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +17,7 @@ import java.util.Map;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.framework.MapDimensionsManager;
 import heuristic_diversification.model.GameStats;
 import ontology.Types;
 import tools.Vector2d;
@@ -32,9 +32,7 @@ public class ExplorationHeuristic extends StateHeuristic {
             { 255, 255, 0 }, // yellow
             { 255, 0, 0 }, // red
     };
-    private int mBlockSize;
-    private int mGridWidth;
-    private int mGridHeight;
+    private MapDimensionsManager mapDimensions;
     private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
     private int mMaxExplorationMatrixValue;
@@ -53,13 +51,9 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         // Initialise the exploration matrix with the information given in the initial
         // state
-        mBlockSize = stateObs.getBlockSize();
-        Dimension gridDimension = stateObs.getWorldDimension();
+        mapDimensions = new MapDimensionsManager(stateObs);
 
-        mGridWidth = gridDimension.width / mBlockSize;
-        mGridHeight = gridDimension.height / mBlockSize;
-
-        mExplorationMatrix = new int[mGridHeight][mGridWidth];
+        mExplorationMatrix = new int[mapDimensions.gridHeight()][mapDimensions.gridWith()];
         mMaxExplorationMatrixValue = 0;
         mMaxFutureStates = 0;
         mNFutureStates = 0;
@@ -74,7 +68,7 @@ public class ExplorationHeuristic extends StateHeuristic {
         // Update the exploration matrix
         Vector2d avatarPosition = stateObs.getAvatarPosition();
 
-        if (!isOutOfBounds(avatarPosition)) {
+        if (!mapDimensions.isOutOfBounds(avatarPosition)) {
             visitCurrentPosition(stateObs);
         }
         return;
@@ -89,11 +83,12 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void updateFutureStateData(StateObservation stateObs) {
-        if (!stateObs.isAvatarAlive() || stateObs.isGameOver() || isOutOfBounds(stateObs.getAvatarPosition())) {
+        Vector2d avatarPosition = stateObs.getAvatarPosition();
+        if (!stateObs.isAvatarAlive() || stateObs.isGameOver() || mapDimensions.isOutOfBounds(avatarPosition)) {
             return;
         }
 
-        String avatarPositionKey = getPositionKey(stateObs.getAvatarPosition());
+        String avatarPositionKey = mapDimensions.getPositionKey(avatarPosition);
 
         if (!mFutureExploredPositions.containsKey(avatarPositionKey)) {
             mFutureExploredPositions.put(avatarPositionKey, 1);
@@ -140,8 +135,8 @@ public class ExplorationHeuristic extends StateHeuristic {
         }
 
         for (Map.Entry<String, Integer> visitedPosition : mFutureExploredPositions.entrySet()) {
-            int x = getX(visitedPosition.getKey());
-            int y = getY(visitedPosition.getKey());
+            int x = mapDimensions.getXFromKey(visitedPosition.getKey());
+            int y = mapDimensions.getYFromKey(visitedPosition.getKey());
 
             if(DEBUG) {
                 System.out.println("visited " + visitedPosition.getKey() + " times: " + visitedPosition.getValue() + " + " + getNumberVisits(x, y));
@@ -191,7 +186,7 @@ public class ExplorationHeuristic extends StateHeuristic {
                 writer = new BufferedWriter(new FileWriter(new File(fileName), true));
                 writer.write(gameId + " " + recordIds[1] + " " + randomSeed + " "
                         + (played.getWinner() == Types.WINNER.PLAYER_WINS ? 1 : 0) + " " + played.getScore() + " "
-                        + played.getGameTick() + " " + getMapSize() + " " + explored + " " + mLastDiscoveryTick + "\n");
+                        + played.getGameTick() + " " + mapDimensions.getMapSize() + " " + explored + " " + mLastDiscoveryTick + "\n");
 
                 // printExplorationMatrix();
 
@@ -204,13 +199,14 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public void drawInScreen(Graphics2D g) {
+        int blockSize = mapDimensions.blockSize();
         for (int y = 0; y < mExplorationMatrix.length; y++) {
             for (int x = 0; x < mExplorationMatrix[y].length; x++) {
                 if (hasBeenVisited(x, y)) {
                     g.setColor(heatMapColour(getNumberVisits(x, y)));
-                    g.fillRect(x * mBlockSize, y * mBlockSize, mBlockSize, mBlockSize);
+                    g.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
                     g.setColor(Types.WHITE);
-                    g.drawRect(x * mBlockSize, y * mBlockSize, mBlockSize, mBlockSize);
+                    g.drawRect(x * blockSize, y * blockSize, blockSize, blockSize);
                 }
             }
         }
@@ -257,77 +253,18 @@ public class ExplorationHeuristic extends StateHeuristic {
     }
 
     /**
-     * @return Size of the map
-     */
-    private int getMapSize() {
-        return mGridWidth * mGridHeight;
-    }
-
-    /**
-     * Generate the key formed by the coordinates for the mFutureExploredPositions
-     * hashmap
-     * 
-     * @return String in the form "x y"
-     */
-    private String getPositionKey(Vector2d position) {
-        int x = (int) position.x / mBlockSize;
-        int y = (int) position.y / mBlockSize;
-
-        return x + " " + y;
-    }
-
-    /**
-     * Get the x coordinate from the key used for the mFutureExploredPositions
-     * hashmap
-     * 
-     * @return the x coordinate
-     */
-    private int getX(String key) {
-        String[] coordinates = key.split(" +");
-        return Integer.parseInt(coordinates[0]);
-    }
-
-    /**
-     * Get the y coordinate from the key used for the mFutureExploredPositions
-     * hashmap
-     * 
-     * @return the y coordinate
-     */
-    private int getY(String key) {
-        String[] coordinates = key.split(" +");
-        return Integer.parseInt(coordinates[1]);
-    }
-
-    /**
-     * Checks if the provided position is out of bounds the map
-     * 
-     * @param position
-     * @return
-     */
-    private boolean isOutOfBounds(Vector2d position) {
-        int x = (int) position.x / mBlockSize;
-        int y = (int) position.y / mBlockSize;
-
-        if ((x < 0) || (x >= mGridWidth) || (y < 0) || (y >= mGridHeight)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Mark the current position as visited in the exploratory matrix
      * 
      * @param stateObs The current state to get the position and the game tick
      */
     private void visitCurrentPosition(StateObservation stateObs) {
         Vector2d position = stateObs.getAvatarPosition();
-        if (isOutOfBounds(position)) {
+        if (mapDimensions.isOutOfBounds(position)) {
             return;
         }
 
-        int x = (int) position.x / mBlockSize;
-        int y = (int) position.y / mBlockSize;
+        int x = mapDimensions.getXFromVector(position);
+        int y = mapDimensions.getYFromVector(position);
 
         if (!hasBeenVisited(x, y)) {
             mLastDiscoveryTick = stateObs.getGameTick();
