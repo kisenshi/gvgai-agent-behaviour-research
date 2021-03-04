@@ -46,6 +46,14 @@ public class JSONManager {
         writeToFile(jsonString, configData.resultsFileName() + ".json");
     }
 
+    public static void prinObjectAsJson(Object object, String fileName) {
+        Gson gson = new Gson();
+
+        JsonElement jsonObject = gson.toJsonTree(object);
+        String jsonString = gson.toJson(jsonObject);
+        writeToFile(jsonString, fileName + ".json");
+    }
+
     private static void writeToFile(String content, String fileName) {
         BufferedWriter writer;
         try {
