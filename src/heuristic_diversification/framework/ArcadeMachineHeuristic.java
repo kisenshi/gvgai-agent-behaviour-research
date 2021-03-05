@@ -409,4 +409,19 @@ public class ArcadeMachineHeuristic {
             toPlay.reset();
         }
     }
+
+    public static void printGameStypes(String game_file) {
+        VGDLFactory.GetInstance().init();
+        VGDLRegistry.GetInstance().init();
+
+        Game toPlay = new VGDLParser().parseGame(game_file);
+
+        int nSpritesGame = VGDLRegistry.GetInstance().numSpriteTypes();
+        int spriteId = 0;
+        while (spriteId < nSpritesGame) {
+            String spriteName = VGDLRegistry.GetInstance().getRegisteredSpriteKey(spriteId);
+            System.out.println("Stype: "+ spriteId +" --> " + spriteName);
+            spriteId++;
+        }
+    }
 }
