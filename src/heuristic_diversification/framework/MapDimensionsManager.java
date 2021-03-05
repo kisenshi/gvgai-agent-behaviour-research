@@ -71,8 +71,8 @@ public class MapDimensionsManager {
      * @return String in the form "x y"
      */
     public String getPositionKey(Vector2d position) {
-        int x = (int) position.x / mBlockSize;
-        int y = (int) position.y / mBlockSize;
+        int x = getXFromVector(position);
+        int y = getYFromVector(position);
 
         return x + " " + y;
     }
@@ -106,8 +106,8 @@ public class MapDimensionsManager {
      * @return
      */
     public boolean isOutOfBounds(Vector2d position) {
-        int x = (int) position.x / mBlockSize;
-        int y = (int) position.y / mBlockSize;
+        int x = getXFromVector(position);
+        int y = getYFromVector(position);
 
         if ((x < 0) || (x >= mGridWidth) || (y < 0) || (y >= mGridHeight)) {
             return true;
