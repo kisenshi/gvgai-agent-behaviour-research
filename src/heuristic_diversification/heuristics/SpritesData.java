@@ -10,10 +10,13 @@ import java.util.HashMap;
 
 import core.game.Event;
 import core.game.Observation;
+import core.game.StateObservation;
+import heuristic_diversification.framework.MapDimensionsManager;
 import heuristic_diversification.model.JSONManager;
 import tools.Vector2d;
 
 public class SpritesData {
+    private MapDimensionsManager mapDimensions;
     private ArrayList<Integer> mGameSprites;   // sprites in the game discovered
     private ArrayList<Integer> mPlayerSprites; // sprites created from the player discoevered
     private HashMap<Integer, InteractionHistory> mStypesCollisions; // information related to the stypes of the sprites the player has collided with
@@ -21,6 +24,7 @@ public class SpritesData {
     private int mLastNewSpriteDiscovered;
     private int mLastNewCollisionTick;
     private int mLastNewHitTick;
+    private int mLastCuriosityTick; // curiosity is described as an interaction (collision or hit) in a new position of the map
 
     private class InteractionHistory {
         int nInteractions;
@@ -34,17 +38,28 @@ public class SpritesData {
         public void increaseInteractionCounter() {
             nInteractions++;
         }
+
+        public boolean addInteractionAtPosition(Vector2d position) {
+            if (!interactionPositionsList.contains(position)) {
+                interactionPositionsList.add(position);
+                return true;
+            }
+            return false;
+        }
     }
 
-    SpritesData() {
+    SpritesData(StateObservation stateObs) {
         this.mLastNewSpriteDiscovered = 0;
         this.mLastNewCollisionTick = 0;
         this.mLastNewHitTick = 0;
+        this.mLastCuriosityTick = 0;
         
         this.mGameSprites = new ArrayList<Integer>();
         this.mPlayerSprites = new ArrayList<Integer>();
         this.mStypesCollisions = new HashMap<Integer, InteractionHistory>();
         this.mStypesHits = new HashMap<Integer, HashMap<Integer, InteractionHistory>>();
+        
+        this.mapDimensions = new MapDimensionsManager(stateObs);
     }
 
     /**
@@ -85,6 +100,13 @@ public class SpritesData {
         }
     }
 
+    /**
+     * Record the collision event to the collision history. If a previous collision between
+     * the avatar and the sprite has happened before, the counter is increased.
+     * If the collision happened in a new position of the map, it is also recorded.
+     * @param event collision event to record
+     * @param gameTick the game tick when the collision happened
+     */
     public void updateCollisionHistory(Event event, int gameTick) {
         int stypeCollidedWith = event.passiveTypeId;
 
@@ -100,10 +122,19 @@ public class SpritesData {
             spriteCollisionHistory.increaseInteractionCounter();
         }
 
-        // TODO(kisenshi): Add position
-
+        // Record where the collision happened
+        recordInteractionCoordinates(event, spriteCollisionHistory, gameTick);
     }
 
+    /**
+     * Record the hit event to the hit history. If a previous hit between
+     * the sprites has happened before, the counter is increased. For this interaction, it is
+     * possible that more than one sprite is generated from the avatar, so the one that hit will
+     * be the one recorded.
+     * If the hit happened in a new position of the map, it is also recorded.
+     * @param event hit event to record
+     * @param gameTick the game tick when the hit happened
+     */
     public void updateHitHistory(Event event, int gameTick) {
         int stypeHit = event.passiveTypeId;
         int stypeUsed = event.activeTypeId;
@@ -132,7 +163,8 @@ public class SpritesData {
             }
         }
 
-        // TODO(kisenshi): Add position
+        // Record where the hit happened
+        recordInteractionCoordinates(event, spriteHitHistory, gameTick);
     }
 
     /**
@@ -160,6 +192,26 @@ public class SpritesData {
     }
 
     /**
+     * Record the position where the interaction happened. If the interaction has not happened in that
+     * position before, it is considered a new curiosity event. 
+     * @param event interaction event to record
+     * @param interactionHistory 
+     * @param gameTick the game tick when the interaction happened
+     */
+    private void recordInteractionCoordinates(Event event, InteractionHistory interactionHistory, int gameTick) {
+        Vector2d interactionPosition = event.position.copy();
+
+        // The position of the interaction must be comverted to coordinates of a matrix
+        int x = mapDimensions.getXFromVector(interactionPosition);
+        int y = mapDimensions.getYFromVector(interactionPosition);
+        Vector2d interactionCoordinates = new Vector2d(x, y);
+
+        if (interactionHistory.addInteractionAtPosition(interactionCoordinates)) {
+            mLastCuriosityTick = gameTick;
+        }
+    }
+
+    /**
      * Debug method. Print spritesData info as JSON if it has been updated at the gametick provided.
      * @param gameTick
      */
@@ -178,6 +230,7 @@ public class SpritesData {
     private boolean hasBeenUpdated(int gameTick) {
         return ((gameTick == mLastNewSpriteDiscovered) 
              || (gameTick == mLastNewCollisionTick) 
-             || (gameTick == mLastNewHitTick));
+             || (gameTick == mLastNewHitTick)
+             || (gameTick == mLastCuriosityTick));
     }
 }

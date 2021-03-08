@@ -5,7 +5,6 @@
 
 package heuristic_diversification.heuristics;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -17,12 +16,7 @@ import core.heuristic.StateHeuristic;
 import heuristic_diversification.model.GameStats;
 
 public class KnowledgeHeuristic extends StateHeuristic {
-    private int mBlockSize;
-    private int mGridWidth;
-    private int mGridHeight;
-
     protected SpritesData mSpritesData;
-    //protected int mSpritesDataUpdatedTick;
 
     public KnowledgeHeuristic() {}
 
@@ -31,13 +25,8 @@ public class KnowledgeHeuristic extends StateHeuristic {
         super.initHeuristicInternalInformation(stateObs);
 
         // Initialisations related to the KnowledgeHeuristic
-        mBlockSize = stateObs.getBlockSize();
-        Dimension gridDimension = stateObs.getWorldDimension();
-
-        mGridWidth = gridDimension.width / mBlockSize;
-        mGridHeight = gridDimension.height / mBlockSize;
         
-        mSpritesData = new SpritesData();
+        mSpritesData = new SpritesData(stateObs);
         acknowledgeSprites(stateObs);
     }
 
