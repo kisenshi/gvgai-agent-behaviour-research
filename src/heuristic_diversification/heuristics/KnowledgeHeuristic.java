@@ -109,14 +109,14 @@ public class KnowledgeHeuristic extends StateHeuristic {
                 // the next events are from previous states so no need to keep iterating
                 break;
             }
-            System.out.println("Event: "+gameTick);
+            //System.out.println("Event: "+gameTick);
             if (event.fromAvatar) {
                 // the interaction is indirect: it is a hit
-                System.out.println("HIT");
+                //System.out.println("HIT");
                 mSpritesData.updateHitHistory(event, gameTick);
             } else {
                 // the avatar collides with a sprite: it is a collision
-                System.out.println("COLLISION");
+                //System.out.println("COLLISION");
                 mSpritesData.updateCollisionHistory(event, gameTick);
             }
         }
