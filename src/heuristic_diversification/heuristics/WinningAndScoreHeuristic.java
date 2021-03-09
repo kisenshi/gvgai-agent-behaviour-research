@@ -125,16 +125,4 @@ public class WinningAndScoreHeuristic extends StateHeuristic {
         // No need to draw anything on screen
         return;
     }
-
-    @Override
-    public void restartFutureStateData() {
-        // No future state data handled in this heuristic
-        return;
-    }
-
-    @Override
-    public void updateFutureStateData(StateObservation stateObs) {
-        // No future state data handled in this heuristic
-        return;
-    }
 }

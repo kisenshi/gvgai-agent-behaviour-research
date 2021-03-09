@@ -25,12 +25,19 @@ public abstract class StateHeuristic {
     protected int nMinHeuristicUpdates;
     protected int nMaxHeuristicUpdates;
 
+    protected int mNFutureStates;
+    protected int mMaxFutureStates;
+
     public void initHeuristicInternalInformation(StateObservation stateObs) {
         // Initialise max and min values of heuristic
         heuristicMax = HUGE_NEGATIVE;
         heuristicMin = HUGE_POSITIVE;
         nMaxHeuristicUpdates = 0;
         nMinHeuristicUpdates = 0;
+
+        // Future data independent from the heuristic
+        mNFutureStates = 0;
+        mMaxFutureStates = 0;
     }
 
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
@@ -39,11 +46,20 @@ public abstract class StateHeuristic {
         nMinHeuristicUpdates = 0;
     }
 
+    public void restartFutureStateData() {
+        mNFutureStates = 0;
+    }
+
+    public void updateFutureStateData(StateObservation stateObs) {
+        // Keep track of the maximum number of future states predicted as well as its
+        // maximum
+        mNFutureStates += 1;
+        if (mNFutureStates > mMaxFutureStates) {
+            mMaxFutureStates = mNFutureStates;
+        }
+    }
+
     abstract public double evaluateState(StateObservation stateObs);
-
-    abstract public void restartFutureStateData();
-
-    abstract public void updateFutureStateData(StateObservation stateObs);
 
     abstract public String relevantInfoStr(StateObservation stateObs);
 

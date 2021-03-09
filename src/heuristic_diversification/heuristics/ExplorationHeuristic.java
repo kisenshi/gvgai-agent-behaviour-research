@@ -36,8 +36,6 @@ public class ExplorationHeuristic extends StateHeuristic {
     private int[][] mExplorationMatrix;
     private HashMap<String, Integer> mFutureExploredPositions;
     private int mMaxExplorationMatrixValue;
-    private int mMaxFutureStates;
-    private int mNFutureStates;
 
     private int mLastDiscoveryTick = 0;
 
@@ -55,8 +53,6 @@ public class ExplorationHeuristic extends StateHeuristic {
 
         mExplorationMatrix = new int[mapDimensions.gridHeight()][mapDimensions.gridWith()];
         mMaxExplorationMatrixValue = 0;
-        mMaxFutureStates = 0;
-        mNFutureStates = 0;
 
         visitCurrentPosition(stateObs);
     }
@@ -77,7 +73,10 @@ public class ExplorationHeuristic extends StateHeuristic {
     @Override
     public void restartFutureStateData() {
         mFutureExploredPositions.clear();
-        mNFutureStates = 0;
+
+        // Restart future data
+        super.restartFutureStateData();
+
         return;
     }
 
@@ -98,12 +97,8 @@ public class ExplorationHeuristic extends StateHeuristic {
             mFutureExploredPositions.put(avatarPositionKey, oldValue + 1);
         }
 
-        // Keep track of the maximum number of future states predicted as well as its
-        // maximum
-        mNFutureStates += 1;
-        if (mNFutureStates > mMaxFutureStates) {
-            mMaxFutureStates = mNFutureStates;
-        }
+        // Update future data
+        super.updateFutureStateData(stateObs);
 
         return;
     }
@@ -156,6 +151,9 @@ public class ExplorationHeuristic extends StateHeuristic {
         while (mNFutureStates < mMaxFutureStates) {
             h += (-1 * mMaxExplorationMatrixValue);
             mNFutureStates += 1;
+            if(DEBUG) {
+                System.out.println("Included " + mNFutureStates + " future state (max: "+ mMaxFutureStates + ")");
+            }
         }
 
         return h;
@@ -163,7 +161,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        return "exploration: " + getNSpotsExplored();
+        return mNFutureStates + " future states (max: " + mMaxFutureStates +"). Exploration: " + getNSpotsExplored();
     }
 
 

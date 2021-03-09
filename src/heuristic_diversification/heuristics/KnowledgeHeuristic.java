@@ -52,21 +52,19 @@ public class KnowledgeHeuristic extends StateHeuristic {
     }
 
     @Override
-    public double evaluateState(StateObservation stateObs) {
-        double h = 0;
-        return h;
-    }
-
-    @Override
     public void restartFutureStateData() {
-        // TODO Auto-generated method stub
-
+        super.restartFutureStateData();
     }
 
     @Override
     public void updateFutureStateData(StateObservation stateObs) {
-        // TODO Auto-generated method stub
+       super.updateFutureStateData(stateObs);
+    }
 
+    @Override
+    public double evaluateState(StateObservation stateObs) {
+        double h = 0;
+        return h;
     }
 
     @Override
