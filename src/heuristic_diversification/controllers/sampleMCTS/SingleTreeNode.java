@@ -62,7 +62,7 @@ public class SingleTreeNode
         //while(numIters < Agent.MCTS_ITERATIONS){
 
             StateObservation state = rootState.copy();
-            heuristic.restartFutureStateData();
+            heuristic.restartFutureStateData(state);
 
             if(StateHeuristic.DEBUG) {
                 System.out.println("ROOT game tick: " + state.getGameTick() + "\n");

@@ -71,11 +71,11 @@ public class ExplorationHeuristic extends StateHeuristic {
     }
 
     @Override
-    public void restartFutureStateData() {
+    public void restartFutureStateData(StateObservation stateObs) {
         mFutureExploredPositions.clear();
 
         // Restart future data
-        super.restartFutureStateData();
+        super.restartFutureStateData(stateObs);
 
         return;
     }

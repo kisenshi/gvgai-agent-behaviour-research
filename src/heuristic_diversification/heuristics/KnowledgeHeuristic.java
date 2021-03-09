@@ -52,8 +52,8 @@ public class KnowledgeHeuristic extends StateHeuristic {
     }
 
     @Override
-    public void restartFutureStateData() {
-        super.restartFutureStateData();
+    public void restartFutureStateData(StateObservation stateObs) {
+        super.restartFutureStateData(stateObs);
     }
 
     @Override

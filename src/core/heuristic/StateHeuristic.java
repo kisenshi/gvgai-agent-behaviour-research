@@ -46,7 +46,7 @@ public abstract class StateHeuristic {
         nMinHeuristicUpdates = 0;
     }
 
-    public void restartFutureStateData() {
+    public void restartFutureStateData(StateObservation stateObs) {
         mNFutureStates = 0;
     }
 

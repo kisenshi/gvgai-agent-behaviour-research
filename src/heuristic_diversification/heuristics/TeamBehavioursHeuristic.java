@@ -73,14 +73,18 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     }
 
     @Override
-    public void restartFutureStateData() {
+    public void restartFutureStateData(StateObservation stateObs) {
+        knowledgeHeuristic.restartFutureStateData(stateObs);
+
         for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.restartFutureStateData();
+            heuristic.restartFutureStateData(stateObs);
         }
     }
 
     @Override
     public void updateFutureStateData(StateObservation stateObs) {
+        knowledgeHeuristic.updateFutureStateData(stateObs);
+
         for (StateHeuristic heuristic : mHeuristics) {
             heuristic.updateFutureStateData(stateObs);
         }
