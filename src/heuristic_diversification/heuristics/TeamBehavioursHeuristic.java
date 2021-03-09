@@ -10,16 +10,24 @@ import heuristic_diversification.model.GameStats;
 public class TeamBehavioursHeuristic extends StateHeuristic {
     private StateHeuristic[] mHeuristics;
     private Double[] mHeuristicsWeights;
+    private KnowledgeHeuristic knowledgeHeuristic;
 
     public TeamBehavioursHeuristic(StateHeuristic[] heuristics, Double[] weights) {
         // We assume the number of heuristics and their weights are the same and
         // provided in the same order
         mHeuristics = heuristics;
         mHeuristicsWeights = weights;
+
+        // The team heuristic is in charge of keeping the SpritesData up to date so
+        // those heuristics that extend from KnowledgeHeuristic have the data available
+        knowledgeHeuristic = new KnowledgeHeuristic();
+        knowledgeHeuristic.setUpdateSpritesData();
     }
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs) {
+        knowledgeHeuristic.initHeuristicInternalInformation(stateObs);
+
         for (StateHeuristic heuristic : mHeuristics) {
             heuristic.initHeuristicInternalInformation(stateObs);
         }
@@ -27,6 +35,8 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
+        knowledgeHeuristic.initHeuristicInternalInformation(stateObs);
+
         for (StateHeuristic heuristic : mHeuristics) {
             heuristic.updateHeuristicInternalInformation(stateObs);
         }

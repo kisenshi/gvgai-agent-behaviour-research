@@ -16,29 +16,39 @@ import core.heuristic.StateHeuristic;
 import heuristic_diversification.model.GameStats;
 
 public class KnowledgeHeuristic extends StateHeuristic {
-    protected SpritesData mSpritesData;
+    protected static SpritesData mSpritesData;
+    protected boolean updateSpritesData;
 
-    public KnowledgeHeuristic() {}
+    public KnowledgeHeuristic() {
+        this.updateSpritesData = false;
+    }
+
+    public void setUpdateSpritesData() {
+        this.updateSpritesData = true;
+    }
 
     @Override
     public void initHeuristicInternalInformation(StateObservation stateObs) {
         super.initHeuristicInternalInformation(stateObs);
 
         // Initialisations related to the KnowledgeHeuristic
-        
-        mSpritesData = new SpritesData(stateObs);
-        acknowledgeSprites(stateObs);
+        if (updateSpritesData) {
+            mSpritesData = new SpritesData(stateObs);
+            acknowledgeSprites(stateObs);
+        }
     }
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
         super.updateHeuristicInternalInformation(stateObs);
 
-        acknowledgeSprites(stateObs);
-        updateInteractionHistory(stateObs);
+        if (updateSpritesData) {
+            acknowledgeSprites(stateObs);
+            updateInteractionHistory(stateObs);
 
-        // DEBUG
-        mSpritesData.printUpdatedSpritesData(stateObs.getGameTick() - 1);
+            // DEBUG
+            mSpritesData.printUpdatedSpritesData(stateObs.getGameTick() - 1);
+        }
     }
 
     @Override

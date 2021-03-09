@@ -218,8 +218,12 @@ public class SpritesData {
     public void printUpdatedSpritesData(int gameTick) {
         if (hasBeenUpdated(gameTick)) {
             System.out.println("-- spritesData updated at "+ gameTick +"--");
-            JSONManager.prinObjectAsJson(this, "spritesData_"+ gameTick);
+            printDebugSpritesData("spritesData_"+ gameTick);
         }
+    }
+
+    public void printDebugSpritesData(String fileName) {
+        JSONManager.prinObjectAsJson(this, fileName);
     }
 
     /**
