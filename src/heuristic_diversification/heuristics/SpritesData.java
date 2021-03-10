@@ -7,6 +7,8 @@ package heuristic_diversification.heuristics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
 
 import core.game.Event;
 import core.game.Observation;
@@ -27,8 +29,8 @@ public class SpritesData {
     private int mLastCuriosityTick; // curiosity is described as an interaction (collision or hit) in a new position of the map
 
     private class InteractionHistory {
-        int nInteractions;
-        ArrayList<Vector2d> interactionPositionsList;
+        private int nInteractions;
+        private ArrayList<Vector2d> interactionPositionsList;
 
         InteractionHistory() {
             nInteractions = 1;
@@ -46,6 +48,28 @@ public class SpritesData {
             }
             return false;
         }
+
+        public int getNInteractions() {
+            return nInteractions;
+        }
+
+        public int getNCuriosityInteractions() {
+            return interactionPositionsList.size();
+        } 
+
+        public ArrayList<Vector2d> getCuriosityInteractions() {
+            return interactionPositionsList;
+        }
+
+        public int nInteractionsNotFoundInReferenceList(ArrayList<Vector2d> positionListReference) {
+            int newPosition = 0;
+            for (Vector2d position : interactionPositionsList) {
+                if (!positionListReference.contains(position)) {
+                    newPosition++;
+                }
+            }
+            return newPosition;
+        }
     }
 
     SpritesData(StateObservation stateObs) {
@@ -60,6 +84,22 @@ public class SpritesData {
         this.mStypesHits = new HashMap<Integer, HashMap<Integer, InteractionHistory>>();
         
         this.mapDimensions = new MapDimensionsManager(stateObs);
+    }
+
+    public final HashMap<Integer, InteractionHistory> getCollisionSpriteHistory() {
+        return mStypesCollisions;
+    }
+
+    public final HashMap<Integer, HashMap<Integer, InteractionHistory>> getHitsSpriteHistory() {
+        return mStypesHits;
+    }
+
+    public final HashMap<Integer, InteractionHistory> getHitSpriteHistory(int stype) {
+        if (mStypesHits != null) {
+            return mStypesHits.get(stype);
+        }
+
+        return null;
     }
 
     /**
@@ -212,6 +252,211 @@ public class SpritesData {
     }
 
     /**
+     * Number of sprites not present in the interaction history in the sprites data object provided 
+     * as reference.
+     * Interactions include both collisions and hits.
+     * @param referenceSpritesData object taken as reference for comparison
+     * @return number of new sprite interactions
+     */
+    public int nNewInteractions(final SpritesData referenceSpritesData) {
+        return nNewCollisions(referenceSpritesData) + nNewHits(referenceSpritesData);
+    }
+
+    /**
+     * Number of locations for each sprite (curiosity events) that are not present in the interaction history 
+     * in the sprites data object provided as reference.
+     * Interactions include both collisions and hits.
+     * @param referenceSpritesData object taken as reference for comparison
+     * @return number of new curiosity events
+     */
+    public int nNewCuriosityInteractions(final SpritesData referenceSpritesData) {
+        return nNewCollisionCuriosityInteractions(referenceSpritesData) + nNewHitCuriosityInteractions(referenceSpritesData);
+    }
+
+    /**
+     * Get number of total interactions with sprites in the data stored in SpritesData.
+     * Interactions include both collisions and hits.
+     * @return
+     */
+    public int nTotalInteractions() {
+        return nCollisions() + nHits();
+    }
+
+    /**
+     * Get the number of interactions of sprites in different positions (curiosity) in the data stored in SpritesData.
+     * Interactions include both collisions and hits.
+     * @return
+     */
+    public int nTotalCuriosityInteractions() {
+        return nCollisionCuriosityInteractions() + nHitCuriosityInteractions();
+    }
+
+    /**
+     * Returns the number of collisions with sprites in SpritesData that can't be found in the object taken as reference.
+     * @param referenceSpritesData
+     * @return
+     */
+    private int nNewCollisions(final SpritesData referenceSpritesData) {
+        return nNewDistinctSprites(mStypesCollisions, referenceSpritesData.getCollisionSpriteHistory());
+    }
+
+    /**
+     * Returns the number of hits of sprites in SpritesData that can't be found in the object taken as reference.
+     * @param referenceSpritesData
+     * @return
+     */
+    private int nNewHits(final SpritesData referenceSpritesData) {
+        int nNewHits = 0;
+        for (Entry<Integer, HashMap<Integer, InteractionHistory>> stypeHit : mStypesHits.entrySet()) {
+            HashMap<Integer, InteractionHistory> referenceHitSpriteHistory = referenceSpritesData.getHitSpriteHistory(stypeHit.getKey());
+            if (referenceHitSpriteHistory != null) {
+                nNewHits += nNewDistinctSprites(stypeHit.getValue(), referenceHitSpriteHistory);
+            } else {
+                nNewHits += stypeHit.getValue().size();
+            }
+        }
+        return nNewHits;
+    }
+
+    /**
+     * Obtains the number of keys present in the first hashmap but not in the second.
+     * To solve this, it is created a set containing the keys in both maps (union). When removing
+     * the keys from the union that exist in the reference, those that are only in the first map
+     * remain. We get the size of the final set.
+     * @param spritesHistory
+     * @param spritesHistoryReference
+     * @return
+     */
+    private int nNewDistinctSprites(HashMap<Integer, InteractionHistory> spritesHistory, HashMap<Integer, InteractionHistory> spritesHistoryReference) {
+        // Get the union of sprites of both history hashmap
+        HashSet<Integer> spritesUnion = new HashSet<>(spritesHistory.keySet());
+        spritesUnion.addAll(spritesHistoryReference.keySet());
+
+        // Remove the reference sprites to obtain the unique ones (new ones) in spritesHistory
+        spritesUnion.removeAll(spritesHistoryReference.keySet());
+
+        return spritesUnion.size();
+    }
+
+    /**
+     * Total of interactions of the collision type
+     * @return
+     */
+    private int nCollisions() {
+        return nInteractions(mStypesCollisions);
+    }
+
+    /**
+     * Total of interactions of the hit type
+     * @return
+     */
+    private int nHits() {
+        int nHits = 0;
+        for (HashMap<Integer, InteractionHistory> spritesHit : mStypesHits.values()) {
+            nHits += nInteractions(spritesHit);
+        }
+        return nHits;
+    }
+
+    /**
+     * Sums the number of interactions for each sprite in the given spritesHistory to obtain the number of total of interactions.
+     * @param spritesHistory Hashmap form by stype and the interaction history for each of them
+     * @return total interactions
+     */
+    private int nInteractions(HashMap<Integer, InteractionHistory> spritesHistory) {
+        int nInteractions = 0;
+        for (InteractionHistory interactionHistory : spritesHistory.values()) {
+            nInteractions += interactionHistory.getNInteractions();
+        }
+        return nInteractions;
+    }
+
+    /**
+     * Gets the numner of new collision curiosities present in SpritesData taking as reference another object.
+     * @param referenceSpritesData
+     * @return
+     */
+    private int nNewCollisionCuriosityInteractions(final SpritesData referenceSpritesData) {
+        return nNewDistinctCuriosityInteractions(mStypesCollisions, referenceSpritesData.getCollisionSpriteHistory());
+    }
+
+    /**
+     * Gets the numner of new hit curiosities present in SpritesData taking as reference another object.
+     * @param referenceSpritesData
+     * @return
+     */
+    private int nNewHitCuriosityInteractions(final SpritesData referenceSpritesData) {
+        int nNewHitCuriosityInteractions = 0;
+        for (Entry<Integer, HashMap<Integer, InteractionHistory>> stypeHit : mStypesHits.entrySet()) {
+            HashMap<Integer, InteractionHistory> referenceHitSpriteHistory = referenceSpritesData.getHitSpriteHistory(stypeHit.getKey());
+            if (referenceHitSpriteHistory != null) {
+                nNewHitCuriosityInteractions += nNewDistinctCuriosityInteractions(stypeHit.getValue(), referenceHitSpriteHistory);
+            } else {
+                nNewHitCuriosityInteractions += nCuriosityInteractions(stypeHit.getValue());
+            }
+        }
+        return nNewHitCuriosityInteractions;
+    }
+
+    /**
+     * Counts those curiosity interactions that are present in the first hashmap and not in the second one, 
+     * which is taken as reference.
+     * @param spritesHistory
+     * @param spritesHistoryReference
+     * @return
+     */
+    private int nNewDistinctCuriosityInteractions(HashMap<Integer, InteractionHistory> spritesHistory, HashMap<Integer, InteractionHistory> spritesHistoryReference) {
+        int nNewCuriosityInteractions = 0;
+        for (Entry<Integer, InteractionHistory> stypeHistory : spritesHistory.entrySet()) {
+            int stype = stypeHistory.getKey();
+            if (spritesHistoryReference.containsKey(stype)) {
+                // We need to count only the different ones
+                ArrayList<Vector2d> curiosityReferences = spritesHistoryReference.get(stype).getCuriosityInteractions();
+                nNewCuriosityInteractions += stypeHistory.getValue().nInteractionsNotFoundInReferenceList(curiosityReferences);
+            } else {
+                // the sprite is not present in the reference, all curiosity is new
+                nNewCuriosityInteractions += stypeHistory.getValue().getNCuriosityInteractions();
+            }
+        }
+        return nNewCuriosityInteractions;
+    }
+
+    /**
+     * Total of curiosities of the collision type
+     * @return
+     */
+    private int nCollisionCuriosityInteractions() {
+        return nCuriosityInteractions(mStypesCollisions);
+    }
+
+    /**
+     * Total of curiosities of the hit type
+     * @return
+     */
+    private int nHitCuriosityInteractions() {
+        int nHitCuriosityInteractions = 0;
+        for (HashMap<Integer, InteractionHistory> spritesHit : mStypesHits.values()) {
+            nHitCuriosityInteractions += nCuriosityInteractions(spritesHit);
+        }
+
+        return nHitCuriosityInteractions;
+    }
+
+    /**
+     * Sums the number of different locations where the interaction with each sprite has taken place (curiosity) to obtain the total 
+     * for the given spritesHistory.
+     * @param spritesHistory
+     * @return
+     */
+    private int nCuriosityInteractions(HashMap<Integer, InteractionHistory> spritesHistory) {
+        int nCuriosityInteractions = 0;
+        for (InteractionHistory interactionHistory : spritesHistory.values()) {
+            nCuriosityInteractions += interactionHistory.getNCuriosityInteractions();
+        }
+        return nCuriosityInteractions;
+    }
+
+    /**
      * Debug method. Print spritesData info as JSON if it has been updated at the gametick provided.
      * @param gameTick
      */
@@ -227,7 +472,7 @@ public class SpritesData {
     }
 
     /**
-     * Check if spritesData have been updated at the gametick provided.
+     * Debug method. Check if spritesData have been updated at the gametick provided.
      * @param gameTick
      * @return
      */
