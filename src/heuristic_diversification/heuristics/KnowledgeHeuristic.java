@@ -34,7 +34,7 @@ public class KnowledgeHeuristic extends StateHeuristic {
         // Initialisations related to the KnowledgeHeuristic
         if (updateSpritesData) {
             mSpritesData = new SpritesData(stateObs);
-            acknowledgeSprites(stateObs);
+            acknowledgeSprites(mSpritesData, stateObs);
         }
     }
 
@@ -43,8 +43,8 @@ public class KnowledgeHeuristic extends StateHeuristic {
         super.updateHeuristicInternalInformation(stateObs);
 
         if (updateSpritesData) {
-            acknowledgeSprites(stateObs);
-            updateInteractionHistory(stateObs);
+            acknowledgeSprites(mSpritesData, stateObs);
+            updateInteractionHistory(mSpritesData, stateObs);
 
             // DEBUG
             mSpritesData.printUpdatedSpritesData(stateObs.getGameTick() - 1);
@@ -77,33 +77,33 @@ public class KnowledgeHeuristic extends StateHeuristic {
         // TODO Auto-generated method stub
     }
 
-    private void acknowledgeSprites(StateObservation stateObs) {
+    protected void acknowledgeSprites(SpritesData spritesData, StateObservation stateObs) {
         int gameTick = stateObs.getGameTick();
 
         // GAME SPRITES
 
         // NPC sprites: getNPCPositions
-        mSpritesData.updateGameSprites(stateObs.getNPCPositions(), gameTick);
+        spritesData.updateGameSprites(stateObs.getNPCPositions(), gameTick);
 
         // Fixed sprites: getImmovablePositions
-        mSpritesData.updateGameSprites(stateObs.getImmovablePositions(), gameTick);
+        spritesData.updateGameSprites(stateObs.getImmovablePositions(), gameTick);
 
         // Movable sprites: getMovablePositions
-        mSpritesData.updateGameSprites(stateObs.getMovablePositions(), gameTick);
+        spritesData.updateGameSprites(stateObs.getMovablePositions(), gameTick);
 
         // Resources sprites: getResourcesPositions
-        mSpritesData.updateGameSprites(stateObs.getResourcesPositions(), gameTick);
+        spritesData.updateGameSprites(stateObs.getResourcesPositions(), gameTick);
         
         // Portal sprites: getPortalsPositions
-        mSpritesData.updateGameSprites(stateObs.getPortalsPositions(), gameTick);
+        spritesData.updateGameSprites(stateObs.getPortalsPositions(), gameTick);
        
         // PLAYER SPRITES
 
         // From avatar sprites: getFromAvatarSpritesPositions
-        mSpritesData.updatePlayerSprites(stateObs.getFromAvatarSpritesPositions(), gameTick);
+        spritesData.updatePlayerSprites(stateObs.getFromAvatarSpritesPositions(), gameTick);
     }
 
-    public void updateInteractionHistory(StateObservation stateObs) {
+    protected void updateInteractionHistory(SpritesData spritesData, StateObservation stateObs) {
         TreeSet<Event> eventsHistory = stateObs.getEventsHistory();
     
         // We are interested on events that just occured, so they happen in the previous gameTick
@@ -121,11 +121,11 @@ public class KnowledgeHeuristic extends StateHeuristic {
             if (event.fromAvatar) {
                 // the interaction is indirect: it is a hit
                 //System.out.println("HIT");
-                mSpritesData.updateHitHistory(event, gameTick);
+                spritesData.updateHitHistory(event, gameTick);
             } else {
                 // the avatar collides with a sprite: it is a collision
                 //System.out.println("COLLISION");
-                mSpritesData.updateCollisionHistory(event, gameTick);
+                spritesData.updateCollisionHistory(event, gameTick);
             }
         }
     }
