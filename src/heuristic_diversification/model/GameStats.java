@@ -147,60 +147,63 @@ public class GameStats {
     }
 
     public void calculateStats() {
-        SummaryStatistics stats = new SummaryStatistics();
 
         // game ticks
         System.out.println("Game ticks");
-        for (Integer tick : gameOverTick) {
-            stats.addValue((double) tick);
-        }
-
-        gameOverTickStats = (StatisticalSummaryValues) stats.getSummary();
-        System.out.println(gameOverTickStats.toString());
-        stats.clear();
+        gameOverTickStats = calculateStatsFromIntegerList(gameOverTick);
 
         // win
         System.out.println("Win");
-        for (int winValue : win) {
-            stats.addValue((double) winValue);
-        }
-
-        winStats = (StatisticalSummaryValues) stats.getSummary();
-        System.out.println(winStats.toString());
-        stats.clear();
+        winStats = calculateStatsFromIntegerList(win);
 
         // score
         System.out.println("Score");
-        for (double scoreValue : score) {
-            stats.addValue(scoreValue);
-        }
-
-        scoreStats = (StatisticalSummaryValues) stats.getSummary();
-        System.out.println(scoreStats.toString());
-        stats.clear();
+        scoreStats = calculateStatsFromDoubleList(score);
 
         // exploration
         System.out.println("Exploration");
-        for (double nExploredValue : nExplored) {
-            stats.addValue(nExploredValue);
-        }
-
-        nExploredStats = (StatisticalSummaryValues) stats.getSummary();
-        System.out.println(nExploredStats.toString());
-        stats.clear();
+        nExploredStats = calculateStatsFromIntegerList(nExplored);
 
         // exploration percentage
         if (mapSize > 0) {
             System.out.println("Exploration percentage");
-            for (double nExploredValue : nExplored) {
-                double percentageExplored = nExploredValue / mapSize;
-                stats.addValue(percentageExplored);
-            }
-
-            percentageExploredStats = (StatisticalSummaryValues) stats.getSummary();
-            System.out.println(percentageExploredStats.toString());
-            stats.clear();
+            percentageExploredStats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
         }
+    private StatisticalSummaryValues calculateStatsFromIntegerList(ArrayList<Integer> integerDataList) {
+        SummaryStatistics stats = new SummaryStatistics();
+        for (Integer data : integerDataList) {
+            stats.addValue((double) data);
+        }
+
+        StatisticalSummaryValues statsVariable = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(statsVariable.toString());
+
+        return statsVariable;
+    }
+
+    private StatisticalSummaryValues calculatePercentageStatsFromIntegerList(ArrayList<Integer> integerDataList, int total) {
+        SummaryStatistics stats = new SummaryStatistics();
+        for (double data : integerDataList) {
+            double percentageData = data / total;
+            stats.addValue(percentageData);
+        }
+
+        StatisticalSummaryValues statsVariable = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(statsVariable.toString());
+
+        return statsVariable;
+    }
+
+    private StatisticalSummaryValues calculateStatsFromDoubleList(ArrayList<Double> doubleDataList) {
+        SummaryStatistics stats = new SummaryStatistics();
+        for (Double data : doubleDataList) {
+            stats.addValue(data);
+        }
+
+        StatisticalSummaryValues statsVariable = (StatisticalSummaryValues) stats.getSummary();
+        System.out.println(statsVariable.toString());
+
+        return statsVariable;
     }
 
     // killer
