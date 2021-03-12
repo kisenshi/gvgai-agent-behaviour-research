@@ -34,7 +34,6 @@ public class KnowledgeHeuristic extends StateHeuristic {
         // Initialisations related to the KnowledgeHeuristic
         if (updateSpritesData) {
             mSpritesData = new SpritesData(stateObs);
-            acknowledgeSprites(mSpritesData, stateObs);
         }
     }
 
@@ -46,8 +45,9 @@ public class KnowledgeHeuristic extends StateHeuristic {
             acknowledgeSprites(mSpritesData, stateObs);
             updateInteractionHistory(mSpritesData, stateObs);
 
-            // DEBUG
-            mSpritesData.printUpdatedSpritesData(stateObs.getGameTick() - 1);
+            if (DEBUG) {
+                mSpritesData.printUpdatedSpritesData(stateObs.getGameTick() - 1);
+            }
         }
     }
 
