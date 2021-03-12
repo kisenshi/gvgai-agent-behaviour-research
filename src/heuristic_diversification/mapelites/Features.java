@@ -28,6 +28,7 @@ public enum Features {
         this.minValue = min;
         this.maxValue = max;
         this.bucketSize = bucketSize;
+        this.percentage = percentage;
     }
 
     public Integer getFeatureMinValue() {

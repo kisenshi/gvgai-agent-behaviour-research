@@ -208,6 +208,10 @@ public class GameStats {
             percentageExploredStats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
         }
     private StatisticalSummaryValues calculateStatsFromIntegerList(ArrayList<Integer> integerDataList) {
+        if (integerDataList.size() == 0) {
+            return null;
+        }
+
         SummaryStatistics stats = new SummaryStatistics();
         for (Integer data : integerDataList) {
             stats.addValue((double) data);
@@ -220,6 +224,10 @@ public class GameStats {
     }
 
     private StatisticalSummaryValues calculatePercentageStatsFromIntegerList(ArrayList<Integer> integerDataList, int total) {
+        if ((integerDataList.size() == 0) || (total <= 0)) {
+            return null;
+        }
+
         SummaryStatistics stats = new SummaryStatistics();
         for (double data : integerDataList) {
             double percentageData = data / total;
@@ -233,6 +241,10 @@ public class GameStats {
     }
 
     private StatisticalSummaryValues calculateStatsFromDoubleList(ArrayList<Double> doubleDataList) {
+        if (doubleDataList.size() == 0) {
+            return null;
+        }
+
         SummaryStatistics stats = new SummaryStatistics();
         for (Double data : doubleDataList) {
             stats.addValue(data);
