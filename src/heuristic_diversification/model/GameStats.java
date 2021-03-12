@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -146,8 +147,45 @@ public class GameStats {
         }
     }
 
-    public void calculateStats() {
+    /**
+     * Allow calculating only the stats for the field provided. This method is helpful in cases where
+     * only one stat value is necessary to avoid spending time calculating all of them.
+     * @param statName name of the variable of the stat without the trailing "Stat" at the end.
+     */
+    public void calculateFieldStats(String statName) {
+        try {
+            StatisticalSummaryValues stats = null;
+            Field dataList;
 
+            // not all field stats are calculated the same way, we include the exceptions
+            switch(statName) {
+                case "percentageExplored":
+                    // stats calculated with percentage from nExplored
+                    stats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
+                    break;
+                case "score":
+                    // type ArrayList<Double>
+                    dataList = this.getClass().getDeclaredField(statName);
+                    ArrayList<Double> doubleDataList = (ArrayList<Double>) dataList.get(this);
+                    stats = calculateStatsFromDoubleList(doubleDataList);
+                    break;
+                default:
+                    // most common stat type ArrayList<Integer> not percentage
+                    dataList = this.getClass().getDeclaredField(statName);
+                    ArrayList<Integer> integerDataList = (ArrayList<Integer>) dataList.get(this);
+                    stats = calculateStatsFromIntegerList(integerDataList);
+                    break;
+            }
+
+            Field statsField = this.getClass().getDeclaredField(statName + "Stats");
+            statsField.set(this, stats); 
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    public void calculateStats() {
         // game ticks
         System.out.println("Game ticks");
         gameOverTickStats = calculateStatsFromIntegerList(gameOverTick);
