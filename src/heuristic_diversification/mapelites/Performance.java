@@ -22,6 +22,10 @@ public enum Performance {
         this.statName = statName;
         this.invertedStat = invertedStat;
     }
+
+    public void calculatePerfomanceStat(GameStats gameStats) {
+        gameStats.calculateFieldStats(statName);
+    }
  
     public double getPerformanceValue(GameStats gameStats) {
         double performance = 0.0;

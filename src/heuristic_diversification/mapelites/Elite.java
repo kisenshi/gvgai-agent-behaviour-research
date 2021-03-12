@@ -13,11 +13,11 @@ import heuristic_diversification.model.GameStats;
  * Returns the feature id and performance of the elite using its stats
  */
 public class Elite {
-    String agentName;
-    Double heuristicsWeightList[];
-    double performance;
-    Double[] featureValues; 
-    GameStats gameStats;
+    private String agentName;
+    private Double heuristicsWeightList[];
+    private double performance;
+    private Double[] featureValues; 
+    private GameStats gameStats;
 
     public Elite(String agentName, final Double weightList[], GameStats gameStats) {
         this.agentName = agentName;
@@ -37,6 +37,10 @@ public class Elite {
         for (int i = 0; i < heuristicsWeightList.length; i++) {
             weightsList[i] = heuristicsWeightList[i];
         }
+    }
+
+    public void calculateAllStats() {
+        gameStats.calculateStats();
     }
 
     public void setDataForSerialisation(Performance performance, Features[] features) {

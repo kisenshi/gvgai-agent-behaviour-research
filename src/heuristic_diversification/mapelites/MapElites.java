@@ -102,6 +102,23 @@ public class MapElites {
 
             nIterations++;
         }
+
+        // When the algorithm is over, we need to make sure the final elites have all the data available
+        processMapElitesData();
+    }
+
+    /**
+     * Make all the data of the elites available: calculate all stats and set the data needed for serialisation.
+     * While the algorithm is running, not all gameStats data is being calculated so it is needed to got through
+     * all the occupied cells in the map to process all the data of the elite so it is available when their
+     * information is printed or serialised.
+     */
+    public void processMapElitesData() {
+        for (EliteIdx eliteIdx : occupiedCellsIdx) {
+            Elite elite = mapElites[eliteIdx.x][eliteIdx.y];
+            elite.calculateAllStats();
+            elite.setDataForSerialisation(performanceCriteria, new Features[]{featureInfoX, featureInfoY});
+        }
     }
 
     private int getNCellsOccupied() {
@@ -118,9 +135,10 @@ public class MapElites {
     }
     
     private Elite createGameplayElite() {
-        // Get the resulting game stats for current controller and weights
-        GameStats gameStats = gameplayFramework.createStatsFromGameplay(controller);
-    
+        // Get the game stats needed for the calculations for the map for current controller and weights. 
+        // During the iteration of the algorithm, only the stats involved in performance and features are needed
+        GameStats gameStats = gameplayFramework.createMapEliteStatsFromGameplay(controller, performanceCriteria, new Features[]{featureInfoX, featureInfoY});
+
         // Create elite with information and results
         return new Elite(controller, heuristicsWeightList, gameStats);
     }

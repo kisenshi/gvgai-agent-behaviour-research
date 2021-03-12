@@ -50,6 +50,10 @@ public enum Features {
         return Buckets.getMapNBuckets(minValue, maxValue, bucketSize);
     }
 
+    public void calculateFeatureStat(GameStats gameStats) {
+        gameStats.calculateFieldStats(statName);
+    }
+ 
     public double getFeatureValue(GameStats gameStats) {
         double featureValue = 0.0;
 

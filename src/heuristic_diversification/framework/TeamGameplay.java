@@ -8,6 +8,8 @@ package heuristic_diversification.framework;
 import heuristic_diversification.config.Games;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.mapelites.Config.FrameworkConfig;
+import heuristic_diversification.mapelites.Features;
+import heuristic_diversification.mapelites.Performance;
 import heuristic_diversification.model.GameStats;
 
 /**
@@ -33,6 +35,22 @@ public class TeamGameplay {
         GameStats gameStats = new GameStats(gameInfo.levelNavigationSize(levelId));
         ArcadeMachineHeuristic.runGameAndGetStats(gameStats, gameInfo.game(), gameInfo.level(levelId), frameworkConfig.visuals, controller, frameworkConfig.actionFile(), teamBehaviouHeuristic, frameworkConfig.nGameRuns);
         gameStats.calculateStats();
+        return gameStats;
+    }
+
+    public GameStats createMapEliteStatsFromGameplay(String controller, Performance performance, Features[] features) {
+        Games gameInfo = frameworkConfig.game;
+        int levelId = frameworkConfig.level;
+    
+        GameStats gameStats = new GameStats(gameInfo.levelNavigationSize(levelId));
+        ArcadeMachineHeuristic.runGameAndGetStats(gameStats, gameInfo.game(), gameInfo.level(levelId), frameworkConfig.visuals, controller, frameworkConfig.actionFile(), teamBehaviouHeuristic, frameworkConfig.nGameRuns);
+        
+        // For the map elited algorithm iteration, only the stats of the performance and features fields are needed so we only calculate those for now
+        performance.calculatePerfomanceStat(gameStats);
+        for (Features feature : features) {
+            feature.calculateFeatureStat(gameStats);
+        }
+
         return gameStats;
     }
 }
