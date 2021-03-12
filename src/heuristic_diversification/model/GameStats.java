@@ -38,6 +38,25 @@ public class GameStats {
     public StatisticalSummaryValues nExploredStats;
     public StatisticalSummaryValues percentageExploredStats;
 
+    // scholar
+    private ArrayList<Integer> finalStypesDiscovered; // this contains the final list of sprites discovered in any of the runs
+    transient private ArrayList<Integer> nSpritesDiscovered;
+    transient private ArrayList<Integer> lastDiscoveryTick;
+    public StatisticalSummaryValues nSpritesDiscoveredStats;
+
+    // curious
+    transient private ArrayList<Integer> nUniqueSpriteInteractions;
+    transient private ArrayList<Integer> nCuriosityInteractions;
+    transient private ArrayList<Integer> nTotalCollisions;
+    transient private ArrayList<Integer> nTotalHits;
+    transient private ArrayList<Integer> lastNewCollisionTick;
+    transient private ArrayList<Integer> lastNewHitTick;
+    transient private ArrayList<Integer> lastCuriosityTick;
+    public StatisticalSummaryValues nUniqueSpriteInteractionsStats;
+    public StatisticalSummaryValues nCuriosityInteractionsStats;
+    public StatisticalSummaryValues nTotalCollisionsStats;
+    public StatisticalSummaryValues nTotalHitsStats;
+
     public GameStats(int mapSize) {
         this.mapSize = mapSize;
 
@@ -55,6 +74,23 @@ public class GameStats {
         nExplored = new ArrayList<Integer>();
         heatMapExplorationMatrix = new ArrayList<int[][]>();
         lastNewExplorationTick = new ArrayList<Integer>();
+
+        // scholar
+        finalStypesDiscovered = new ArrayList<Integer>();
+        nSpritesDiscovered = new ArrayList<Integer>();
+        lastDiscoveryTick = new ArrayList<Integer>();
+
+        // curious
+        nUniqueSpriteInteractions = new ArrayList<Integer>();
+        nCuriosityInteractions = new ArrayList<Integer>();
+        nTotalCollisions = new ArrayList<Integer>();
+        nTotalHits = new ArrayList<Integer>();
+        lastNewCollisionTick = new ArrayList<Integer>();
+        lastNewHitTick = new ArrayList<Integer>();
+        lastCuriosityTick = new ArrayList<Integer>();
+
+        // killer
+        // collector
     }
 
     public void addGeneralData(int gameOverTick) {
@@ -77,6 +113,29 @@ public class GameStats {
 
         int[][] matrixCopy = Arrays.stream(explorationMatrix).map(int[]::clone).toArray(int[][]::new);
         this.heatMapExplorationMatrix.add(matrixCopy);
+    }
+
+    public void addScholarFinalData(ArrayList<Integer> stypesDiscovered, int nSprites, int lastSpriteDiscovery) {
+        if (!finalStypesDiscovered.equals(stypesDiscovered)) {
+            for (Integer stype : stypesDiscovered) {
+                if (!finalStypesDiscovered.contains(stype)) {
+                    this.finalStypesDiscovered.add(stype);
+                }
+            }
+        }
+        
+        this.nSpritesDiscovered.add(nSprites);
+        this.lastDiscoveryTick.add(lastSpriteDiscovery);
+    }
+
+    public void addCuriousFinalData(int nDistinctStypes, int nCuriosity, int nCollisions, int nHits, int lastNewCollision, int lastNewHit, int lastCuriosity) {
+        this.nUniqueSpriteInteractions.add(nDistinctStypes);
+        this.nCuriosityInteractions.add(nCuriosity); 
+        this.nTotalCollisions.add(nCollisions);
+        this.nTotalHits.add(nHits);
+        this.lastNewCollisionTick.add(lastNewCollision); 
+        this.lastNewHitTick.add(lastNewHit);
+        this.lastCuriosityTick.add(lastCuriosity);
     }
 
     private void printGeneralStats(BufferedWriter writer) throws IOException {
@@ -129,6 +188,28 @@ public class GameStats {
             }
             writer.write("\n\n");
         }
+
+    private void printScholarStats(BufferedWriter writer) throws IOException {
+        writer.write(" == Scholar ==\n");
+        for (int i = 0; i < nSpritesDiscovered.size(); i++) {
+            writer.write(nSpritesDiscovered.get(i).toString() + " ");
+            writer.write(lastDiscoveryTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
+    }
+
+    private void printCuriosityStats(BufferedWriter writer) throws IOException {
+        writer.write("== Curious ==\n");
+        for (int i = 0; i < nUniqueSpriteInteractions.size(); i++) {
+            writer.write(nUniqueSpriteInteractions.get(i).toString() + " ");
+            writer.write(nCuriosityInteractions.get(i).toString() + " ");
+            writer.write(nTotalCollisions.get(i).toString() + " ");
+            writer.write(nTotalHits.get(i).toString() + " ");
+            writer.write(lastNewCollisionTick.get(i).toString() + " ");
+            writer.write(lastNewHitTick.get(i).toString() + " ");
+            writer.write(lastCuriosityTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
     }
 
     public void printStats(String fileName) {
@@ -140,6 +221,8 @@ public class GameStats {
                 printWinnerStats(writer);
                 printRecordBreakerStats(writer);
                 printExplorerStats(writer);
+                printScholarStats(writer);
+                printCuriosityStats(writer);
                 writer.close();
             }
         } catch (IOException e) {
@@ -207,6 +290,25 @@ public class GameStats {
             System.out.println("Exploration percentage");
             percentageExploredStats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
         }
+
+        // discovery
+        System.out.println("Sprites discovered");
+        nSpritesDiscoveredStats = calculateStatsFromIntegerList(nSpritesDiscovered);
+        
+        // interaction
+        System.out.println("Unique interactions");
+        nUniqueSpriteInteractionsStats = calculateStatsFromIntegerList(nUniqueSpriteInteractions);
+        
+        System.out.println("Curiosity interactions");
+        nCuriosityInteractionsStats = calculateStatsFromIntegerList(nCuriosityInteractions);
+        
+        System.out.println("Total collisions");
+        nTotalCollisionsStats = calculateStatsFromIntegerList(nTotalCollisions);
+        
+        System.out.println("Total hits");
+        nTotalHitsStats = calculateStatsFromIntegerList(nTotalHits);
+    }
+
     private StatisticalSummaryValues calculateStatsFromIntegerList(ArrayList<Integer> integerDataList) {
         if (integerDataList.size() == 0) {
             return null;
@@ -258,7 +360,6 @@ public class GameStats {
 
     // killer
     // collector
-    // scholar
     // risk analyst
     // novelty explorer
 }

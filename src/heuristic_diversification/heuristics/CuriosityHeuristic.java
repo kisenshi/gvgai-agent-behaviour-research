@@ -110,26 +110,30 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        // TODO Auto-generated method stub
-        return null;
+        return "";
     }
 
     @Override
     public void recordGameStats(Game game, GameStats gameStats) {
-        // TODO Auto-generated method stub
-        
+        int nDistinctStypes = mSpritesData.getNStypesInteractedWith();
+        int nCollisions = mSpritesData.nCollisions();
+        int nHits = mSpritesData.nHits();
+        int nCuriosity = mSpritesData.nTotalCuriosityInteractions();  
+        int lastNewCollision = mSpritesData.getLastNewCollision(); 
+        int lastNewHit = mSpritesData.getLastNewHit();
+        int lastCuriosity = mSpritesData.getLastCuriosity();
+
+        gameStats.addCuriousFinalData(nDistinctStypes, nCuriosity, nCollisions, nHits, lastNewCollision, lastNewHit, lastCuriosity);
     }
 
     @Override
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds) {
-        // TODO Auto-generated method stub
-        
+        // We dont implement this method for this heuristic
     }
 
     @Override
     public void drawInScreen(Graphics2D g) {
-        // TODO Auto-generated method stub
-        
+        // No need to draw anything on screen
     }
 
 }
