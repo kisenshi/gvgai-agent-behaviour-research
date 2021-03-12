@@ -29,6 +29,8 @@ public class GameStats {
     transient private ArrayList<Integer> lastScoreChangeTick;
     transient private ArrayList<Integer> lastPositiveScoreChangeTick;
     public StatisticalSummaryValues scoreStats;
+    public StatisticalSummaryValues lastScoreChangeTickStats;
+    public StatisticalSummaryValues lastPositiveScoreChangeTickStats;
 
     // explorer
     private int mapSize;
@@ -37,12 +39,14 @@ public class GameStats {
     transient private ArrayList<Integer> lastNewExplorationTick;
     public StatisticalSummaryValues nExploredStats;
     public StatisticalSummaryValues percentageExploredStats;
+    public StatisticalSummaryValues lastNewExplorationTickStats;
 
     // scholar
     private ArrayList<Integer> finalStypesDiscovered; // this contains the final list of sprites discovered in any of the runs
     transient private ArrayList<Integer> nSpritesDiscovered;
     transient private ArrayList<Integer> lastDiscoveryTick;
     public StatisticalSummaryValues nSpritesDiscoveredStats;
+    public StatisticalSummaryValues lastDiscoveryTickStats;
 
     // curious
     transient private ArrayList<Integer> nUniqueSpriteInteractions;
@@ -56,6 +60,9 @@ public class GameStats {
     public StatisticalSummaryValues nCuriosityInteractionsStats;
     public StatisticalSummaryValues nTotalCollisionsStats;
     public StatisticalSummaryValues nTotalHitsStats;
+    public StatisticalSummaryValues lastNewCollisionTickStats;
+    public StatisticalSummaryValues lastNewHitTickStats;
+    public StatisticalSummaryValues lastCuriosityTickStats;
 
     public GameStats(int mapSize) {
         this.mapSize = mapSize;
@@ -188,6 +195,9 @@ public class GameStats {
             }
             writer.write("\n\n");
         }
+        writer.write("== Average exploration Matrix ==\n");
+        // TODO(kisenshi): include this data
+    }
 
     private void printScholarStats(BufferedWriter writer) throws IOException {
         writer.write(" == Scholar ==\n");
@@ -281,6 +291,14 @@ public class GameStats {
         System.out.println("Score");
         scoreStats = calculateStatsFromDoubleList(score);
 
+        // last score change
+        System.out.println("Tick last score change");
+        lastScoreChangeTickStats = calculateStatsFromIntegerList(lastScoreChangeTick);
+
+        // last positive score change
+        System.out.println("Tick last positive score change");
+        lastPositiveScoreChangeTickStats = calculateStatsFromIntegerList(lastPositiveScoreChangeTick);
+
         // exploration
         System.out.println("Exploration");
         nExploredStats = calculateStatsFromIntegerList(nExplored);
@@ -291,22 +309,42 @@ public class GameStats {
             percentageExploredStats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
         }
 
+        // last new exploration
+        System.out.println("Tick last new exploration");
+        lastNewExplorationTickStats = calculateStatsFromIntegerList(lastNewExplorationTick);
+
         // discovery
         System.out.println("Sprites discovered");
         nSpritesDiscoveredStats = calculateStatsFromIntegerList(nSpritesDiscovered);
         
-        // interaction
+        // last discovery
+        System.out.println("Tick last discovery");
+        lastDiscoveryTickStats = calculateStatsFromIntegerList(lastDiscoveryTick);
+
+        // interactions
         System.out.println("Unique interactions");
         nUniqueSpriteInteractionsStats = calculateStatsFromIntegerList(nUniqueSpriteInteractions);
         
+        // curiosity
         System.out.println("Curiosity interactions");
         nCuriosityInteractionsStats = calculateStatsFromIntegerList(nCuriosityInteractions);
+
+        System.out.println("Tick last curiosity");
+        lastCuriosityTickStats = calculateStatsFromIntegerList(lastCuriosityTick);
         
+        // collisions
         System.out.println("Total collisions");
         nTotalCollisionsStats = calculateStatsFromIntegerList(nTotalCollisions);
+
+        System.out.println("Tick last new collision");
+        lastNewCollisionTickStats = calculateStatsFromIntegerList(lastNewCollisionTick);
         
+        // hits
         System.out.println("Total hits");
         nTotalHitsStats = calculateStatsFromIntegerList(nTotalHits);
+
+        System.out.println("Tick last new hit");
+        lastNewHitTickStats = calculateStatsFromIntegerList(lastNewHitTick);
     }
 
     private StatisticalSummaryValues calculateStatsFromIntegerList(ArrayList<Integer> integerDataList) {
