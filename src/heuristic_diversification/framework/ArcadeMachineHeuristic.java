@@ -7,6 +7,7 @@ package heuristic_diversification.framework;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Random;
 
 import core.competition.CompetitionParameters;
@@ -410,11 +411,29 @@ public class ArcadeMachineHeuristic {
         }
     }
 
-    public static void printGameStypes(String game_file) {
+    public static HashMap<Integer, String> getGameStypesInfo(String gameFile) {
+        HashMap<Integer, String> spritesInfo = new HashMap<Integer, String>();
         VGDLFactory.GetInstance().init();
         VGDLRegistry.GetInstance().init();
 
-        Game toPlay = new VGDLParser().parseGame(game_file);
+        Game toPlay = new VGDLParser().parseGame(gameFile);
+
+        int nSpritesGame = VGDLRegistry.GetInstance().numSpriteTypes();
+        int spriteId = 0;
+        while (spriteId < nSpritesGame) {
+            String spriteName = VGDLRegistry.GetInstance().getRegisteredSpriteKey(spriteId);
+            spritesInfo.put(spriteId, spriteName);
+            spriteId++;
+        }
+
+        return spritesInfo;
+    }
+
+    public static void printGameStypes(String gameFile) {
+        VGDLFactory.GetInstance().init();
+        VGDLRegistry.GetInstance().init();
+
+        Game toPlay = new VGDLParser().parseGame(gameFile);
 
         int nSpritesGame = VGDLRegistry.GetInstance().numSpriteTypes();
         int spriteId = 0;

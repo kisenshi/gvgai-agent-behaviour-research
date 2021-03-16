@@ -5,6 +5,8 @@
 
 package heuristic_diversification.framework;
 
+import java.util.HashMap;
+
 import heuristic_diversification.config.Games;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.mapelites.Config.FrameworkConfig;
@@ -26,6 +28,13 @@ public class TeamGameplay {
     public TeamGameplay(TeamBehavioursHeuristic teamBehaviouHeuristic, FrameworkConfig frameworkConfig) {
         this.teamBehaviouHeuristic = teamBehaviouHeuristic;
         this.frameworkConfig = frameworkConfig;
+    }
+
+    public HashMap<Integer, String> getSpriteDetails() {
+        Games gameInfo = frameworkConfig.game;
+
+        HashMap<Integer, String> spriteDetails = ArcadeMachineHeuristic.getGameStypesInfo(gameInfo.game());
+        return spriteDetails;
     }
 
     public GameStats createStatsFromGameplay(String controller) {

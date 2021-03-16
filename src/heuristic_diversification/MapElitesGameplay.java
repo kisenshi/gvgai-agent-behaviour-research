@@ -14,6 +14,7 @@ import heuristic_diversification.mapelites.Config;
 import heuristic_diversification.mapelites.Config.FrameworkConfig;
 import heuristic_diversification.mapelites.Config.MapElitesConfig;
 import heuristic_diversification.mapelites.MapElites;
+import heuristic_diversification.model.GameInfo;
 import heuristic_diversification.model.JSONManager;
 
 public class MapElitesGameplay {
@@ -60,6 +61,7 @@ public class MapElitesGameplay {
         mapElites.printMapElitesInfo(statsResultsFileName);
         
         // Generate JSON
-        JSONManager.saveMapElitesGameplay(configData, mapElites);
+        GameInfo gameInfo = new GameInfo(gameplayFramework);
+        JSONManager.saveMapElitesGameplay(configData, mapElites, gameInfo);
     }
 }

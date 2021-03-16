@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 
 import heuristic_diversification.mapelites.Config;
 import heuristic_diversification.mapelites.MapElites;
@@ -19,7 +20,7 @@ import tools.com.google.gson.JsonObject;
 
 public class JSONManager {
 
-    public static void saveMapElitesGameplay(Config configData, MapElites mapElitesGameplay) {
+    public static void saveMapElitesGameplay(Config configData, MapElites mapElitesGameplay, GameInfo gameInfo) {
         FeaturesInfo featureXInfo = new FeaturesInfo(configData.getMapElitesConfig().featureX);
         FeaturesInfo featureYInfo = new FeaturesInfo(configData.getMapElitesConfig().featureY);
         
@@ -36,9 +37,11 @@ public class JSONManager {
 
         JsonObject jsonObject = new JsonObject();
         JsonElement configDataJson = gson.toJsonTree(configData);
+        JsonElement gameInfoJson = gson.toJsonTree(gameInfo);
         JsonElement mapElitesJson = gson.toJsonTree(mapElitesGameplay);
         
         jsonObject.add("config", configDataJson);
+        jsonObject.add("gameInfo", gameInfoJson);
         jsonObject.add("featuresDetails", faturesInfoJson);
         jsonObject.add("result", mapElitesJson);
 
