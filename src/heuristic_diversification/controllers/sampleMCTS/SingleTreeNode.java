@@ -243,15 +243,6 @@ public class SingleTreeNode
             }
         }
 
-        if(StateHeuristic.DEBUG) {
-            for(int i=0; i<children.length; i++){
-                if(children[i] != null) {
-                    System.out.println("i " + actions[i] + " nVisits: " + children[i].nVisits + " nValue " + children[i].totValue);
-                }
-            }
-            System.out.println("Selected: " + actions[selected]);
-        }
-
         if (selected == -1)
         {
             System.out.println("Unexpected selection!");
@@ -261,6 +252,16 @@ public class SingleTreeNode
             //If all are equal, we opt to choose for the one with the best Q.
             selected = bestAction();
         }
+
+        if(StateHeuristic.DEBUG) {
+            for(int i=0; i<children.length; i++){
+                if(children[i] != null) {
+                    System.out.println("i " + actions[i] + " nVisits: " + children[i].nVisits + " nValue " + children[i].totValue);
+                }
+            }
+            System.out.println("Selected: " + actions[selected]);
+        }
+
         return selected;
     }
 
