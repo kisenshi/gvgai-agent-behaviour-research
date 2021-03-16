@@ -14,11 +14,12 @@ import core.game.StateObservation;
 import heuristic_diversification.model.GameStats;
 
 /**
- * Maximize the interactions with sprites in the game, prioritising new interactions.
+ * Maximize the discovery and interaction with sprites in the game, prioritising new interactions.
  * When no new interactions are possible, it prioritises interactions in new locations
  * of the game.
  */
 public class CuriosityHeuristic extends KnowledgeHeuristic {
+    private static final int H_NEW_SPRITES_DISCOVERED       = 1000;
     private static final int H_NEW_INTERACTIONS             = 1000;
     private static final int H_NEW_CURIOSITY_INTERACTIONS   = 100;
     private static final int H_CURIOSITY_LOCATIONS          = 10;
@@ -54,6 +55,10 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
 
     @Override
     public void updateFutureStateData(StateObservation stateObs) {
+        // acknowledge sprites for discovery
+        acknowledgeSprites(mFutureInteractions, stateObs);
+
+        // update interaction history for interaction
         updateInteractionHistory(mFutureInteractions, stateObs);
 
         // Update future data
@@ -84,10 +89,13 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
         }
 
         // For the curiosity we give priority to each interaction as follows:
-        // 1) New interactions
+        // 1) New sprites discovered and new interactions
         // 2) New curiosity: interactions in a new location
         // 3) Different curiosity: Number of unique future locations
         // 4) Total interactions: Number of total future interactions
+        int nNewSpritesDiscovered = mFutureInteractions.nNewSpritesDiscovered(mSpritesData);
+        h += (H_NEW_SPRITES_DISCOVERED * nNewSpritesDiscovered);
+
         int nNewInteractions = mFutureInteractions.nNewInteractions(mSpritesData);
         h += (H_NEW_INTERACTIONS * nNewInteractions);
 
@@ -102,7 +110,7 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
 
         if(DEBUG) {
             int randomSeed = new Random().nextInt();
-            System.out.println(randomSeed + " New interactions: " + nNewInteractions + " New curiosity interactions : " + nNewCuriosityInteractions + " total distinct curiosity: " + nTotalCuriosityInteractions + " total interactions: " + nTotalInteracions);
+            System.out.println(randomSeed + " New sprites: " + nNewSpritesDiscovered + " New interactions: " + nNewInteractions + " New curiosity interactions : " + nNewCuriosityInteractions + " total distinct curiosity: " + nTotalCuriosityInteractions + " total interactions: " + nTotalInteracions);
             mFutureInteractions.printDebugSpritesData("debug_eval_" + stateObs.getGameTick() + "_" + randomSeed);
         }
         return h;
