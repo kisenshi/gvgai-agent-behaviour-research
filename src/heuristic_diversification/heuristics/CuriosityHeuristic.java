@@ -20,6 +20,7 @@ import heuristic_diversification.model.GameStats;
  * of the game.
  */
 public class CuriosityHeuristic extends KnowledgeHeuristic {
+    private static final boolean DEBUG_CURIOUS = false;
     private static final int H_NEW_SPRITES_DISCOVERED       = 1000;
     private static final int H_NEW_INTERACTIONS             = 1000;
     private static final int H_NEW_CURIOSITY_INTERACTIONS   = 100;
@@ -112,7 +113,10 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
         if(DEBUG) {
             int randomSeed = new Random().nextInt();
             System.out.println(randomSeed + " New sprites: " + nNewSpritesDiscovered + " New interactions: " + nNewInteractions + " New curiosity interactions : " + nNewCuriosityInteractions + " total distinct curiosity: " + nTotalCuriosityInteractions + " total interactions: " + nTotalInteracions);
-            mFutureInteractions.printDebugSpritesData("debug_eval_" + stateObs.getGameTick() + "_" + randomSeed);
+            
+            if (DEBUG_CURIOUS) {
+                mFutureInteractions.printDebugSpritesData("debug_eval_" + stateObs.getGameTick() + "_" + randomSeed);
+            }
         }
         return h;
     }
@@ -141,6 +145,13 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
         int lastCuriosity = mSpritesData.getLastCuriosity();
 
         gameStats.addCuriousFinalData(nDistinctStypes, nCuriosity, nCollisions, nHits, lastNewCollision, lastNewHit, lastCuriosity);
+        
+        // DEBUG
+        if (DEBUG_CURIOUS) {
+            int randomSeed = new Random().nextInt();
+            System.out.println(randomSeed);
+            mSpritesData.printDebugSpritesData(randomSeed + "_gameStats");
+        }
     }
 
     @Override
