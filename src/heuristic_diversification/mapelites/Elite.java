@@ -5,6 +5,11 @@
 
 package heuristic_diversification.mapelites;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import heuristic_diversification.model.GameStats;
 
 /**
@@ -58,13 +63,24 @@ public class Elite {
     public void printInfo(String statsResultsFileName) {
         System.out.println("Agent: " + agentName);
         System.out.println("Weights: " + printWeights());
-        System.out.println("Gametick: " + gameStats.gameOverTickStats.toString());
-        System.out.println("Wins: " + gameStats.winStats.toString());
-        System.out.println("Score: " + gameStats.scoreStats.toString());
-        System.out.println("nExplored: " + gameStats.nExploredStats.toString());
+        System.out.println("Feature values: "+ featuresString(", "));
+        System.out.println("Performance: " + performance);
 
         if (statsResultsFileName != null) {
             String resultsHeuristicFile = statsResultsFileName + "_" + weightsString("_") + ".txt";
+            
+            BufferedWriter writer;
+            try {{
+                    writer = new BufferedWriter(new FileWriter(new File(resultsHeuristicFile), true));
+                    writer.write("Agent: " + agentName + "\n");
+                    writer.write("Weights: " + printWeights() + "\n");
+                    writer.write("Feature values: "+ featuresString(", ") + "\n");
+                    writer.write("Performance: " + performance + "\n\n");
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             gameStats.printStats(resultsHeuristicFile);
         }
     }
@@ -76,5 +92,14 @@ public class Elite {
         }
         weights += heuristicsWeightList[heuristicsWeightList.length - 1];
         return weights;
+    }
+
+    private String featuresString(String separator) {
+        String featuresStr = "";
+        for (int i = 0; i < (featureValues.length- 1); i++) {
+            featuresStr += featureValues[i] + separator;
+        }
+        featuresStr += featureValues[featureValues.length- 1];
+        return featuresStr;
     }
 }
