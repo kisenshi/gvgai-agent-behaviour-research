@@ -52,7 +52,7 @@ public class Elite {
     }
 
     public String printWeights() {
-        return "[" + heuristicsWeightList[0] + ", " + heuristicsWeightList[1] + "]";
+        return "[" + weightsString(", ") + "]";
     }
 
     public void printInfo(String statsResultsFileName) {
@@ -64,8 +64,17 @@ public class Elite {
         System.out.println("nExplored: " + gameStats.nExploredStats.toString());
 
         if (statsResultsFileName != null) {
-            String resultsHeuristicFile = statsResultsFileName + "_" + heuristicsWeightList[0] + "_" + heuristicsWeightList[1] + ".txt";
+            String resultsHeuristicFile = statsResultsFileName + "_" + weightsString("_") + ".txt";
             gameStats.printStats(resultsHeuristicFile);
         }
+    }
+
+    private String weightsString(String separator) {
+        String weights = "";
+        for (int i = 0; i < (heuristicsWeightList.length - 1); i++) {
+            weights += heuristicsWeightList[i] + separator;
+        }
+        weights += heuristicsWeightList[heuristicsWeightList.length - 1];
+        return weights;
     }
 }

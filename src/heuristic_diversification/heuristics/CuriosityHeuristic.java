@@ -3,7 +3,6 @@
  * Date: 9th March 2021
  */
 
-
 package heuristic_diversification.heuristics;
 
 import java.awt.Graphics2D;
