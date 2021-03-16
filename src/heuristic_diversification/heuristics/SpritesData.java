@@ -86,6 +86,14 @@ public class SpritesData {
         this.mapDimensions = new MapDimensionsManager(stateObs);
     }
 
+    public final ArrayList<Integer> getGameSprites() {
+        return mGameSprites;
+    }
+
+    public final ArrayList<Integer> getPlayerSprites() {
+        return mPlayerSprites;
+    }
+
     public final HashMap<Integer, InteractionHistory> getCollisionSpriteHistory() {
         return mStypesCollisions;
     }
@@ -261,6 +269,33 @@ public class SpritesData {
         if (interactionHistory.addInteractionAtPosition(interactionCoordinates)) {
             mLastCuriosityTick = gameTick;
         }
+    }
+
+    /**
+     * Number of new sprites discovered, not present in the data object provided as reference.
+     * We return the sum of new discovered sprites for both the game and from avatar sprites.
+     * @param referenceSpritesData
+     * @return
+     */
+    public int nNewSpritesDiscovered(final SpritesData referenceSpritesData) {
+        return nNewSprites(mGameSprites, referenceSpritesData.getGameSprites()) + nNewSprites(mPlayerSprites, referenceSpritesData.getPlayerSprites());
+    }
+
+    /**
+     * Return the number of sprites of spritesData that are not present in referenceSpritesData. This number would 
+     * represent the number of new sprites discovered.
+     * @param spritesData
+     * @param referenceSpritesData
+     * @return
+     */
+    private int nNewSprites(ArrayList<Integer> spritesData, ArrayList<Integer> referenceSpritesData) {
+        int nNewSprites = 0;
+        for (Integer sprite : spritesData) {
+            if (!referenceSpritesData.contains(sprite)) {
+                nNewSprites++;
+            }
+        }
+        return nNewSprites;
     }
 
     /**
