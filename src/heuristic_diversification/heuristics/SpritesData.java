@@ -86,6 +86,13 @@ public class SpritesData {
         this.mapDimensions = new MapDimensionsManager(stateObs);
     }
 
+    public final ArrayList<Integer> getSpritesDiscovered() {
+        ArrayList<Integer> allSpritesDiscovered = new ArrayList<Integer>();
+        allSpritesDiscovered.addAll(mGameSprites);
+        allSpritesDiscovered.addAll(mPlayerSprites);
+        return allSpritesDiscovered;
+    }
+
     public final ArrayList<Integer> getGameSprites() {
         return mGameSprites;
     }
@@ -108,6 +115,10 @@ public class SpritesData {
         }
 
         return null;
+    }
+
+    public final int getLastNewDiscovery() {
+        return this.mLastNewSpriteDiscovered;
     }
 
     public final int getLastNewCollision() {

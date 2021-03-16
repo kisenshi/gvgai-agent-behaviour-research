@@ -7,6 +7,7 @@
 package heuristic_diversification.heuristics;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Random;
 
 import core.game.Game;
@@ -123,6 +124,14 @@ public class CuriosityHeuristic extends KnowledgeHeuristic {
 
     @Override
     public void recordGameStats(Game game, GameStats gameStats) {
+        // discovery
+        ArrayList<Integer> spritesDiscovered = mSpritesData.getSpritesDiscovered();
+        int nDifferentStypes = spritesDiscovered.size();
+        int lastSpriteDiscovery = mSpritesData.getLastNewDiscovery();
+        
+        gameStats.addDiscoveryFinalData(spritesDiscovered, nDifferentStypes, lastSpriteDiscovery);
+
+        // curiority
         int nDistinctStypes = mSpritesData.getNStypesInteractedWith();
         int nCollisions = mSpritesData.nCollisions();
         int nHits = mSpritesData.nHits();
