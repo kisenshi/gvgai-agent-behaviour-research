@@ -9,8 +9,10 @@ import java.util.Random;
 
 import core.heuristic.StateHeuristic;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
+import heuristic_diversification.heuristics.KnowledgeHeuristic;
 import heuristic_diversification.model.GameStats;
 import tools.Utils;
+import tracks.ArcadeMachine;
 
 public class testDemo {
     public static void main(String[] args) {
@@ -25,6 +27,7 @@ public class testDemo {
 
 		//Load available games
         String gamesTest =  "examples/games_heuristic_experiments.csv";
+        //String gamesTest =  "examples/all_games_sp.csv";
 		String[][] games = Utils.readGames(gamesTest);
 
 		//Game settings
@@ -36,11 +39,10 @@ public class testDemo {
 						// where to record the actions
 						// executed. null if not to save.
 
-		// 1. This starts a game, in a level, played by a human.
-		//ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
-
 		//String heuristicName = "WinningAndScoreHeuristic";
-		String heuristicName = "ExplorationHeuristic";
+		//String heuristicName = "ExplorationHeuristic";
+		String heuristicName = "KnowledgeHeuristic";
+		//String heuristicName = "CuriosityHeuristic";
 		String heuristicInfo = heuristicsPath + heuristicName;
 
 		String controllerName = "sampleMCTS";
@@ -49,14 +51,23 @@ public class testDemo {
 
 		String actionFile = null;
 
-		StateHeuristic heuristic = ArcadeMachineHeuristic.createHeuristic(heuristicInfo);
-
+		//StateHeuristic heuristic = ArcadeMachineHeuristic.createHeuristic(heuristicInfo);
+		KnowledgeHeuristic heuristic = (KnowledgeHeuristic) ArcadeMachineHeuristic.createHeuristic(heuristicInfo);
+		heuristic.setUpdateSpritesData();
+		
 		// Game and level to play
 		int gameIdx = 2;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
 		String level1 = game.replace(gameName, gameName + "_lvl" + levelIdx);
+
+		//ArcadeMachineHeuristic.printGameStypes(game);
+
+		// 1. This starts a game, in a level, played by a human.
+		//ArcadeMachine.playOneGame(game, level1, recordActionsFile, seed);
+
+		//System.exit(0);
 
 		boolean oneGame = true;
         if (oneGame){
@@ -70,7 +81,9 @@ public class testDemo {
 
 			//ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, game, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
 			GameStats gameStats = new GameStats(0);
-			ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, heuristic, 1);
+			ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, heuristic, 5);
+			gameStats.printStats(resultsHeuristicFile);
+            gameStats.calculateStats();
 		} else {
 			int n_games = 20;
 			for (int gameId = 0; gameId < n_games; gameId++) {

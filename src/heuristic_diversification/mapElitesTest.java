@@ -42,8 +42,9 @@ public class mapElitesTest {
             heuristicsList[info.id()] = info.getHeuristicInstance();
         }
 
-        heuristicsWeightList[Behaviours.WINNER.id()] = 0.15;
-        heuristicsWeightList[Behaviours.EXPLORER.id()] = 0.85;
+        heuristicsWeightList[Behaviours.WINNER.id()] = 0.25;
+        heuristicsWeightList[Behaviours.EXPLORER.id()] = 0.25;
+        heuristicsWeightList[Behaviours.CURIOUS.id()] = 0.50;
     
         Class[] heuristicArgsClass = new Class[] { heuristicsList.getClass(), heuristicsWeightList.getClass() };
         Object[] constructorArgs = new Object[] { heuristicsList, heuristicsWeightList};
@@ -58,7 +59,7 @@ public class mapElitesTest {
         String actionFile = null;
 
         // Game and level to play
-		int gameIdx = 2;
+		int gameIdx = 0;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
@@ -74,7 +75,7 @@ public class mapElitesTest {
 
             //ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
             GameStats gameStats = new GameStats(levelIdx);
-            ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 10);
+            ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 5);
             gameStats.printStats(resultsHeuristicFile);
             gameStats.calculateStats();
         } else {
