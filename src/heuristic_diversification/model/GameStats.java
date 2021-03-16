@@ -41,7 +41,7 @@ public class GameStats {
     public StatisticalSummaryValues percentageExploredStats;
     public StatisticalSummaryValues lastNewExplorationTickStats;
 
-    // scholar
+    // discovery
     private ArrayList<Integer> finalStypesDiscovered; // this contains the final list of sprites discovered in any of the runs
     transient private ArrayList<Integer> nSpritesDiscovered;
     transient private ArrayList<Integer> lastDiscoveryTick;
@@ -82,7 +82,7 @@ public class GameStats {
         heatMapExplorationMatrix = new ArrayList<int[][]>();
         lastNewExplorationTick = new ArrayList<Integer>();
 
-        // scholar
+        // discovery
         finalStypesDiscovered = new ArrayList<Integer>();
         nSpritesDiscovered = new ArrayList<Integer>();
         lastDiscoveryTick = new ArrayList<Integer>();
@@ -122,7 +122,7 @@ public class GameStats {
         this.heatMapExplorationMatrix.add(matrixCopy);
     }
 
-    public void addScholarFinalData(ArrayList<Integer> stypesDiscovered, int nSprites, int lastSpriteDiscovery) {
+    public void addDiscoveryFinalData(ArrayList<Integer> stypesDiscovered, int nSprites, int lastSpriteDiscovery) {
         if (!finalStypesDiscovered.equals(stypesDiscovered)) {
             for (Integer stype : stypesDiscovered) {
                 if (!finalStypesDiscovered.contains(stype)) {
@@ -199,8 +199,8 @@ public class GameStats {
         // TODO(kisenshi): include this data
     }
 
-    private void printScholarStats(BufferedWriter writer) throws IOException {
-        writer.write(" == Scholar ==\n");
+    private void printDiscoveryStats(BufferedWriter writer) throws IOException {
+        writer.write(" == Discovery ==\n");
         for (int i = 0; i < nSpritesDiscovered.size(); i++) {
             writer.write(nSpritesDiscovered.get(i).toString() + " ");
             writer.write(lastDiscoveryTick.get(i).toString() + " ");
@@ -231,7 +231,7 @@ public class GameStats {
                 printWinnerStats(writer);
                 printRecordBreakerStats(writer);
                 printExplorerStats(writer);
-                printScholarStats(writer);
+                printDiscoveryStats(writer);
                 printCuriosityStats(writer);
                 writer.close();
             }
