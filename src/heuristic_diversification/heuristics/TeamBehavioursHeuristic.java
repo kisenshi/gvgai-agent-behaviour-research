@@ -35,7 +35,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
 
     @Override
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
-        knowledgeHeuristic.initHeuristicInternalInformation(stateObs);
+        knowledgeHeuristic.updateHeuristicInternalInformation(stateObs);
 
         for (StateHeuristic heuristic : mHeuristics) {
             heuristic.updateHeuristicInternalInformation(stateObs);
@@ -65,7 +65,7 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
             finalH += (hNorm * hWeight);
 
             if (DEBUG) {
-                System.out.println(h + " --> " + hNorm + " w: " + hWeight + " --> " + finalH);
+                System.out.println(h + " --> " + hNorm + " w: " + hWeight + " --> " + (hNorm * hWeight) + " --> finalH: " + finalH);
             }
         }
 
