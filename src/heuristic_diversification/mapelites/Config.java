@@ -17,6 +17,8 @@ import heuristic_diversification.config.Agents;
 import heuristic_diversification.config.Games;
 
 public class Config {
+    private static final String EXPERIMENT_KEY = "experimentId";
+
     private static final String GAME_KEY = "gameName";
     private static final String LEVEL_KEY = "level";
     private static final String AGENT_KEY = "agentName";
@@ -30,6 +32,7 @@ public class Config {
     private static final String N_MAP_INITIALISATION_KEY = "nRandomInitialisations";
     private static final String N_ALGORITHM_ITERATIONS_KEY = "nAlgorithmIterations";
 
+    private final String experimentId; 
     private FrameworkConfig frameworkConfig;
     private MapElitesConfig mapElitesConfig;
 
@@ -88,6 +91,7 @@ public class Config {
             System.exit(1);
         }
 
+        experimentId = configProperties.getProperty(EXPERIMENT_KEY);
         frameworkConfig = new FrameworkConfig(configProperties);
         mapElitesConfig = new MapElitesConfig(configProperties);
     }
@@ -101,7 +105,7 @@ public class Config {
     }
 
     public  String resultsFileName() {
-        return "MAPElitesGameplay_" + frameworkConfig.game.getGameName() + "_lvl" + frameworkConfig.level + "_x_" + mapElitesConfig.featureX.name() + "_y_" + mapElitesConfig.featureY.name() + "_perf_" + mapElitesConfig.performanceCriteria.name() + "_" + frameworkConfig.nGameRuns + "_" + mapElitesConfig.nMapElitesIterations;
+        return "MAPElitesGameplay_" + experimentId + "_" + frameworkConfig.game.getGameName() + "_lvl" + frameworkConfig.level + "_x_" + mapElitesConfig.featureX.name() + "_y_" + mapElitesConfig.featureY.name() + "_perf_" + mapElitesConfig.performanceCriteria.name() + "_" + frameworkConfig.nGameRuns + "_" + mapElitesConfig.nMapElitesIterations;
     }
 
     private static String gameValuesString() {
@@ -166,6 +170,7 @@ public class Config {
         try {
             writer = new BufferedWriter(new FileWriter(new File(fileName), true));
 
+            writer.write(EXPERIMENT_KEY + "=XXXX\n");
             writer.write(GAME_KEY + "=" + gameValuesString() + "\n");
             writer.write(LEVEL_KEY + "=0/1/2...\n");
             writer.write(AGENT_KEY + "=" + agentValuesString() + "\n");

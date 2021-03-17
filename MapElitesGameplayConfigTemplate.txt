@@ -1,3 +1,4 @@
+experimentId=XXXX
 gameName=BUTTERFLIES
 level=0/1/2...
 agentName=OSLA/MCTS
