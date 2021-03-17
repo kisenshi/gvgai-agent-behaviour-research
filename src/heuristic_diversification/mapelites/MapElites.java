@@ -64,6 +64,21 @@ public class MapElites {
      * @param nRandomInitialisations number of random initialisations requested
      */
     private void initialiseMap(int nRandomInitialisations) {
+        // Create an elite with only one of each of the behaviours, set to 1.0 and the others to 0.0
+        for (int i = 0; i < heuristicsWeightList.length; i++) {
+            System.out.println("MAPELites initialisation with behaviour for weight in " + i);
+            // Set all the weights to 0.0 and the current one to 1.0
+            for (int j = 0; j < heuristicsWeightList.length; j++) {
+                heuristicsWeightList[j] = 0.0;
+            }
+            heuristicsWeightList[i] = 1.0;
+
+            // Create elite for the current behaviour
+            Elite elite = createGameplayElite();
+            addEliteToMap(elite);
+        }
+
+        // Random initialisations
         for (int i = 1; i < (nRandomInitialisations + 1); i++) {
             System.out.println("MAPELites initialisation iteration " + i);
             Generator.setRandomWeights(heuristicsWeightList);
