@@ -15,7 +15,12 @@ public enum Features {
     WINS("win", 0, 100, 10, true), 
     SCORE("score", 0, 70, 10, false), 
     EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 10, true),
-    EXPLORATION_NUMBER("nExplored", 0, 206, 10, false);
+    EXPLORATION_NUMBER("nExplored", 0, 206, 10, false),
+    DISCOVERY("nSpritesDiscovered", 0, 20, 1, false),
+    SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 20, 1, false),
+    CURIOSITY("nCuriosityInteractions", 0, 400, 20, false),
+    COLLISIONS("nTotalCollisions", 0, 1000, 50, false),
+    HITS("nTotalHits", 0, 1000, 50, false);
 
     String statName;
     Integer minValue;
