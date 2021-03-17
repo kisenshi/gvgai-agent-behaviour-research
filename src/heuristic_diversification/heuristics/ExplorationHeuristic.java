@@ -257,7 +257,7 @@ public class ExplorationHeuristic extends StateHeuristic {
      */
     private void visitCurrentPosition(StateObservation stateObs) {
         Vector2d position = stateObs.getAvatarPosition();
-        if (mapDimensions.isOutOfBounds(position)) {
+        if (!stateObs.isAvatarAlive() || stateObs.isGameOver() || mapDimensions.isOutOfBounds(position)) {
             return;
         }
 
