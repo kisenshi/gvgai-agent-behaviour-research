@@ -37,6 +37,7 @@ public class GameStats {
     transient private ArrayList<Integer> nExplored;
     transient private ArrayList<int[][]> heatMapExplorationMatrix;
     transient private ArrayList<Integer> lastNewExplorationTick;
+    private double[][] heatMapExplorationMatrixAvg;
     public StatisticalSummaryValues nExploredStats;
     public StatisticalSummaryValues percentageExploredStats;
     public StatisticalSummaryValues lastNewExplorationTickStats;
@@ -196,7 +197,19 @@ public class GameStats {
             writer.write("\n\n");
         }
         writer.write("== Average exploration Matrix ==\n");
-        // TODO(kisenshi): include this data
+        for (int y = 0; y < heatMapExplorationMatrixAvg.length; y++) {
+            for (int x = 0; x < heatMapExplorationMatrixAvg[y].length; x++) {
+                double nVisits = heatMapExplorationMatrixAvg[y][x];
+                if (nVisits < 10) {
+                    writer.write(String.format("%.2f", nVisits) + "   ");
+                } else if (nVisits < 100) {
+                    writer.write(String.format("%.2f", nVisits) + "  ");
+                } else {
+                    writer.write(String.format("%.2f", nVisits) + " ");
+                }
+            }
+            writer.write("\n");
+        }
     }
 
     private void printDiscoveryStats(BufferedWriter writer) throws IOException {
@@ -309,6 +322,9 @@ public class GameStats {
             percentageExploredStats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
         }
 
+        // exploration heatmap average
+        heatMapExplorationMatrixAvg = calculateAverageExplorationHeatMap();
+
         // last new exploration
         System.out.println("Tick last new exploration");
         lastNewExplorationTickStats = calculateStatsFromIntegerList(lastNewExplorationTick);
@@ -394,6 +410,35 @@ public class GameStats {
         System.out.println(statsVariable.toString());
 
         return statsVariable;
+    }
+
+    private double[][] calculateAverageExplorationHeatMap() {
+        if (heatMapExplorationMatrix.size() == 0) {
+            return null;
+        }
+
+        // get first element to set the correct size to the matrix
+        int[][] firstElement = heatMapExplorationMatrix.get(0);
+        double[][] avgMatrix = new double[firstElement.length][firstElement[0].length];
+    
+        for (int i = 0; i < heatMapExplorationMatrix.size(); i++) {
+            for (int y = 0; y < heatMapExplorationMatrix.get(i).length; y++) {
+                for (int x = 0; x < heatMapExplorationMatrix.get(i)[y].length; x++) {
+                    int nVisits = heatMapExplorationMatrix.get(i)[y][x];
+                    avgMatrix[y][x] += (double) nVisits;
+                }
+            }
+        }
+
+        int nElements = heatMapExplorationMatrix.size();
+        for (int y = 0; y < avgMatrix.length; y++) {
+            for (int x = 0; x < avgMatrix[y].length; x++) {
+                double nVisits = avgMatrix[y][x];
+                avgMatrix[y][x] = (nVisits / nElements);
+            }
+        }
+
+        return avgMatrix;
     }
 
     // killer
