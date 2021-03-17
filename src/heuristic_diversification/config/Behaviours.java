@@ -11,7 +11,8 @@ import heuristic_diversification.framework.ArcadeMachineHeuristic;
 public enum Behaviours {
 
     WINNER(0, "WinningAndScoreHeuristic"), 
-    EXPLORER(1, "ExplorationHeuristic");
+    EXPLORER(1, "ExplorationHeuristic"),
+    CURIOUS(2, "CuriosityHeuristic");
 
     int id;
     String fileName;
