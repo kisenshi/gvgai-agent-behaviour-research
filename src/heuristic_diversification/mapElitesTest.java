@@ -44,7 +44,7 @@ public class mapElitesTest {
 
         heuristicsWeightList[Behaviours.WINNER.id()] = 0.25;
         heuristicsWeightList[Behaviours.EXPLORER.id()] = 0.25;
-        heuristicsWeightList[Behaviours.CURIOUS.id()] = 0.50;
+        //heuristicsWeightList[Behaviours.CURIOUS.id()] = 0.50;
     
         Class[] heuristicArgsClass = new Class[] { heuristicsList.getClass(), heuristicsWeightList.getClass() };
         Object[] constructorArgs = new Object[] { heuristicsList, heuristicsWeightList};
