@@ -200,18 +200,20 @@ public class GameStats {
             writer.write("\n\n");
         }
         writer.write("== Average exploration Matrix ==\n");
-        for (int y = 0; y < heatMapExplorationMatrixAvg.length; y++) {
-            for (int x = 0; x < heatMapExplorationMatrixAvg[y].length; x++) {
-                double nVisits = heatMapExplorationMatrixAvg[y][x];
-                if (nVisits < 10) {
-                    writer.write(String.format("%.2f", nVisits) + "   ");
-                } else if (nVisits < 100) {
-                    writer.write(String.format("%.2f", nVisits) + "  ");
-                } else {
-                    writer.write(String.format("%.2f", nVisits) + " ");
+        if (heatMapExplorationMatrixAvg != null) {
+            for (int y = 0; y < heatMapExplorationMatrixAvg.length; y++) {
+                for (int x = 0; x < heatMapExplorationMatrixAvg[y].length; x++) {
+                    double nVisits = heatMapExplorationMatrixAvg[y][x];
+                    if (nVisits < 10) {
+                        writer.write(String.format("%.2f", nVisits) + "   ");
+                    } else if (nVisits < 100) {
+                        writer.write(String.format("%.2f", nVisits) + "  ");
+                    } else {
+                        writer.write(String.format("%.2f", nVisits) + " ");
+                    }
                 }
+                writer.write("\n");
             }
-            writer.write("\n");
         }
     }
 
@@ -333,6 +335,7 @@ public class GameStats {
         }
 
         // exploration heatmap average
+        System.out.println("Exploration heatmap average");
         heatMapExplorationMatrixAvg = calculateAverageExplorationHeatMap();
 
         // last new exploration
