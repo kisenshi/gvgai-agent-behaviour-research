@@ -41,8 +41,9 @@ public class testDemo {
 
 		//String heuristicName = "WinningAndScoreHeuristic";
 		//String heuristicName = "ExplorationHeuristic";
-		String heuristicName = "KnowledgeHeuristic";
+		//String heuristicName = "KnowledgeHeuristic";
 		//String heuristicName = "CuriosityHeuristic";
+		String heuristicName = "KillingHeuristic";
 		String heuristicInfo = heuristicsPath + heuristicName;
 
 		String controllerName = "sampleMCTS";
@@ -56,7 +57,7 @@ public class testDemo {
 		heuristic.setUpdateSpritesData();
 		
 		// Game and level to play
-		int gameIdx = 2;
+		int gameIdx = 0;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
@@ -81,7 +82,7 @@ public class testDemo {
 
 			//ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, game, visuals, controller, actionFile, seed, heuristic, resultsHeuristicFile, recordIds);
 			GameStats gameStats = new GameStats(0);
-			ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, heuristic, 5);
+			ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, heuristic, 1);
 			gameStats.printStats(resultsHeuristicFile);
             gameStats.calculateStats();
 		} else {
