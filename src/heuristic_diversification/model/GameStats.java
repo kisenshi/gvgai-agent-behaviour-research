@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
@@ -59,6 +61,7 @@ public class GameStats {
     transient private ArrayList<Integer> lastCuriosityTick;
     public StatisticalSummaryValues nUniqueSpriteInteractionsStats;
     public StatisticalSummaryValues nCuriosityInteractionsStats;
+    public StatisticalSummaryValues nTotalInteractionsStats;
     public StatisticalSummaryValues nTotalCollisionsStats;
     public StatisticalSummaryValues nTotalHitsStats;
     public StatisticalSummaryValues lastNewCollisionTickStats;
@@ -269,6 +272,13 @@ public class GameStats {
                     // stats calculated with percentage from nExplored
                     stats = calculatePercentageStatsFromIntegerList(nExplored, mapSize);
                     break;
+                case "nTotalInteractions":
+                    // stats calculated as the sum of two lists: collisions + hits
+                    ArrayList<Integer> bothInteractions = (ArrayList<Integer>) IntStream.range(0, nTotalCollisions.size())
+                        .mapToObj(i -> nTotalCollisions.get(i) + nTotalHits.get(i))
+                        .collect(Collectors.toList());
+                    stats = calculateStatsFromIntegerList(bothInteractions);
+                    break;
                 case "score":
                     // type ArrayList<Double>
                     dataList = this.getClass().getDeclaredField(statName);
@@ -337,10 +347,10 @@ public class GameStats {
         System.out.println("Tick last discovery");
         lastDiscoveryTickStats = calculateStatsFromIntegerList(lastDiscoveryTick);
 
-        // interactions
+        // unique interactions
         System.out.println("Unique interactions");
         nUniqueSpriteInteractionsStats = calculateStatsFromIntegerList(nUniqueSpriteInteractions);
-        
+
         // curiosity
         System.out.println("Curiosity interactions");
         nCuriosityInteractionsStats = calculateStatsFromIntegerList(nCuriosityInteractions);
@@ -348,6 +358,13 @@ public class GameStats {
         System.out.println("Tick last curiosity");
         lastCuriosityTickStats = calculateStatsFromIntegerList(lastCuriosityTick);
         
+        // total interactions
+        System.out.println("Total interactions");
+        ArrayList<Integer> bothInteractions = (ArrayList<Integer>) IntStream.range(0, nTotalCollisions.size())
+                                                .mapToObj(i -> nTotalCollisions.get(i) + nTotalHits.get(i))
+                                                .collect(Collectors.toList());
+        nTotalInteractionsStats = calculateStatsFromIntegerList(bothInteractions);
+
         // collisions
         System.out.println("Total collisions");
         nTotalCollisionsStats = calculateStatsFromIntegerList(nTotalCollisions);
