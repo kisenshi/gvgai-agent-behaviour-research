@@ -29,16 +29,19 @@ public class SpritesData {
     private int mLastCuriosityTick; // curiosity is described as an interaction (collision or hit) in a new position of the map
 
     private class InteractionHistory {
+        private int lastInteractionTick;
         private int nInteractions;
         private ArrayList<Vector2d> interactionPositionsList;
 
-        InteractionHistory() {
+        InteractionHistory(int gameTick) {
             nInteractions = 1;
+            lastInteractionTick = gameTick;
             interactionPositionsList = new ArrayList<Vector2d>();
         }
 
-        public void increaseInteractionCounter() {
+        public void increaseInteractionCounter(int gameTick) {
             nInteractions++;
+            lastInteractionTick = gameTick;
         }
 
         public boolean addInteractionAtPosition(Vector2d position) {
@@ -51,6 +54,10 @@ public class SpritesData {
 
         public int getNInteractions() {
             return nInteractions;
+        }
+
+        public int getLastInteractionTick() {
+            return lastInteractionTick;
         }
 
         public int getNCuriosityInteractions() {
@@ -184,13 +191,13 @@ public class SpritesData {
         InteractionHistory spriteCollisionHistory;
         // Add sprite collided with to list
         if (!mStypesCollisions.containsKey(stypeCollidedWith)) {
-            spriteCollisionHistory = new InteractionHistory();
+            spriteCollisionHistory = new InteractionHistory(gameTick);
 
             mStypesCollisions.put(stypeCollidedWith, spriteCollisionHistory);
             mLastNewCollisionTick = gameTick;
         } else {
             spriteCollisionHistory = mStypesCollisions.get(stypeCollidedWith);
-            spriteCollisionHistory.increaseInteractionCounter();
+            spriteCollisionHistory.increaseInteractionCounter(gameTick);
         }
 
         // Record where the collision happened
@@ -215,7 +222,7 @@ public class SpritesData {
 
         // Add sprite hit to list. As the avatar could create different sprites, we need to make a distinction between each of the possible sprites
         if (!mStypesHits.containsKey(stypeHit)) {
-            spriteHitHistory = new InteractionHistory();
+            spriteHitHistory = new InteractionHistory(gameTick);
             mStypeHitsInformation = new HashMap<Integer, InteractionHistory>();
             mStypeHitsInformation.put(stypeUsed, spriteHitHistory);
 
@@ -224,13 +231,13 @@ public class SpritesData {
         } else {
             mStypeHitsInformation = mStypesHits.get(stypeHit);
             if (!mStypeHitsInformation.containsKey(stypeUsed)) {
-                spriteHitHistory = new InteractionHistory();
+                spriteHitHistory = new InteractionHistory(gameTick);
 
                 mStypeHitsInformation.put(stypeUsed, spriteHitHistory);
                 mLastNewHitTick = gameTick;
             } else {
                 spriteHitHistory = mStypeHitsInformation.get(stypeUsed);
-                spriteHitHistory.increaseInteractionCounter();
+                spriteHitHistory.increaseInteractionCounter(gameTick);
             }
         }
 
