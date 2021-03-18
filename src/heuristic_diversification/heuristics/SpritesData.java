@@ -252,7 +252,11 @@ public class SpritesData {
      * @param spriteList list of sprite type ids to update
      * @return if a new sprite has been discovered
      */
-    private boolean addNewSpritesToList(ArrayList<Observation>[] observations, ArrayList<Integer> spriteList) {
+    public boolean addNewSpritesToList(ArrayList<Observation>[] observations, ArrayList<Integer> spriteList) {
+        if (observations == null) {
+            return false;
+        }
+
         int stype;
         boolean newSpriteDiscovered = false;
 
@@ -423,11 +427,134 @@ public class SpritesData {
         return nHits;
     }
 
+    /**
+     * Number of different stypes interacted with
+     * @return
+     */
     public int getNStypesInteractedWith() {
         int nStypesCollisions = mStypesCollisions.size();
         int nStypesHits = mStypesHits.size();
 
         return nStypesCollisions + nStypesHits;
+    }
+
+    /**
+     * Number of total collisions with the sprites of the type provided in the list
+     * @param spritesList
+     * @return 
+     */
+    public Integer nCollisionsToSprites(ArrayList<Integer> spritesList) {
+        Integer nCollisionsWithSprites = 0;
+        
+        for (Integer stype : spritesList) {
+            // collisions with spritesList
+            if (mStypesCollisions.containsKey(stype)) {
+                nCollisionsWithSprites += mStypesCollisions.get(stype).getNInteractions();
+            }
+        }
+
+        return nCollisionsWithSprites;
+    }
+
+    /**
+     * Number of total hits with the sprites of the type provided in the list
+     * @param spritesList
+     * @return 
+     */
+    public Integer nHitsToSprites(ArrayList<Integer> spritesList) {
+        Integer nHitsWithSprites = 0;
+        
+        for (Integer stype : spritesList) {
+             // hits to spritesList
+             if (mStypesHits.containsKey(stype)) {
+                // we are interested in all the hits, independently of the sprite that hit it
+                nHitsWithSprites += nInteractions(mStypesHits.get(stype));
+             }
+        }
+
+        return nHitsWithSprites;
+    }
+
+    /**
+     * Last interaction tick for the collisions with sprites of the type provided in the list
+     * @param spritesList
+     * @return 
+     */
+    public Integer getLastCollisionToSprites(ArrayList<Integer> spritesList) {
+        Integer lastCollisionTick = 0;
+        
+        for (Integer stype : spritesList) {
+            // collisions with spritesList
+            if (mStypesCollisions.containsKey(stype)) {
+                int collisionTick = mStypesCollisions.get(stype).getLastInteractionTick();
+                if (collisionTick > lastCollisionTick) {
+                    lastCollisionTick = collisionTick;
+                }
+            }
+        }
+
+        return lastCollisionTick;
+    }
+
+    /**
+     * Last interaction tick for the hits to sprites of the type provided in the list
+     * @param spritesList
+     * @return 
+     */
+    public Integer getLastHitToSprites(ArrayList<Integer> spritesList) {
+        Integer lastHitTick = 0;
+        
+        for (Integer stype : spritesList) {
+             // hits to spritesList
+             if (mStypesHits.containsKey(stype)) {
+                // we are interested in all the hits, independently of the sprite that hit it
+                for (InteractionHistory interactionHistory: mStypesHits.get(stype).values()) {
+                    int hitTick = interactionHistory.getLastInteractionTick();
+                    if (hitTick > lastHitTick) {
+                        lastHitTick = hitTick;
+                    }
+                }
+             }
+        }
+
+        return lastHitTick;
+    }
+
+    /**
+     * List of stypes collided with of the type provided in the list
+     * @param spritesList
+     * @return
+     */
+    public ArrayList<Integer> spritesFromListCollisions(ArrayList<Integer> spritesList) {
+        ArrayList<Integer> spritesCollisions = new ArrayList<Integer>();
+
+        for (Integer stype : spritesList) {
+            // collisions with spritesList
+            if (mStypesCollisions.containsKey(stype)) {
+                spritesCollisions.add(stype);
+            }
+        }
+
+        return spritesCollisions;    
+    }
+
+    /**
+     * List of stypes hit of the type provided in the list
+     * @param spritesList
+     * @return
+     */
+    public ArrayList<Integer> spritesFromListHits(ArrayList<Integer> spritesList) {
+        ArrayList<Integer> spritesHits = new ArrayList<Integer>();
+
+        for (Integer stype : spritesList) {
+            // hits to spritesList
+            if (mStypesHits.containsKey(stype)) {
+               // we are only in the stypes hit so no need to go deeper on the object
+               spritesHits.add(stype);
+            }
+        }
+
+        return spritesHits;    
     }
 
     /**

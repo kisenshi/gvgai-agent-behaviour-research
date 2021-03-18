@@ -6,6 +6,7 @@
 package heuristic_diversification.heuristics;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -69,7 +70,7 @@ public class KnowledgeHeuristic extends StateHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        return "string with info";
+        return "";
     }
 
     @Override
@@ -126,6 +127,33 @@ public class KnowledgeHeuristic extends StateHeuristic {
                 // the avatar collides with a sprite: it is a collision
                 //System.out.println("COLLISION");
                 spritesData.updateCollisionHistory(event, gameTick);
+            }
+        }
+    }
+
+    protected void updateInteractionHistoryOfSpritesInList(SpritesData spritesData, StateObservation stateObs, ArrayList<Integer> spritesList) {
+        TreeSet<Event> eventsHistory = stateObs.getEventsHistory();
+    
+        // We are interested on events that just occured, so they happen in the previous gameTick
+        int gameTick = stateObs.getGameTick() - 1;
+
+        // We are only interested in the events that occurred in the current state
+        Iterator<Event> eventsIterator = eventsHistory.descendingSet().iterator();
+        while (eventsIterator.hasNext()){
+            Event event = (Event) eventsIterator.next();
+            if (event.gameStep != gameTick){
+                // the next events are from previous states so no need to keep iterating
+                break;
+            }
+            // We include it to the history if the stype is in the list.
+            if (spritesList.contains(event.passiveTypeId)) {
+                if (event.fromAvatar) {
+                    // the interaction is indirect: it is a hit. 
+                    spritesData.updateHitHistory(event, gameTick);
+                } else {
+                    // the avatar collides with a sprite: it is a collision
+                    spritesData.updateCollisionHistory(event, gameTick);
+                }
             }
         }
     }
