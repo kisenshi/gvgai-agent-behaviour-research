@@ -67,6 +67,20 @@ public class GameStats {
     public StatisticalSummaryValues lastNewCollisionTickStats;
     public StatisticalSummaryValues lastNewHitTickStats;
     public StatisticalSummaryValues lastCuriosityTickStats;
+    
+    // killer
+    private ArrayList<Integer> finalStypesKilled;
+    transient private ArrayList<Integer> nTotalKills;
+    transient private ArrayList<Integer> lastKillTick;
+    public StatisticalSummaryValues nTotalKillsStats;
+    public StatisticalSummaryValues lastKillTickStats;
+
+    // collector
+    private ArrayList<Integer> finalStypesCollected;
+    transient private ArrayList<Integer> nTotalItemsCollected;
+    transient private ArrayList<Integer> lastCollectionTick;
+    public StatisticalSummaryValues nTotalItemsCollectedStats;
+    public StatisticalSummaryValues lastCollectionTickStats;
 
     public GameStats(int mapSize) {
         this.mapSize = mapSize;
@@ -101,7 +115,14 @@ public class GameStats {
         lastCuriosityTick = new ArrayList<Integer>();
 
         // killer
+        finalStypesKilled = new ArrayList<Integer>();
+        nTotalKills = new ArrayList<Integer>();
+        lastKillTick = new ArrayList<Integer>();
+
         // collector
+        finalStypesCollected = new ArrayList<Integer>();
+        nTotalItemsCollected = new ArrayList<Integer>();
+        lastCollectionTick = new ArrayList<Integer>();
     }
 
     public void addGeneralData(int gameOverTick) {
@@ -127,13 +148,7 @@ public class GameStats {
     }
 
     public void addDiscoveryFinalData(ArrayList<Integer> stypesDiscovered, int nSprites, int lastSpriteDiscovery) {
-        if (!finalStypesDiscovered.equals(stypesDiscovered)) {
-            for (Integer stype : stypesDiscovered) {
-                if (!finalStypesDiscovered.contains(stype)) {
-                    this.finalStypesDiscovered.add(stype);
-                }
-            }
-        }
+        addStypesToFinalStypes(stypesDiscovered, this.finalStypesDiscovered);
         
         this.nSpritesDiscovered.add(nSprites);
         this.lastDiscoveryTick.add(lastSpriteDiscovery);
@@ -147,6 +162,30 @@ public class GameStats {
         this.lastNewCollisionTick.add(lastNewCollision); 
         this.lastNewHitTick.add(lastNewHit);
         this.lastCuriosityTick.add(lastCuriosity);
+    }
+
+    public void addKillerFinalData(ArrayList<Integer> stypesKilled, int nKills, int lastKill) {
+        addStypesToFinalStypes(stypesKilled, finalStypesKilled);
+
+        this.nTotalKills.add(nKills);
+        this.lastKillTick.add(lastKill);
+    }
+
+    public void addCollectorFinalData(ArrayList<Integer> stypesCollected, int nCollectedItems, int lastCollection) {
+        addStypesToFinalStypes(stypesCollected, finalStypesCollected);
+
+        this.nTotalItemsCollected.add(nCollectedItems);
+        this.lastCollectionTick.add(lastCollection);
+    }
+
+    private void addStypesToFinalStypes(ArrayList<Integer> stypes, ArrayList<Integer> finalStypes) {
+        if (!finalStypes.equals(stypes)) {
+            for (Integer stype : stypes) {
+                if (!finalStypes.contains(stype)) {
+                    finalStypes.add(stype);
+                }
+            }
+        }
     }
 
     private void printGeneralStats(BufferedWriter writer) throws IOException {
@@ -219,6 +258,7 @@ public class GameStats {
 
     private void printDiscoveryStats(BufferedWriter writer) throws IOException {
         writer.write(" == Discovery ==\n");
+        writer.write("stype discovered: " + finalStypesDiscovered.toString() + "\n");
         for (int i = 0; i < nSpritesDiscovered.size(); i++) {
             writer.write(nSpritesDiscovered.get(i).toString() + " ");
             writer.write(lastDiscoveryTick.get(i).toString() + " ");
@@ -240,6 +280,26 @@ public class GameStats {
         }
     }
 
+    private void printKillingStats(BufferedWriter writer) throws IOException {
+        writer.write("== Killer ==\n");
+        writer.write("stype killed: " + finalStypesKilled.toString() + "\n");
+        for (int i = 0; i < nTotalKills.size(); i++) {
+            writer.write(nTotalKills.get(i).toString() + " ");
+            writer.write(lastKillTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
+    }
+
+    private void printCollectionStats(BufferedWriter writer) throws IOException {
+        writer.write("== Collector ==\n");
+        writer.write("stype collected: " + finalStypesCollected.toString() + "\n");
+        for (int i = 0; i < nTotalItemsCollected.size(); i++) {
+            writer.write(nTotalItemsCollected.get(i).toString() + " ");
+            writer.write(lastCollectionTick.get(i).toString() + " ");
+            writer.write("\n");
+        }
+    }
+
     public void printStats(String fileName) {
         BufferedWriter writer;
         try {
@@ -251,6 +311,8 @@ public class GameStats {
                 printExplorerStats(writer);
                 printDiscoveryStats(writer);
                 printCuriosityStats(writer);
+                printKillingStats(writer);
+                printCollectionStats(writer);
                 writer.close();
             }
         } catch (IOException e) {
@@ -381,6 +443,20 @@ public class GameStats {
 
         System.out.println("Tick last new hit");
         lastNewHitTickStats = calculateStatsFromIntegerList(lastNewHitTick);
+
+        // kills
+        System.out.println("Total kills");
+        nTotalKillsStats = calculateStatsFromIntegerList(nTotalKills);
+
+        System.out.println("Tick last kill");
+        lastKillTickStats = calculateStatsFromIntegerList(lastKillTick);
+
+        // items collected
+        System.out.println("Total items collected");
+        nTotalItemsCollectedStats = calculateStatsFromIntegerList(nTotalItemsCollected);
+
+        System.out.println("Tick last collection");
+        lastCollectionTickStats = calculateStatsFromIntegerList(lastCollectionTick);
     }
 
     private StatisticalSummaryValues calculateStatsFromIntegerList(ArrayList<Integer> integerDataList) {
@@ -461,8 +537,6 @@ public class GameStats {
         return avgMatrix;
     }
 
-    // killer
-    // collector
     // risk analyst
     // novelty explorer
 }
