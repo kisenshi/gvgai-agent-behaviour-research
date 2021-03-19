@@ -7,12 +7,10 @@ package heuristic_diversification;
 
 import java.util.Random;
 
-import core.heuristic.StateHeuristic;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.heuristics.KnowledgeHeuristic;
 import heuristic_diversification.model.GameStats;
 import tools.Utils;
-import tracks.ArcadeMachine;
 
 public class testDemo {
     public static void main(String[] args) {
