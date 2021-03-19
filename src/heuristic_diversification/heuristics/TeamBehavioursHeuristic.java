@@ -5,16 +5,17 @@ import java.awt.Graphics2D;
 import core.game.Game;
 import core.game.StateObservation;
 import core.heuristic.StateHeuristic;
+import heuristic_diversification.framework.TeamMember;
 import heuristic_diversification.model.GameStats;
 
 public class TeamBehavioursHeuristic extends StateHeuristic {
-    private StateHeuristic[] mHeuristics;
+    private TeamMember[] mHeuristics;
     private Double[] mHeuristicsWeights;
     private KnowledgeHeuristic knowledgeHeuristic;
 
-    public TeamBehavioursHeuristic(StateHeuristic[] heuristics, Double[] weights) {
-        // We assume the number of heuristics and their weights are the same and
-        // provided in the same order
+    public TeamBehavioursHeuristic(TeamMember[] heuristics, Double[] weights) {
+        // The number of heuristics and their weights can be different, but the weights are assigned in the same order
+        // to the enabled ones
         mHeuristics = heuristics;
         mHeuristicsWeights = weights;
 
@@ -28,8 +29,8 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public void initHeuristicInternalInformation(StateObservation stateObs) {
         knowledgeHeuristic.initHeuristicInternalInformation(stateObs);
 
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.initHeuristicInternalInformation(stateObs);
+        for (TeamMember teamMember : mHeuristics) {
+            teamMember.heuristic.initHeuristicInternalInformation(stateObs);
         }
     }
 
@@ -37,8 +38,8 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public void updateHeuristicInternalInformation(StateObservation stateObs) {
         knowledgeHeuristic.updateHeuristicInternalInformation(stateObs);
 
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.updateHeuristicInternalInformation(stateObs);
+        for (TeamMember teamMember : mHeuristics) {
+            teamMember.heuristic.updateHeuristicInternalInformation(stateObs);
         }
     }
 
@@ -50,22 +51,22 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
             System.out.println("Evaluation...");
         }
 
-        if (!checkHeuristicsArraySize()) {
-            // Avoid error in the iteration
-            return 0;
-        }
+        int weightIndex = 0;
+        for (TeamMember teamMember : mHeuristics) {
+            // Only take those that are enabled to obtain the final heuristic
+            if (teamMember.isEnabled()) {
+                double h = teamMember.heuristic.evaluateState(stateObs);
+                double hNorm = teamMember.heuristic.normaliseHeuristic(h);
 
-        for (int i = 0; i < mHeuristics.length; i++) {
-            StateHeuristic heuristic = mHeuristics[i];
-            double h = heuristic.evaluateState(stateObs);
-            double hNorm = heuristic.normaliseHeuristic(h);
+                // add the heuristic value based on its weight to the final result
+                double hWeight = mHeuristicsWeights[weightIndex];
+                finalH += (hNorm * hWeight);
 
-            // add the heuristic value based on its weight to the final result
-            double hWeight = mHeuristicsWeights[i];
-            finalH += (hNorm * hWeight);
+                if (DEBUG) {
+                    System.out.println(h + " --> " + hNorm + " w: " + hWeight + " --> " + (hNorm * hWeight) + " --> finalH: " + finalH);
+                }
 
-            if (DEBUG) {
-                System.out.println(h + " --> " + hNorm + " w: " + hWeight + " --> " + (hNorm * hWeight) + " --> finalH: " + finalH);
+                weightIndex++;
             }
         }
 
@@ -76,8 +77,12 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public void restartFutureStateData(StateObservation stateObs) {
         knowledgeHeuristic.restartFutureStateData(stateObs);
 
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.restartFutureStateData(stateObs);
+        for (TeamMember teamMember : mHeuristics) {
+            // The future state data is only necessary for evaluation, so if the team member is disabled
+            // the future state won't be necessary.
+            if (teamMember.isEnabled()) {
+                teamMember.heuristic.restartFutureStateData(stateObs);
+            }
         }
     }
 
@@ -85,16 +90,24 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     public void updateFutureStateData(StateObservation stateObs) {
         knowledgeHeuristic.updateFutureStateData(stateObs);
 
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.updateFutureStateData(stateObs);
+        for (TeamMember teamMember : mHeuristics) {
+            // The future state data is only necessary for evaluation, so if the team member is disabled
+            // the future state won't be necessary.
+            if (teamMember.isEnabled()) {
+                teamMember.heuristic.updateFutureStateData(stateObs);
+            }
         }
     }
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
         String s = "";
-        for (StateHeuristic heuristic : mHeuristics) {
-            s.concat(heuristic.relevantInfoStr(stateObs) + "\n");
+        for (TeamMember teamMember : mHeuristics) {
+            // The relevantInfoStr is helpful for future data debug, so if the team member is disabled
+            // it won't be necessary.
+            if (teamMember.isEnabled()) {
+                s = s.concat("; "+teamMember.heuristic.relevantInfoStr(stateObs));
+            }
         }
         return s;
     }
@@ -102,26 +115,22 @@ public class TeamBehavioursHeuristic extends StateHeuristic {
     @Override
     public void recordGameStats(Game game, GameStats gameStats) {
         gameStats.addGeneralData(game.getGameTick());
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.recordGameStats(game, gameStats);
+        for (TeamMember teamMember : mHeuristics) {
+            teamMember.heuristic.recordGameStats(game, gameStats);
         }
     }
 
     @Override
     public void recordDataOnFile(Game played, String fileName, int randomSeed, int[] recordIds) {
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.recordDataOnFile(played, fileName, randomSeed, recordIds);
+        for (TeamMember teamMember : mHeuristics) {
+            teamMember.heuristic.recordDataOnFile(played, fileName, randomSeed, recordIds);
         }
     }
 
     @Override
     public void drawInScreen(Graphics2D g) {
-        for (StateHeuristic heuristic : mHeuristics) {
-            heuristic.drawInScreen(g);
+        for (TeamMember teamMember : mHeuristics) {
+            teamMember.heuristic.drawInScreen(g);
         }
-    }
-
-    private boolean checkHeuristicsArraySize() {
-        return (mHeuristics.length == mHeuristicsWeights.length);
     }
 }

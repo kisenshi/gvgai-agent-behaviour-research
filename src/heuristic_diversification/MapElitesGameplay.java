@@ -5,10 +5,8 @@
 
 package heuristic_diversification;
 
-import core.heuristic.StateHeuristic;
-import heuristic_diversification.config.Behaviours;
-import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.framework.TeamGameplay;
+import heuristic_diversification.framework.TeamManager;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.mapelites.Config;
 import heuristic_diversification.mapelites.Config.FrameworkConfig;
@@ -31,21 +29,10 @@ public class MapElitesGameplay {
         FrameworkConfig fwConfig = configData.getFrameworkConfig();
         MapElitesConfig mapElitesConfig = configData.getMapElitesConfig();
 
-        // Team initialisation
-        String team = Behaviours.HEURISTICS_PATH + "TeamBehavioursHeuristic";
-
-        int nHeuristics = Behaviours.values().length;
-        StateHeuristic heuristicsList[] = new StateHeuristic[nHeuristics];
-        Double heuristicsWeightList[] = new Double[nHeuristics];
-
-        for (Behaviours info : Behaviours.values()) {
-            heuristicsList[info.id()] = info.getHeuristicInstance();
-        }
-
-        Class[] heuristicArgsClass = new Class[]{heuristicsList.getClass(), heuristicsWeightList.getClass()};
-        Object[] constructorArgs = new Object[]{heuristicsList, heuristicsWeightList};
-        TeamBehavioursHeuristic teamBehaviouHeuristic = (TeamBehavioursHeuristic) ArcadeMachineHeuristic.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
-
+        // Team set up
+        Double heuristicsWeightList[] = TeamManager.createTeamBehaviourWeightList();
+        TeamBehavioursHeuristic teamBehaviouHeuristic = TeamManager.createTeamBehaviourHeuristic(heuristicsWeightList);
+ 
         TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, fwConfig);
 
         // MAP elites adaptation

@@ -10,18 +10,20 @@ import heuristic_diversification.framework.ArcadeMachineHeuristic;
 
 public enum Behaviours {
 
-    WINNER(0, "WinningAndScoreHeuristic"), 
-    EXPLORER(1, "ExplorationHeuristic"),
-    CURIOUS(2, "CuriosityHeuristic");
+    WINNER("WinningAndScoreHeuristic", true), 
+    EXPLORER("ExplorationHeuristic", true),
+    CURIOUS("CuriosityHeuristic", true),
+    KILLER("KillingHeuristic", true),
+    COLLECTOR("CollectionHeuristic", true);
 
-    int id;
     String fileName;
+    boolean enabled;
 
     public static final String HEURISTICS_PATH = "heuristic_diversification.heuristics.";
 
-    Behaviours(int id, String fileName) {
-        this.id = id;
+    Behaviours(String fileName, boolean enabled) {
         this.fileName = fileName;
+        this.enabled = enabled;
     }
 
     public StateHeuristic getHeuristicInstance() {
@@ -30,8 +32,8 @@ public enum Behaviours {
         return heuristic;
     }
 
-    public int id() {
-        return id;
+    public boolean isEnabled() {
+        return enabled;
     }
 }
 

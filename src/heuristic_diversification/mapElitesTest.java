@@ -7,9 +7,9 @@ package heuristic_diversification;
 
 import java.util.Random;
 
-import core.heuristic.StateHeuristic;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
-import heuristic_diversification.config.Behaviours;
+import heuristic_diversification.framework.TeamManager;
+import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 import heuristic_diversification.model.GameStats;
 import tools.Utils;
 
@@ -34,21 +34,16 @@ public class mapElitesTest {
         
         String controller = sampleMCTS;
 
-        int nHeuristics = Behaviours.values().length;
-        StateHeuristic heuristicsList[] = new StateHeuristic[nHeuristics];
-        Double heuristicsWeightList[] = new Double[nHeuristics];
+        // Team set up
+        Double heuristicsWeightList[] = TeamManager.createTeamBehaviourWeightList();
+        TeamBehavioursHeuristic teamBehaviouHeuristic = TeamManager.createTeamBehaviourHeuristic(heuristicsWeightList);
 
-        for (Behaviours info : Behaviours.values()) {
-            heuristicsList[info.id()] = info.getHeuristicInstance();
-        }
-
-        heuristicsWeightList[Behaviours.WINNER.id()] = 0.25;
-        heuristicsWeightList[Behaviours.EXPLORER.id()] = 0.25;
-        heuristicsWeightList[Behaviours.CURIOUS.id()] = 0.50;
-    
-        Class[] heuristicArgsClass = new Class[] { heuristicsList.getClass(), heuristicsWeightList.getClass() };
-        Object[] constructorArgs = new Object[] { heuristicsList, heuristicsWeightList};
-        StateHeuristic teamBehaviouHeuristic = ArcadeMachineHeuristic.createHeuristicWithArgs(team, heuristicArgsClass, constructorArgs);
+        // Weights set up
+        heuristicsWeightList[0] = 0.10;  // Behaviours.WINNER
+        heuristicsWeightList[1] = 0.10;  // Behaviours.EXPLORER
+        heuristicsWeightList[2] = 0.20; // Behaviours.CURIOUS
+        heuristicsWeightList[3] = 0.30;  // Behaviours.KILLER
+        heuristicsWeightList[4] = 0.30; // Behaviours.COLLECTOR
 
         //Game settings
 		boolean visuals = true;
