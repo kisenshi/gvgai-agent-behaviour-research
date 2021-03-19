@@ -98,10 +98,10 @@ public class KillingHeuristic extends KnowledgeHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        ArrayList<Integer> spritesKilled = mSpritesData.spritesFromListHits(mNPCSprites);
-        int nKills = mSpritesData.nHitsToSprites(mNPCSprites);
-        int lastKill = mSpritesData.getLastHitToSprites(mNPCSprites);
-        return "NPCS: " + mNPCSprites.toString() + " spritesKilled: " + spritesKilled.toString() + " nKills: " + nKills + " lastKill: " + lastKill;
+        ArrayList<Integer> spritesKilled = mFutureInteractions.spritesFromListHits(mFutureNPCSprites);
+        int nKills = mFutureInteractions.nHitsToSprites(mFutureNPCSprites);
+        int lastKill = mFutureInteractions.getLastHitToSprites(mFutureNPCSprites);
+        return "Future killing data -> NPCS: " + mFutureNPCSprites.toString() + " spritesKilled: " + spritesKilled.toString() + " nKills: " + nKills + " lastKill: " + lastKill;
     }
 
     @Override

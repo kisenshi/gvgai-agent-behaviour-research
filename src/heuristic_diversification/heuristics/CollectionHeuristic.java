@@ -98,11 +98,11 @@ public class CollectionHeuristic extends KnowledgeHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        ArrayList<Integer> spritesCollected = mSpritesData.spritesFromListCollisions(mResourceSprites);
-        int nItemsCollected = mSpritesData.nCollisionsToSprites(mResourceSprites);
-        int lastCollection = mSpritesData.getLastCollisionToSprites(mResourceSprites);
+        ArrayList<Integer> spritesCollected = mFutureInteractions.spritesFromListCollisions(mFutureResourceSprites);
+        int nItemsCollected = mFutureInteractions.nCollisionsToSprites(mFutureResourceSprites);
+        int lastCollection = mFutureInteractions.getLastCollisionToSprites(mFutureResourceSprites);
 
-        return "resources: " + mResourceSprites.toString() + " spritesCollected: " + spritesCollected.toString() + " nItemsCollected: " + nItemsCollected + " lastCollection: " + lastCollection;
+        return "Future collector data --> resources: " + mFutureResourceSprites.toString() + " spritesCollected: " + spritesCollected.toString() + " nItemsCollected: " + nItemsCollected + " lastCollection: " + lastCollection;
     }
 
     @Override

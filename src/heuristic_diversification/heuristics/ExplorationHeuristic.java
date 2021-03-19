@@ -161,7 +161,7 @@ public class ExplorationHeuristic extends StateHeuristic {
 
     @Override
     public String relevantInfoStr(StateObservation stateObs) {
-        return mNFutureStates + " future states (max: " + mMaxFutureStates +"). Exploration: " + getNSpotsExplored();
+        return mNFutureStates + " future states (max: " + mMaxFutureStates +"). Future exploration: " + mFutureExploredPositions.size();
     }
 
 
