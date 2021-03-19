@@ -2,7 +2,7 @@ BasicGame
   SpriteSet
     floor > Immovable randomtiling=0.9 img=oryx/floor3 hidden=True
     goal  > Door color=GREEN img=oryx/doorclosed1
-    key   > Immovable color=ORANGE img=oryx/key2
+    key   > Resource limit=0 color=ORANGE img=oryx/key2
     sword > OrientedFlicker limit=5 singleton=True img=oryx/slash1
     movable >
       avatar  > ShootAvatar   stype=sword frameRate=8
@@ -30,10 +30,11 @@ BasicGame
     movable wall  > stepBack
     nokey goal    > stepBack
     goal withkey  > killSprite scoreChange=1
-    enemy sword > killSprite scoreChange=2
-    enemy enemy > stepBack
-    avatar enemy > killSprite scoreChange=-1
+    enemy sword   > killSprite scoreChange=2
+    enemy enemy   > stepBack
+    avatar enemy  > killSprite scoreChange=-1
     nokey key     > transformTo stype=withkey scoreChange=1 killSecond=True
+    key avatar    > killSprite scoreChange=1
 
   TerminationSet
     SpriteCounter stype=goal   win=True

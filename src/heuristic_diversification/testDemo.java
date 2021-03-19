@@ -26,7 +26,7 @@ public class testDemo {
 		String sampleMCTS = "heuristic_diversification.controllers.sampleMCTS.Agent";
 
 		//Load available games
-        String gamesTest =  "examples/games_heuristic_experiments.csv";
+        String gamesTest =  "examples/map_elites_experiments.csv";
         //String gamesTest =  "examples/all_games_sp.csv";
 		String[][] games = Utils.readGames(gamesTest);
 
@@ -43,7 +43,8 @@ public class testDemo {
 		//String heuristicName = "ExplorationHeuristic";
 		//String heuristicName = "KnowledgeHeuristic";
 		//String heuristicName = "CuriosityHeuristic";
-		String heuristicName = "KillingHeuristic";
+		//String heuristicName = "KillingHeuristic";
+		String heuristicName = "CollectionHeuristic";
 		String heuristicInfo = heuristicsPath + heuristicName;
 
 		String controllerName = "sampleMCTS";
@@ -57,7 +58,7 @@ public class testDemo {
 		heuristic.setUpdateSpritesData();
 		
 		// Game and level to play
-		int gameIdx = 0;
+		int gameIdx = 2;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
