@@ -74,7 +74,7 @@ public class KillingHeuristic extends KnowledgeHeuristic {
             // Return a negative value that it is in range of the possible values in the
             // heuristic, to reduce the range between
             // the lowest and highest values of the heuristic
-            h = (-1) * mMaxFutureStates;
+            h = (-1);
 
             if(DEBUG) {
                 System.out.println("GAME OVER maxLength " + mMaxFutureStates + " h " + h);
