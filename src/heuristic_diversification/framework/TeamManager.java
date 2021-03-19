@@ -29,7 +29,6 @@ public class TeamManager {
 
     public static Double[] createTeamBehaviourWeightList() {
         int nEnabledHeuristics = (int) Arrays.stream(Behaviours.values()).filter(h -> h.isEnabled()).count();
-        System.out.println("Enabled h: " + nEnabledHeuristics);
         Double heuristicsWeightList[] = new Double[nEnabledHeuristics];
 
         return heuristicsWeightList;

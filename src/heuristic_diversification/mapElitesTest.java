@@ -10,6 +10,7 @@ import java.util.Random;
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.framework.TeamManager;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
+import heuristic_diversification.mapelites.Generator;
 import heuristic_diversification.model.GameStats;
 import tools.Utils;
 
@@ -40,11 +41,16 @@ public class mapElitesTest {
         TeamBehavioursHeuristic teamBehaviouHeuristic = TeamManager.createTeamBehaviourHeuristic(heuristicsWeightList);
 
         // Weights set up
-        heuristicsWeightList[0] = 0.10;  // Behaviours.WINNER
-        heuristicsWeightList[1] = 0.10;  // Behaviours.EXPLORER
-        heuristicsWeightList[2] = 0.20; // Behaviours.CURIOUS
-        heuristicsWeightList[3] = 0.30;  // Behaviours.KILLER
-        heuristicsWeightList[4] = 0.30; // Behaviours.COLLECTOR
+        //heuristicsWeightList[0] = 0.10;  // Behaviours.WINNER
+        //heuristicsWeightList[1] = 0.10;  // Behaviours.EXPLORER
+        //heuristicsWeightList[2] = 0.20; // Behaviours.CURIOUS
+        //heuristicsWeightList[3] = 0.30;  // Behaviours.KILLER
+        //heuristicsWeightList[4] = 0.30; // Behaviours.COLLECTOR
+        Generator.setRandomWeights(heuristicsWeightList);
+        for (Double w : heuristicsWeightList) {
+            System.out.print(w + " ");
+        }
+        System.out.println();
 
         //Game settings
 		boolean visuals = true;
