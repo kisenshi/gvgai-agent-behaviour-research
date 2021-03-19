@@ -29,7 +29,8 @@ public class mapElitesTest {
         
         //Available games
         //String gamesList =  "examples/games_map_elites.csv";
-        String gamesList =  "examples/games_heuristic_experiments.csv";
+        //String gamesList =  "examples/games_heuristic_experiments.csv";
+        String gamesList =  "examples/map_elites_experiments.csv";
         String[][] games = Utils.readGames(gamesList);
         
         String controller = sampleMCTS;
@@ -54,7 +55,7 @@ public class mapElitesTest {
         String actionFile = null;
 
         // Game and level to play
-		int gameIdx = 0;
+		int gameIdx = 2;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];

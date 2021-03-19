@@ -7,7 +7,8 @@ package heuristic_diversification.config;
 
 public enum Games {
 
-    BUTTERFLIES(0, "butterflies", new int[]{ 206 });
+    BUTTERFLIES(0, "butterflies", new int[]{ 206 }),
+    ZELDA(1, "zelda", new int[]{ 64 });
 
     int id;
     String gameName;
