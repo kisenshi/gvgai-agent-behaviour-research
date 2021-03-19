@@ -20,7 +20,9 @@ public enum Features {
     SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 20, 1, false),
     CURIOSITY("nCuriosityInteractions", 0, 400, 20, false),
     COLLISIONS("nTotalCollisions", 0, 1000, 50, false),
-    HITS("nTotalHits", 0, 1000, 50, false);
+    HITS("nTotalHits", 0, 5000, 250, false),
+    KILLS("nTotalKills", 0, 3, 1, false),
+    ITEMS("nTotalItemsCollected", 0, 1, 1, false);
 
     String statName;
     Integer minValue;
