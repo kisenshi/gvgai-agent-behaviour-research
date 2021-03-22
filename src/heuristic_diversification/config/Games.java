@@ -14,7 +14,7 @@ public enum Games {
     String gameName;
     int[] lvlsNavigationSize;
 
-    private static final String GAMES_PATH = "examples/gridphysics/";
+    private static final String GAMES_PATH = "examples/experiments/";
 
     Games (int id, String gameName, int[] lvlsNavigationSize) {
         this.id = id;
