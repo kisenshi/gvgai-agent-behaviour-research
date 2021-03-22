@@ -5,7 +5,9 @@
 
 package heuristic_diversification;
 
+import java.util.HashMap;
 import java.util.Random;
+import java.util.Map.Entry;
 
 import heuristic_diversification.framework.ArcadeMachineHeuristic;
 import heuristic_diversification.framework.TeamManager;
@@ -61,7 +63,7 @@ public class mapElitesTest {
         String actionFile = null;
 
         // Game and level to play
-		int gameIdx = 2;
+		int gameIdx = 3;
 		int levelIdx = 0; // level names from 0 to 4 (game_lvlN.txt).
 		String gameName = games[gameIdx][1];
 		String game = games[gameIdx][0];
@@ -77,9 +79,13 @@ public class mapElitesTest {
 
             //ArcadeMachineHeuristic.runOneGameUsingHeuristic(game, level1, visuals, controller, actionFile, seed, teamBehaviouHeuristic, resultsHeuristicFile, recordIds);
             GameStats gameStats = new GameStats(levelIdx);
-            ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 5);
+            ArcadeMachineHeuristic.runGameAndGetStats(gameStats, game, level1, visuals, controller, actionFile, teamBehaviouHeuristic, 1);
             gameStats.calculateStats();
             gameStats.printStats(resultsHeuristicFile);
+            HashMap<Integer, String> spriteDetails = ArcadeMachineHeuristic.getGameStypesInfo(game);
+            for (Entry<Integer, String> entry : spriteDetails.entrySet()) {
+                System.out.println(entry.getKey() + " -> " + entry.getValue());
+            }
         } else {
             int n_games = 20;
             for (int gameId = 0; gameId < n_games; gameId++) {
