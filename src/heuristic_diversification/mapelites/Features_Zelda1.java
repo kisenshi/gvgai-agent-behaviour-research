@@ -19,6 +19,7 @@ public enum Features_Zelda1 {
     DISCOVERY("nSpritesDiscovered", 0, 10, 1, false),
     SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 12, 1, false),
     CURIOSITY("nCuriosityInteractions", 0, 200, 10, false),
+    INTERACTIONS("nTotalInteractions", 0, 2000, 100, false),
     COLLISIONS("nTotalCollisions", 0, 2000, 100, false),
     HITS("nTotalHits", 0, 2000, 100, false),
     KILLS("nTotalKills", 0, 6, 1, false),

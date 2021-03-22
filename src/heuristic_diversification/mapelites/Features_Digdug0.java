@@ -19,6 +19,7 @@ public enum Features_Digdug0 {
     DISCOVERY("nSpritesDiscovered", 0, 7, 1, false),
     SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 10, 1, false),
     CURIOSITY("nCuriosityInteractions", 0, 450, 25, false),
+    INTERACTIONS("nTotalInteractions", 0, 1000, 50, false),
     COLLISIONS("nTotalCollisions", 0, 1000, 50, false),
     HITS("nTotalHits", 0, 1000, 50, false),
     KILLS("nTotalKills", 0, 27, 3, false),
