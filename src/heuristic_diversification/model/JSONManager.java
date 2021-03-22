@@ -52,6 +52,50 @@ public class JSONManager {
         writeToFile(jsonString, configData.resultsFileName() + ".json");
     }
 
+    public static void backupGeneralExperimentInfo(Config configData, GameInfo gameInfo) {
+        FeaturesInfo featureXInfo = new FeaturesInfo(configData.getMapElitesConfig().featureX);
+        FeaturesInfo featureYInfo = new FeaturesInfo(configData.getMapElitesConfig().featureY);
+        TeamManager teamInfo = new TeamManager();
+        
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+        JsonObject jsonFeaturesObject = new JsonObject();
+        JsonElement featureXInfoJson = gson.toJsonTree(featureXInfo);
+        JsonElement featureYInfoJson = gson.toJsonTree(featureYInfo);
+
+        jsonFeaturesObject.add(configData.getMapElitesConfig().featureX.name(), featureXInfoJson);
+        jsonFeaturesObject.add(configData.getMapElitesConfig().featureY.name(), featureYInfoJson);
+        JsonElement faturesInfoJson = gson.toJsonTree(jsonFeaturesObject);
+
+
+        JsonObject jsonObject = new JsonObject();
+        JsonElement configDataJson = gson.toJsonTree(configData);
+        JsonElement gameInfoJson = gson.toJsonTree(gameInfo);
+        JsonElement teamInfoJson = gson.toJsonTree(teamInfo);
+        
+        jsonObject.add("config", configDataJson);
+        jsonObject.add("gameInfo", gameInfoJson);
+        jsonObject.add("teamInfo", teamInfoJson);
+        jsonObject.add("featuresDetails", faturesInfoJson);
+
+        String jsonString = gson.toJson(jsonObject);
+        writeToFile(jsonString, "MapElitesGameplay_temp_general_info.json");
+    }
+
+    public static void backupMapElitesGameplay(MapElites mapElitesGameplay, int algorithmIteration) {
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        
+        JsonObject jsonObject = new JsonObject();
+        JsonElement mapElitesJson = gson.toJsonTree(mapElitesGameplay);
+        JsonElement iterationJson = gson.toJsonTree(algorithmIteration);
+        
+        jsonObject.add("iteration", iterationJson);
+        jsonObject.add("resultTemp", mapElitesJson);
+
+        String jsonString = gson.toJson(jsonObject);
+        writeToFile(jsonString, "MapElitesGameplay_temp_"+ algorithmIteration +".json");
+    }
+
     public static void prinObjectAsJson(Object object, String fileName) {
         Gson gson = new Gson();
 

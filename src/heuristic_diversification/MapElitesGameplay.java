@@ -35,6 +35,12 @@ public class MapElitesGameplay {
  
         TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, fwConfig);
 
+        // Print general information about the experiment before running the algorithm
+        // We print temp results so it can be helpful to have the general data in case something goes
+        // wrong or we need to stop the algorithm
+        GameInfo gameInfo = new GameInfo(gameplayFramework);
+        JSONManager.backupGeneralExperimentInfo(configData, gameInfo);
+
         // MAP elites adaptation
 
         // Initialise MAP
@@ -48,7 +54,6 @@ public class MapElitesGameplay {
         mapElites.printMapElitesInfo(statsResultsFileName);
         
         // Generate JSON
-        GameInfo gameInfo = new GameInfo(gameplayFramework);
         JSONManager.saveMapElitesGameplay(configData, mapElites, gameInfo);
     }
 }

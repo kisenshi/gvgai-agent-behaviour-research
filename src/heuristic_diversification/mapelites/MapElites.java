@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import heuristic_diversification.framework.TeamGameplay;
 import heuristic_diversification.model.GameStats;
+import heuristic_diversification.model.JSONManager;
 
 /**
  * Contains the definition of the MAP-Elites as well as the methos required to
@@ -21,6 +22,8 @@ import heuristic_diversification.model.GameStats;
  * configuration set when running the algorithm
  */
 public class MapElites {
+    transient private static final int ITERATION_BACKUP = 25;
+
     // Map elites config
     private Performance performanceCriteria;
     private Features featureInfoX;
@@ -56,6 +59,11 @@ public class MapElites {
         this.heuristicsWeightList = heuristicsWeightList;
 
         initialiseMap(nRandomInitialisations);
+
+        // Backup map elites after initialisation for temp data 
+        if (ITERATION_BACKUP != 0){
+            backUpTempResults(0);
+        }
     }
 
     /**
@@ -100,9 +108,9 @@ public class MapElites {
      * @param nTotalIterations number of iterations of the map elites algorithm
      */
     public void runAlgorithm(int nTotalIterations) {
-        int nIterations = 0;
-        while(nIterations < nTotalIterations) {
-            System.out.println("MAPELites algorithm iteration " + (nIterations + 1));
+        int nIterations = 1;
+        while(nIterations <= nTotalIterations) {
+            System.out.println("MAPELites algorithm iteration " + nIterations);
             
             // get random cell elite and a copy of its weights
             Elite randomElite = getRandomEliteFromMap();
@@ -115,11 +123,22 @@ public class MapElites {
             Elite newElite = createGameplayElite();
             addEliteToMap(newElite);
 
+            // Backup map elites current state for temp data
+            if ((ITERATION_BACKUP != 0) && ((nIterations % ITERATION_BACKUP) == 0)) {
+                backUpTempResults(nIterations);
+            }
+            
             nIterations++;
         }
 
         // When the algorithm is over, we need to make sure the final elites have all the data available
         processMapElitesData();
+    }
+
+    private void backUpTempResults(int algorithmIteration) {
+        System.out.println("Iteration number " +  algorithmIteration + ". Backing up map elite results...");
+        processMapElitesData();
+        JSONManager.backupMapElitesGameplay(this, algorithmIteration);
     }
 
     /**
