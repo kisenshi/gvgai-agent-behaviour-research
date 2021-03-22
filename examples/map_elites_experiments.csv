@@ -1,3 +1,4 @@
 0,examples/gridphysics/aliens.txt
-1,examples/gridphysics/butterflies.txt
-2,examples/gridphysics/zelda.txt
+1,examples/experiments/butterflies.txt
+2,examples/experiments/zelda.txt
+3,examples/experiments/digdug.txt
