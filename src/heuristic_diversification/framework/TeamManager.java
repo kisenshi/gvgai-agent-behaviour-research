@@ -6,6 +6,20 @@ import heuristic_diversification.config.Behaviours;
 import heuristic_diversification.heuristics.TeamBehavioursHeuristic;
 
 public class TeamManager {
+    private Behaviours enabledBehaviours[];
+
+    public TeamManager() {
+        int nEnabledHeuristics = (int) Arrays.stream(Behaviours.values()).filter(h -> h.isEnabled()).count();
+        enabledBehaviours = new Behaviours[nEnabledHeuristics];
+
+        int i=0;
+        for (Behaviours behaviour : Behaviours.values()) {
+            if (behaviour.isEnabled()) {
+                enabledBehaviours[i] = behaviour;
+                i++;
+            }
+        }
+    }
 
     public static TeamBehavioursHeuristic createTeamBehaviourHeuristic(Double[] heuristicsWeightList) {
         // Team initialisation
