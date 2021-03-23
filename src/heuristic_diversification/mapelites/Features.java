@@ -13,17 +13,17 @@ import heuristic_diversification.model.GameStats;
 
 public enum Features {
     WINS("win", 0, 100, 10, true), 
-    SCORE("score", 0, 14, 1, false), 
-    EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 5, true),
-    EXPLORATION_NUMBER("nExplored", 0, 126, 9, false),
-    DISCOVERY("nSpritesDiscovered", 0, 10, 1, false),
-    SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 12, 1, false),
-    CURIOSITY("nCuriosityInteractions", 0, 200, 10, false),
-    INTERACTIONS("nTotalInteractions", 0, 2000, 100, false),
-    COLLISIONS("nTotalCollisions", 0, 2000, 100, false),
-    HITS("nTotalHits", 0, 2000, 100, false),
-    KILLS("nTotalKills", 0, 6, 1, false),
-    ITEMS("nTotalItemsCollected", 0, 1, 1, false);
+    SCORE("score", 0, 50, 5, false), 
+    EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 10, true),
+    EXPLORATION_NUMBER("nExplored", 0, 405, 20, false),
+    DISCOVERY("nSpritesDiscovered", 0, 7, 1, false),
+    SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 10, 1, false),
+    CURIOSITY("nCuriosityInteractions", 0, 450, 25, false),
+    INTERACTIONS("nTotalInteractions", 0, 1000, 50, false),
+    COLLISIONS("nTotalCollisions", 0, 1000, 50, false),
+    HITS("nTotalHits", 0, 1000, 50, false),
+    KILLS("nTotalKills", 0, 27, 3, false),
+    ITEMS("nTotalItemsCollected", 0, 27, 3, false);
 
     String statName;
     Integer minValue;

@@ -15,7 +15,7 @@ public enum Features_Digdug0 {
     WINS("win", 0, 100, 10, true), 
     SCORE("score", 0, 50, 5, false), 
     EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 10, true),
-    EXPLORATION_NUMBER("nExplored", 0, 405, 10, false),
+    EXPLORATION_NUMBER("nExplored", 0, 405, 20, false),
     DISCOVERY("nSpritesDiscovered", 0, 7, 1, false),
     SPRITES_INTERACTION("nUniqueSpriteInteractions", 0, 10, 1, false),
     CURIOSITY("nCuriosityInteractions", 0, 450, 25, false),
