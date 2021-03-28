@@ -12,9 +12,9 @@ public enum Behaviours {
 
     WINNER("WinningAndScoreHeuristic", true), 
     EXPLORER("ExplorationHeuristic", true),
-    CURIOUS("CuriosityHeuristic", true),
-    KILLER("KillingHeuristic", true),
-    COLLECTOR("CollectionHeuristic", true);
+    CURIOUS("CuriosityHeuristic", false),
+    KILLER("KillingHeuristic", false),
+    COLLECTOR("CollectionHeuristic", false);
 
     String fileName;
     boolean enabled;
