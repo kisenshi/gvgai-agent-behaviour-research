@@ -12,7 +12,7 @@ public enum Behaviours {
 
     WINNER("WinningAndScoreHeuristic", true), 
     EXPLORER("ExplorationHeuristic", true),
-    CURIOUS("CuriosityHeuristic", false),
+    CURIOUS("CuriosityHeuristic", true),
     KILLER("KillingHeuristic", false),
     COLLECTOR("CollectionHeuristic", false);
 
