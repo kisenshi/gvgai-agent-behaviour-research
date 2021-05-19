@@ -21,7 +21,7 @@ import java.io.Reader;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class automatedGameplay {
+public class AutomatedGameplay {
     // PATHS
     private static String CONTROLLERS_PATH = "heuristic_diversification.controllers.";
     private static String HEURISTICS_PATH = "heuristic_diversification.heuristics.";
