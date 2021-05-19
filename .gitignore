@@ -8,6 +8,7 @@
 .idea
 *.iml
 *.iws
+manifests/
 
 # Mac
 .DS_Store
