@@ -76,7 +76,8 @@ public class automatedGameplay {
         Gson gson = new Gson();
 
         String jsonPath = String.valueOf(Paths.get(configJsonFile));
-        System.out.println(jsonPath);
+        System.out.println("Config file: " + jsonPath +"\n");
+
         try (Reader reader = new FileReader(jsonPath)) {
             AutomatedGameplayConfig gameplayConfig = gson.fromJson(reader,AutomatedGameplayConfig.class);
             System.out.println(gameplayConfig.printConfigInfo());
@@ -93,7 +94,7 @@ public class automatedGameplay {
 
             System.out.println("Behaviours set for the agent: ");
             for (Behaviours b : Behaviours.values()) {
-                System.out.println(b +" ->"+ b.isEnabled());
+                System.out.println(b +" -> "+ b.isEnabled());
             }
             System.out.println();
 
