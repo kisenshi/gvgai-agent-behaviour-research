@@ -16,9 +16,10 @@ import heuristic_diversification.mapelites.Config.FrameworkConfig;
 
 import tools.com.google.gson.Gson;
 
+import java.io.FileReader;
 import java.io.Reader;
-import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class automatedGameplay {
     // PATHS
@@ -28,19 +29,13 @@ public class automatedGameplay {
     private static String AGENT = "MCTS";
 
     public class AutomatedGameplayConfig {
+        private String experimentId;
         private String game;
         private int level;
-        private String[] enabledBehaviours;
-        private Double[] enabledBehavioursWeightList;
+        private String[] behaviours;
+        private Double[] weights;
 
-       // public AutomatedGameplayConfig(){}
-
-        public AutomatedGameplayConfig(String game, int level, String[] behaviours, Double[] weights) {
-            this.game = game;
-            this.level = level;
-            this.enabledBehaviours = behaviours;
-            this.enabledBehavioursWeightList = weights;
-        }
+        public String getExperimentId() { return this.experimentId; }
 
         public Games getGame(){
             return Games.valueOf(this.game);
@@ -50,12 +45,23 @@ public class automatedGameplay {
             return this.level;
         }
 
-        public String[] getBehaviours() {
-            return this.enabledBehaviours;
+        public String[] getEnabledBehaviours() {
+            return this.behaviours;
         }
 
-        public Double[] getWeights() {
-            return this.enabledBehavioursWeightList;
+        public Double[] getEnabledBehavioursWeightList() {
+            return this.weights;
+        }
+
+        public String printConfigInfo() {
+            String text = "Automated gameplay of "+this.getGame()+" level "+this.getLevel() + ". ";
+            if (this.experimentId != null) {
+                text += "\nData from experiment "  + this.getExperimentId();
+            }
+            text += "\nBehaviours: " + Arrays.toString(this.getEnabledBehaviours());
+            text += "\nWeights: " + Arrays.toString(this.getEnabledBehavioursWeightList());
+            text += "\n";
+            return  text;
         }
     }
 
@@ -67,50 +73,49 @@ public class automatedGameplay {
         }
 
         String configJsonFile = args[0];
-        AutomatedGameplayConfig gameplayConfig = null;
+        Gson gson = new Gson();
 
-        try {
-            Gson gson = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get(configJsonFile));
-            gameplayConfig = gson.fromJson(reader,AutomatedGameplayConfig.class);
-            reader.close();
+        String jsonPath = String.valueOf(Paths.get(configJsonFile));
+        System.out.println(jsonPath);
+        try (Reader reader = new FileReader(jsonPath)) {
+            AutomatedGameplayConfig gameplayConfig = gson.fromJson(reader,AutomatedGameplayConfig.class);
+            System.out.println(gameplayConfig.printConfigInfo());
 
-            System.out.println(gameplayConfig);
+            /*String game = "DIGDUG";
+            String[] enabledBehaviours = {"WINNER", "EXPLORER", "CURIOUS", "KILLER", "COLLECTOR"};
+            Double[] enabledBehavioursWeightList = {0.5, 0.02, 0.5, 1.0, 0.0};*/
+
+            // Enable behaviours requested
+            for (String behaviourString : gameplayConfig.getEnabledBehaviours()) {
+                Behaviours behaviour = Behaviours.valueOf(behaviourString);
+                behaviour.enableBehaviour();
+            }
+
+            System.out.println("Behaviours set for the agent: ");
+            for (Behaviours b : Behaviours.values()) {
+                System.out.println(b +" ->"+ b.isEnabled());
+            }
+            System.out.println();
+
+            // Game and framework set up
+            boolean visuals = true;
+            boolean saveActionFile = false;
+
+            Config configData = new Config(gameplayConfig.getGame(), gameplayConfig.getLevel(), Agents.valueOf(AGENT), 1, visuals, saveActionFile);
+            FrameworkConfig fwConfig = configData.getFrameworkConfig();
+
+            // Team set up
+            TeamBehavioursHeuristic teamBehaviouHeuristic = TeamManager.createTeamBehaviourHeuristic(gameplayConfig.getEnabledBehavioursWeightList());
+            TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, fwConfig);
+
+            // Automated gameplay
+            System.out.println("Running automated gameplay...\n");
+            gameplayFramework.createStatsFromGameplay(fwConfig.agent.getAgentFileName());
+            System.out.println("Automated gameplay finished");
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
         }
-
-        /*String game = "DIGDUG";
-        String[] enabledBehaviours = {"WINNER", "EXPLORER", "CURIOUS", "KILLER", "COLLECTOR"};
-        Double[] enabledBehavioursWeightList = {0.5, 0.02, 0.5, 1.0, 0.0};*/
-
-        // Enable behaviours requested
-        for (String behaviourString : gameplayConfig.getBehaviours()) {
-            Behaviours behaviour = Behaviours.valueOf(behaviourString);
-            behaviour.enableBehaviour();
-        }
-        
-        for (Behaviours b : Behaviours.values()) {
-            System.out.println("Behaviours set for the agent: ");
-            System.out.println(b +" ->"+ b.isEnabled());
-        }
-
-        // Game and framework set up
-        int level = 0;
-        boolean visuals = true;
-        boolean saveActionFile = false;
-
-        Config configData = new Config(gameplayConfig.getGame(), gameplayConfig.getLevel(), Agents.valueOf(AGENT), 1, visuals, saveActionFile);
-        FrameworkConfig fwConfig = configData.getFrameworkConfig();
-        
-        // Team set up
-        TeamBehavioursHeuristic teamBehaviouHeuristic = TeamManager.createTeamBehaviourHeuristic(gameplayConfig.getWeights());
-        TeamGameplay gameplayFramework = new TeamGameplay(teamBehaviouHeuristic, fwConfig);
-
-        // Automated gameplay
-        System.out.println("Running automated gameplay");
-        gameplayFramework.createStatsFromGameplay(fwConfig.agent.getAgentFileName());
-        System.out.println("Automated gameplay finished");
     }
 }
