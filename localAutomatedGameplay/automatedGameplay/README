@@ -1,0 +1,65 @@
+This folder contains the files necessary to trigger an automated gameplay of a 
+game of the GVGAI framework. The config file included provides an example of its 
+structure. Update its content to choose the game, level and description of the 
+agent that plays the game (enabled behaviours and weights).
+
+If you downloaded the description of an agent from 
+http://team-automated-gameplay-visualization.surge.sh, 
+you can include the config file in this folder or replace the contents of the 
+existent one.
+
+CONTENTS
+
+> RunAutomatedGameplay.jar          
+  Java program that plays a GVGAI game automatically. When the game is over, the game
+  hangs in the end state and needs to be closed/killed to finish.
+
+> RunAutomatedGameplay-exit.jar          
+  Java program that plays a GVGAI game automatically and finishes when done.
+
+> automatedGameplayConfig.json      
+  Config file that determines the game, level, and description of the agent that 
+  plays the game.
+
+> examples/                         
+  Available games and levels.
+
+> sprites/                          
+  Available sprites for the games.
+
+> LICENSE.txt
+  Copy of GNU General Public License
+
+RUN AN AUTOMATED GAMEPLAY:
+
+1. Open a terminal and get into the location of this folder
+2. Execute jar providing the config file as an argument
+
+java -jar RunAutomatedGameplay.jar automatedGameplayConfig.json
+java -jar RunAutomatedGameplay.jar automatedGameplayConfig-exit.json
+
+AUTHOR AND LICENSE
+
+The original code of the GVGAI Framework can be found at: 
+https://github.com/GAIGResearch/GVGAI
+
+The original code of the GVGAI Framework has been extended to create and 
+generate the RunAutomatedGameplay.jar provided in this folder.
+The new code that allows triggering an automated gameplay of a GVGAI game has 
+been created by Cristina Guerrero-Romero in 2021. The code can be found at 
+https://github.com/kisenshi/gvgai-heuristic-extension
+ 
+Copyright (C) 2021 Cristina Guerrero-Romero
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

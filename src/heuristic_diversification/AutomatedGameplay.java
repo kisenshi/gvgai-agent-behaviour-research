@@ -114,6 +114,7 @@ public class AutomatedGameplay {
             gameplayFramework.createStatsFromGameplay(fwConfig.agent.getAgentFileName());
             System.out.println("Automated gameplay finished");
 
+            System.exit(0);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
