@@ -4,7 +4,7 @@ structure. Update its content to choose the game, level and description of the
 agent that plays the game (enabled behaviours and weights).
 
 If you downloaded the description of an agent from 
-http://team-automated-gameplay-visualization.surge.sh, 
+https://demo-visualize-diverse-gameplay-xqjmp.ondigitalocean.app/ 
 you can include the config file in this folder or replace the contents of the 
 existent one.
 
@@ -47,7 +47,7 @@ The original code of the GVGAI Framework has been extended to create and
 generate the RunAutomatedGameplay.jar provided in this folder.
 The new code that allows triggering an automated gameplay of a GVGAI game has 
 been created by Cristina Guerrero-Romero in 2021. The code can be found at 
-https://github.com/kisenshi/gvgai-heuristic-extension
+https://github.com/kisenshi/gvgai-heuristic-extension/tree/automated-gameplay-standalone
  
 Copyright (C) 2021 Cristina Guerrero-Romero
 
