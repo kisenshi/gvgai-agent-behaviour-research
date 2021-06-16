@@ -122,8 +122,12 @@ Guerrero-Romero, Cristina, Simon M. Lucas, and Diego Perez-Liebana. "[Using a Te
 
 ## Automated gameplay
 
-We have implemented an executable that allows triggering an automated gameplay of a 
-game of the GVGAI framework by providing a config file with the details of the game, agent and the description of its behaviours. The code related to this standalone, as well as the final folder and downloadable zip can be found in the [automated-gameplay-standalone branch](https://github.com/kisenshi/gvgai-agent-behaviour-research/tree/automated-gameplay-standalone).
+I have implemented an executable that allows triggering an automated gameplay of a 
+game of the GVGAI framework by providing a config file with the details of the game, agent and the description of its behaviours. 
+
+- The folder containing the files and downloadable zip can be found at localAutomatedGameplay/.
+
+- _src/heuristic_diversification/AutomatedGameplay.java_ contains the code of the main that has been used to generate the jar included in the standalone.
 
 ## License
 
