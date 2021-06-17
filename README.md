@@ -64,7 +64,7 @@ __Note__: For the code and results obtained in the experiments presented in the 
 The heuristic implemented are general within the GVGAI framework. They can be
 used in any of the games supported by it, as long as the rules are well-formed and
 aligned with the assumptions made in each of the heuristics (detailed in the paper
-"MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay").
+"[MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay](http://kisenshi.github.io/files/paper-map-elites-generation-team-agents-behaviour.pdf)").
 
 - **Winning and Score**: Winning  the  game while maximizing the score difference.
 - **Exploration**: Maximizes the physical exploration of the map prioritizing those positions that haven’t been visited before or have been visited the least number of times.
@@ -114,7 +114,7 @@ The link to the live demo is: https://demo-visualize-diverse-gameplay-xqjmp.ondi
 
 ### Publication
 
-Guerrero-Romero, Cristina, and Diego Perez-Liebana. "MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay" To be published _in 2021 IEEE Conference on Games (CoG)_
+Guerrero-Romero, Cristina, and Diego Perez-Liebana. "[MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay](http://kisenshi.github.io/files/paper-map-elites-generation-team-agents-behaviour.pdf)" To be published _in 2021 IEEE Conference on Games (CoG)_
 
 ### Related paper
 
