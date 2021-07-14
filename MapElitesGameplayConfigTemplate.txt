@@ -1,5 +1,5 @@
 experimentId=XXXX
-gameName=BUTTERFLIES/ZELDA/DIGDUG
+gameName=BUTTERFLIES/ZELDA/DIGDUG/SHERIFF
 level=0/1/2...
 agentName=OSLA/MCTS
 nGameRuns=1/2/3...

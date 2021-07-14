@@ -1,6 +1,6 @@
 /**
  * Author: Cristina Guerrero
- * Date: 5th February 2021
+ * Date: 12th July 2021
  */
 
 package heuristic_diversification.mapelites;
@@ -11,7 +11,7 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummaryValues;
 
 import heuristic_diversification.model.GameStats;
 
-public enum Features {
+public enum Features_Sheriff0 {
     WINS("win", 0, 100, 10, true), 
     SCORE("score", -1, 8, 1, false), 
     EXPLORATION_PERCENTAGE("percentageExplored", 0, 100, 10, true),
@@ -31,7 +31,7 @@ public enum Features {
     Integer bucketSize;
     boolean percentage;
 
-    Features(String statName, Integer min, Integer max, Integer bucketSize, boolean percentage) {
+    Features_Sheriff0(String statName, Integer min, Integer max, Integer bucketSize, boolean percentage) {
         this.statName = statName;
         this.minValue = min;
         this.maxValue = max;
