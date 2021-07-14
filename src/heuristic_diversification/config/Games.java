@@ -9,7 +9,8 @@ public enum Games {
 
     BUTTERFLIES(0, "butterflies", new int[]{ 206 }),
     ZELDA(1, "zelda", new int[]{ 64, 126 }),
-    DIGDUG(2, "digdug", new int[]{ 405 });
+    DIGDUG(2, "digdug", new int[]{ 405 }),
+    SHERIFF(3, "sheriff", new int[]{ 280 });
 
     int id;
     String gameName;

@@ -13,7 +13,7 @@ public enum Behaviours {
     WINNER("WinningAndScoreHeuristic", true), 
     EXPLORER("ExplorationHeuristic", true),
     CURIOUS("CuriosityHeuristic", true),
-    KILLER("KillingHeuristic", false),
+    KILLER("KillingHeuristic", true),
     COLLECTOR("CollectionHeuristic", false);
 
     String fileName;
