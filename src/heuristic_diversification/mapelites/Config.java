@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import heuristic_diversification.config.Agents;
 import heuristic_diversification.config.Games;
 
