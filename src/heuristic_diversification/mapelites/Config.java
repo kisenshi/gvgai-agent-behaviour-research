@@ -53,6 +53,15 @@ public class Config {
             this.saveActionFile = Boolean.valueOf(configProperties.getProperty(ACTION_FILE_KEY));
         }
 
+        public FrameworkConfig(Games game, Integer level, Agents agent, Integer nGameRuns, Boolean visuals, Boolean saveActionFile) {
+            this.game = game;
+            this.level = level;
+            this.agent = agent;
+            this.nGameRuns = nGameRuns;
+            this.visuals = visuals;
+            this.saveActionFile = saveActionFile;
+        }
+
         public String actionFile() {
             if (!saveActionFile) {
                 return null;
@@ -76,6 +85,12 @@ public class Config {
             this.nRandomInitialisations = Integer.parseInt(configProperties.getProperty(N_MAP_INITIALISATION_KEY));
             this.nMapElitesIterations = Integer.parseInt(configProperties.getProperty(N_ALGORITHM_ITERATIONS_KEY));
         }
+    }
+
+    public Config(Games game, Integer level, Agents agent, Integer nGameRuns, Boolean visuals, Boolean saveActionFile) {
+        experimentId = "";
+
+        frameworkConfig = new FrameworkConfig(game, level, agent, nGameRuns, visuals, saveActionFile);
     }
 
     public Config(String configFile) {
