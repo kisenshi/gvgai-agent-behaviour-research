@@ -218,6 +218,10 @@ public class GameStats {
         writer.write("== Explorer ==\n");
         for (int i = 0; i < nExplored.size(); i++) {
             writer.write(nExplored.get(i).toString() + " ");
+            if (mapSize > 0) {
+                Double percentageExplored = nExplored.get(i) * 1.0 / mapSize;
+                writer.write(percentageExplored.toString() + " ");
+            }
             writer.write(lastNewExplorationTick.get(i).toString() + " ");
             writer.write("\n");
         }
