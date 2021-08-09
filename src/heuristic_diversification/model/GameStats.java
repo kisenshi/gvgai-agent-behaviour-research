@@ -194,6 +194,8 @@ public class GameStats {
             writer.write(gameOverTick.get(i).toString() + " ");
         }
         writer.write("\n");
+        writer.write("-- gameOverTickStats:\n");
+        writer.write(gameOverTickStats.toString());
     }
 
     private void printWinnerStats(BufferedWriter writer) throws IOException {
@@ -202,6 +204,8 @@ public class GameStats {
             writer.write(win.get(i).toString() + " ");
         }
         writer.write("\n");
+        writer.write("-- winStats:\n");
+        writer.write(winStats.toString());
     }
 
     private void printRecordBreakerStats(BufferedWriter writer) throws IOException {
@@ -212,6 +216,12 @@ public class GameStats {
             writer.write(lastPositiveScoreChangeTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- scoreStats:\n");
+        writer.write(scoreStats.toString());
+        writer.write("-- lastScoreChangeTickStats:\n");
+        writer.write(lastScoreChangeTickStats.toString());
+        writer.write("-- lastPositiveScoreChangeTickStats:\n");
+        writer.write(lastPositiveScoreChangeTickStats.toString());
     }
 
     private void printExplorerStats(BufferedWriter writer) throws IOException {
@@ -225,6 +235,8 @@ public class GameStats {
             writer.write(lastNewExplorationTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- percentageExploredStats:\n");
+        writer.write(percentageExploredStats.toString());
         writer.write("== Exploration Matrix ==\n");
         for (int i = 0; i < heatMapExplorationMatrix.size(); i++) {
             for (int y = 0; y < heatMapExplorationMatrix.get(i).length; y++) {
@@ -261,13 +273,17 @@ public class GameStats {
     }
 
     private void printDiscoveryStats(BufferedWriter writer) throws IOException {
-        writer.write(" == Discovery ==\n");
+        writer.write("== Discovery ==\n");
         writer.write("stype discovered: " + finalStypesDiscovered.toString() + "\n");
         for (int i = 0; i < nSpritesDiscovered.size(); i++) {
             writer.write(nSpritesDiscovered.get(i).toString() + " ");
             writer.write(lastDiscoveryTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- nSpritesDiscoveredStats:\n");
+        writer.write(nSpritesDiscoveredStats.toString());
+        writer.write("-- lastDiscoveryTickStats:\n");
+        writer.write(lastDiscoveryTickStats.toString());
     }
 
     private void printCuriosityStats(BufferedWriter writer) throws IOException {
@@ -282,6 +298,20 @@ public class GameStats {
             writer.write(lastCuriosityTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- nUniqueSpriteInteractionsStats:\n");
+        writer.write(nUniqueSpriteInteractionsStats.toString());
+        writer.write("-- nCuriosityInteractionsStats:\n");
+        writer.write(nCuriosityInteractionsStats.toString());
+        writer.write("-- nTotalCollisionsStats:\n");
+        writer.write(nTotalCollisionsStats.toString());
+        writer.write("-- nTotalHitsStats:\n");
+        writer.write(nTotalHitsStats.toString());
+        writer.write("-- lastNewCollisionTickStats:\n");
+        writer.write(lastNewCollisionTickStats.toString());
+        writer.write("-- lastNewHitTickStats:\n");
+        writer.write(lastNewHitTickStats.toString());
+        writer.write("-- lastCuriosityTickStats:\n");
+        writer.write(lastCuriosityTickStats.toString());
     }
 
     private void printKillingStats(BufferedWriter writer) throws IOException {
@@ -292,6 +322,10 @@ public class GameStats {
             writer.write(lastKillTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- nTotalKillsStats:\n");
+        writer.write(nTotalKillsStats.toString());
+        writer.write("-- lastKillTickStats:\n");
+        writer.write(lastKillTickStats.toString());
     }
 
     private void printCollectionStats(BufferedWriter writer) throws IOException {
@@ -302,6 +336,10 @@ public class GameStats {
             writer.write(lastCollectionTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- nTotalItemsCollectedStats:\n");
+        writer.write(nTotalItemsCollectedStats.toString());
+        writer.write("-- lastCollectionTickStats:\n");
+        writer.write(lastCollectionTickStats.toString());
     }
 
     public void printStats(String fileName) {
