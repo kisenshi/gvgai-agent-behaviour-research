@@ -235,6 +235,8 @@ public class GameStats {
             writer.write(lastNewExplorationTick.get(i).toString() + " ");
             writer.write("\n");
         }
+        writer.write("-- nExploredStats:\n");
+        writer.write(nExploredStats.toString());
         writer.write("-- percentageExploredStats:\n");
         writer.write(percentageExploredStats.toString());
         writer.write("== Exploration Matrix ==\n");
