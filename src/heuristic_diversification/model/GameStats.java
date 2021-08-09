@@ -239,6 +239,8 @@ public class GameStats {
         writer.write(nExploredStats.toString());
         writer.write("-- percentageExploredStats:\n");
         writer.write(percentageExploredStats.toString());
+        writer.write("-- lastNewExplorationTickStats:\n");
+        writer.write(lastNewExplorationTickStats.toString());
         writer.write("== Exploration Matrix ==\n");
         for (int i = 0; i < heatMapExplorationMatrix.size(); i++) {
             for (int y = 0; y < heatMapExplorationMatrix.get(i).length; y++) {
