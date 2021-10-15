@@ -1,12 +1,20 @@
 # Agent Behaviour Research (in GVGAI)
 
+### Automated Gameplay branch
+
+_This branch contains the code related to the standalone created for to execute automated gameplay of a game in GVGAI using a particular agent description._
+
+--------
+
+<br/>
+
 Personalised version of the GVGAI framework that allows providing the heuristic to use in the algorithm at the time of starting the game. This modification allows running the agents with different heuristics (behaviours) without having to update their core code. The heuristics are created in a external file and plugged into the agent during its instantiation.  
 
 This repository contains the code related to my research in agent behaviour. it covers the following topics:
 
 - [Heuristic diversification](#heuristic-diversification)
 - [Use of MAP-Elites to generate agents that elicits diverse automated gameplay](#map-elites-to-generate-a-team-of-agents-with-diverse-behaviours)
-- [Automated gameplay](#automated-gameplay)
+- [Automated gameplay](#automated-gameplay) (this branch)
 
 ## Original code: GVGAI competition
 
