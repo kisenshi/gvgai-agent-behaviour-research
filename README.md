@@ -64,7 +64,7 @@ The modifications are similar to the ones carried out in previous experiments bu
 
 ### Related paper
 
-Guerrero-Romero, Cristina, Annie Louis, and Diego Perez-Liebana. "[Beyond Playing to Win: Diversifying Heuristics for GVGAI](http://kisenshi.github.io/files/201708_PlayingDiversifying.pdf)." _In 2017 IEEE Conference on Computational Intelligence and Games (CIG)_, pp. 118-125. IEEE, 2017.
+Cristina Guerrero-Romero, Annie Louis and Diego Perez-Liebana. "[Beyond Playing to Win: Diversifying Heuristics for GVGAI](http://kisenshi.github.io/files/201708_PlayingDiversifying.pdf)." _In 2017 IEEE Conference on Computational Intelligence and Games (CIG)_, pp. 118-125. IEEE, 2017.
 
 __Note__: For the code and results obtained in the experiments presented in the paper, refer to the [original repository](https://github.com/kisenshi/gvgai-experiments).
 
@@ -123,11 +123,11 @@ The link to the live demo is: https://demo-visualize-diverse-gameplay-xqjmp.ondi
 
 ### Publication
 
-Guerrero-Romero, Cristina, and Diego Perez-Liebana. "[MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay](http://kisenshi.github.io/files/paper-map-elites-generation-team-agents-behaviour.pdf)" To be published _in 2021 IEEE Conference on Games (CoG)_
+Cristina Guerrero-Romero and Diego Perez-Liebana. "[MAP-Elites to Generate a Team of Agents that Elicits Diverse Automated Gameplay](http://kisenshi.github.io/files/paper-map-elites-generation-team-agents-behaviour.pdf)" To be published _in 2021 IEEE Conference on Games (CoG)_
 
 ### Related paper
 
-Guerrero-Romero, Cristina, Simon M. Lucas, and Diego Perez-Liebana. "[Using a Team of General AI Algorithms to Assist Game Design and Testing](http://kisenshi.github.io/files/paper-team-general-ai-assist.pdf)." _In 2018 IEEE Conference on Computational Intelligence and Games (CIG)_, pp. 1-8. IEEE, 2018
+Cristina Guerrero-Romero, Simon M. Lucas, and Diego Perez-Liebana. "[Using a Team of General AI Algorithms to Assist Game Design and Testing](http://kisenshi.github.io/files/paper-team-general-ai-assist.pdf)." _In 2018 IEEE Conference on Computational Intelligence and Games (CIG)_, pp. 1-8. IEEE, 2018
 
 ## Automated gameplay
 
