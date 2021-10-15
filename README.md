@@ -1,4 +1,4 @@
-# Agent Behaviour Research (in GVGAI)
+# Beyond Playing to Win: Agent Behaviour Research (in GVGAI)
 
 Personalised version of the GVGAI framework that allows providing the heuristic to use in the algorithm at the time of starting the game. This modification allows running the agents with different heuristics (behaviours) without having to update their core code. The heuristics are created in a external file and plugged into the agent during its instantiation.  
 
