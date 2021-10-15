@@ -1,4 +1,4 @@
-# Agent Behaviour Research (in GVGAI)
+# Beyond Playing to Win: Agent Behaviour Research (in GVGAI)
 
 ### Automated Gameplay branch
 
