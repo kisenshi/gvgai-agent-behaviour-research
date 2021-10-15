@@ -15,6 +15,7 @@ This repository contains the code related to my research in agent behaviour. it 
 - [Heuristic diversification](#heuristic-diversification)
 - [Use of MAP-Elites to generate agents that elicits diverse automated gameplay](#map-elites-to-generate-a-team-of-agents-with-diverse-behaviours)
 - [Automated gameplay](#automated-gameplay) (this branch)
+- [Portability of the _team_ of agents generated and their potential application in testing](#generalisation-experiments-portability-and-gameplay-testing)
 
 ## Original code: GVGAI competition
 
@@ -136,6 +137,12 @@ game of the GVGAI framework by providing a config file with the details of the g
 - The folder containing the files and downloadable zip can be found at localAutomatedGameplay/.
 
 - _src/heuristic_diversification/AutomatedGameplay.java_ contains the code of the main that has been used to generate the jar included in the standalone.
+
+## Generalisation experiments: portability and gameplay testing
+
+We have identified various _behaviour-types_ agents from the _teams_ generated in the experiments and run a test to check their potential portability to new levels, different from those used for their generation. These agents have also been used to test "broken" levels in an exploratory study.
+
+The code for these experiments and related links can be found in the [generalisation-experiments-automated-gameplay-stats branch](https://github.com/kisenshi/gvgai-agent-behaviour-research/tree/generalisation-experiments-automated-gameplay-stats)
 
 ## License
 
