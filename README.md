@@ -1,4 +1,4 @@
-# Agent Behaviour Research (in GVGAI)
+# Beyond Playing to Win: Agent Behaviour Research (in GVGAI)
 ## Generalisation experiments branch: portability and gameplay testing
 This branch contains the code used to run the generalisation experiments, where we have identified verious _behaviour-types_ agents from the _teams_ generated and run a test to check their potential portability to new levels, different from those used for their generation. 
 
