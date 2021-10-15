@@ -1,4 +1,11 @@
 # Agent Behaviour Research (in GVGAI)
+## Generalisation experiments branch: portability and gameplay testing
+This branch contains the code used to run the generalisation experiments, where we have identified verious _behaviour-types_ agents from the _teams_ generated and run a test to check their potential portability to new levels, different from those used for their generation. 
+
+These agents have also been used to test "broken" levels in an exploratory study.
+
+------
+<br/>
 
 Personalised version of the GVGAI framework that allows providing the heuristic to use in the algorithm at the time of starting the game. This modification allows running the agents with different heuristics (behaviours) without having to update their core code. The heuristics are created in a external file and plugged into the agent during its instantiation.  
 
@@ -7,7 +14,7 @@ This repository contains the code related to my research in agent behaviour. it 
 - [Heuristic diversification](#heuristic-diversification)
 - [Use of MAP-Elites to generate agents that elicits diverse automated gameplay](#map-elites-to-generate-a-team-of-agents-with-diverse-behaviours)
 - [Automated gameplay](#automated-gameplay)
-- [Portability of the _team_ of agents generated and their potential application in testing](#generalisation-experiments-portability-and-gameplay-testing)
+- [Portability of the _team_ of agents generated and their potential application in testing](#generalisation-experiments-portability-and-gameplay-testing) (this branch)
 
 ## Original code: GVGAI competition
 
@@ -130,7 +137,24 @@ game of the GVGAI framework by providing a config file with the details of the g
 
 We have identified various _behaviour-types_ agents from the _teams_ generated in the experiments and run a test to check their potential portability to new levels, different from those used for their generation. These agents have also been used to test "broken" levels in an exploratory study.
 
-The code for these experiments and related links can be found in the [generalisation-experiments-automated-gameplay-stats branch](https://github.com/kisenshi/gvgai-agent-behaviour-research/tree/generalisation-experiments-automated-gameplay-stats)
+### Contents 
+
+* The levels used for the generalisation test are located at _examples/experiments_generalisation/_
+
+    * First level is the one that was used to generate the team for the game and it is included as reference
+    * The next 4 levels are the ones used to test the portability of the agents by comparig the tendency of the resulting stats
+    * The last level is similar to the original level but "broken" and it is used to test the potential use of the agents for automated testing
+
+* _src/heuristic_diversification/AutomatedGameplayGeneralisation.java_ is the main created for these experiments. Both the portability and testing experiments execute this file, as both involve analysing the resulting stats. It requires a configuration file. 
+
+* _MapElitesGameplayConfigTemplate.txt_ Template for the config file required to execute the experiments.
+
+Some modifications were necessary in the Config files to execute the agents in the game and GameStats to print a summary of the stats from the gameplay (see commits for details).
+
+### Experiments 
+
+The config files, executables and resulting stats of these experiments can be found in an [OSF repository](https://osf.io/kmgz4/)
+
 
 ## License
 
